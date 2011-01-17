@@ -112,6 +112,7 @@ Most other combinations of endpoints work as well:
 I've not yet flushed out the put support for each route yet. I've been doing additions via `irb` for now:
 
 ## Adding a new application and configuration item
+
 	irb -r ./irbstub.rb
 
 	a1 = Application.create(:name => 'myapplication')
