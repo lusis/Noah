@@ -19,24 +19,28 @@ In the end, we reinvent the wheel ANYWAY. Maybe we do something like have our CM
 
 ## Design Goals
 I have a few basic design goals:
-- The system must support RESTful interaction for operations where REST maps properly
-- The system must support basic concepts of hosts, services and configuration parameters
-- The system must support horizontal scaling
-- The system must support traditional load balancing methodologies
-- The system must support ephemeral clients and stateless operation where applicable
+
+* The system must support RESTful interaction for operations where REST maps properly
+* The system must support basic concepts of hosts, services and configuration parameters
+* The system must support horizontal scaling
+* The system must support traditional load balancing methodologies
+* The system must support ephemeral clients and stateless operation where applicable
 
 In essence, the system must be resemble your typical web application.
 Here are some "would really like to have" things:
-- The system should support watches similar to ZooKeeper
-- The system should support pluggable callback methods (more below)
-- The system should support being a client of itself
+
+* The system should support watches similar to ZooKeeper
+* The system should support pluggable callback methods (more below)
+* The system should support being a client of itself
 
 ## Opinionated stack
 I've found that being opinionated has its benefits. Swappable storage backends are nice but those have to evolve naturally over time. To this end I've tried to keep the stack as lightweight and easy to distribute as possible. I'm also a big fan of the Unix philosophy of doing one thing and doing it very well. To this end, I've chosen the followng initial stack:
-- Ruby
-- EventMachine/Sinatra/Ohm
-- Redis
-The main reason for choosing Redis is that much of the functionality I need/that I want to implement from ZooKeeper is already available in Redis semantics. Essentially Noah becomes a custom API for Redis - a way to provide disconnected client operations for it. By using Ohm, I get an easy and unobtrusive orm that only does what I tell it to do. Sinatra was originally going to be the only inteface but as I thought about how best to handle the Watch scenario and callbacks, I realized I needed something a bit more evented - hence EventMachine.
+
+* Ruby
+* EventMachine/Sinatra/Ohm
+* Redis
+
+The main reason for choosing Redis is that much of the functionality I need/that I want to implement from ZooKeeper is already available in Redis semantics. Essentially Noah becomes a custom API for Redis - a way to provide disconnected client operations for it. By using Ohm, I get an easy and unobtrusive orm that only does what I tell it to do. Sinatra was originally going to be the only inteface but as I thought about how best to handle the Watch scenario and callbacks, I realized I needed something a bit more evented hence EventMachine.
 
 ## Pretty pictures
 This is the original Mindmap I did when thinking about Noah. It's not complete and was just a dump of what was in my head at the time:
@@ -44,4 +48,4 @@ This is the original Mindmap I did when thinking about Noah. It's not complete a
 [Noah MindMap](https://github.com/lusis/Noah/raw/master/doc/noah-mindmap-original.png)
 
 ## Where's the code?
-I'm still working on the codebase in a private local branch. Sorry. I'm going to be flailing around a bit trying a few things and don't want people to fork yet. I'll still commit regularly to that branch so you'll see said flailing in the history when I merge. What I've done is create a simple sinatra app that you can get a feel for where I'm headed with this. It's under the branch called "testing".
+I'm still working on the codebase in a private local branch. Sorry. I'm going to be flailing around a bit trying a few things and don't want people to fork yet. I'll still commit regularly to that branch so you'll see said flailing in the history when I merge. What I've done is create a simple sinatra app that you can get a feel for where I'm headed with this. It's under the branch called [testing](https://github.com/lusis/Noah/tree/testing).
