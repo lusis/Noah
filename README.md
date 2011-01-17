@@ -94,10 +94,11 @@ _curl http://localhost:9292/a/_
 
 Most other combinations of endpoints work as well:
 
-* `http://localhost:9292/h/<hostname>/s/` - All service for <hostname>
-* `http://localhost:9292/h/<hostname>/s/<servicename>` - <servicename> on <hostname>
-* `http://localhost:9292/a/<appname>/<configname>` - Configuration for <appname>
-* `http://localhost:9292/c/<appname>/<element>` - Specific configuration element for <appname>
+* `http://localhost:9292/h/<hostname>/s/` - All service for `<hostname>`
+* `http://localhost:9292/h/<hostname>/s/<servicename>` - `<servicename>` on `<hostname>`
+* `http://localhost:9292/a/<appname>/<configname>` - Configuration for `<appname>`
+* `http://localhost:9292/c/<appname>/<element>` - Specific configuration element for `<appname>`
+
 	{
 	 "id":"1",
 	 "name":"db",
@@ -106,6 +107,7 @@ Most other combinations of endpoints work as well:
 	 "update_at":"2011-01-17 14:12:43 UTC",
 	 "application":"noah"
 	}
+
 # Adding new entries
 I've not yet flushed out the put support for each route yet. I've been doing additions via `irb` for now:
 
@@ -146,10 +148,12 @@ I'm still noodling out some things around Hosts and Services. There's a field ca
 
 # Constraints
 You can view all the constraints inside `models.rb` but here they are for now:
-- A new host must have at least `name` and `state` set.
-- A new service must have at least `name` and `state` set.
-- Each Host `name` must be unique
-- Each Service `name` per Host must be unique
-- Each Application `name` must exist and be unique
-- Each Configuration name per Application must be unique.
-- Each Configuration must have `name`,`format` and `body`
+
+* A new host must have at least `name` and `state` set.
+* A new service must have at least `name` and `state` set.
+* Each Host `name` must be unique
+* Each Service `name` per Host must be unique
+* Each Application `name` must exist and be unique
+* Each Configuration name per Application must be unique.
+* Each Configuration must have `name`,`format` and `body`
+
