@@ -1,0 +1,37 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    backports (1.18.2)
+    monkey-lib (0.5.4)
+      backports
+    nest (1.1.0)
+      redis (~> 2.1)
+    ohm (0.1.3)
+      nest (~> 1.0)
+    ohm-contrib (0.1.0)
+      ohm
+    rack (1.2.1)
+    redis (2.1.1)
+    sinatra (1.1.2)
+      rack (~> 1.1)
+      tilt (~> 1.2)
+    sinatra-advanced-routes (0.5.1)
+      monkey-lib (~> 0.5.0)
+      sinatra (~> 1.0)
+      sinatra-sugar (~> 0.5.0)
+    sinatra-reloader (0.5.0)
+      sinatra (~> 1.0)
+      sinatra-advanced-routes (~> 0.5.0)
+    sinatra-sugar (0.5.0)
+      monkey-lib (~> 0.5.0)
+      sinatra (~> 1.0)
+    tilt (1.2.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ohm (= 0.1.3)
+  ohm-contrib (= 0.1.0)
+  sinatra (= 1.1.2)
+  sinatra-reloader (= 0.5.0)
