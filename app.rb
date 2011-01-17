@@ -1,19 +1,21 @@
 require 'sinatra/reloader' if development?
 require 'ohm'
 require 'json'
+require 'haml'
 
 require File.join(File.dirname(__FILE__), 'config/db')
 require File.join(File.dirname(__FILE__), 'models')
 
 # Read operations
 ## Hosts
-### Still not sold on this pathing structure
+# Specifc Host/Specific Service
 get '/h/:hostname/s/:servicename/?' do
   host = Host.find(:name => params[:hostname]).first
   service = Service.find(:name => params[:servicename], :host_id => host.id).first
   "#{service.to_json}"
 end
 
+# Specific Host/All Services
 get '/h/:hostname/s/?' do
   host = Host.find(:name => params[:hostname]).first
   services = []
@@ -21,13 +23,13 @@ get '/h/:hostname/s/?' do
   "#{services.to_json}"
 end
 
-
+# Specific Host
 get '/h/:hostname/?' do
   host = Host.find(:name => "#{params[:hostname]}").first
   "#{host.to_json}"
 end
 
-# Catchall
+# All Hosts
 get '/h/?' do
   hosts = []
   Host.all.sort.each {|h| hosts << h.to_hash}
@@ -36,9 +38,9 @@ end
 
 ## Services
 get '/s/:servicename/h/:hostname/?' do
-  s = Service.find(:name => "#{params[:servicename]}").first
-  h = Host.find(:name => "#{params[:hostname]}", :service_id => s.id).first
-  "#{h.to_json}"
+  h = Host.find(:name => params[:hostname]).first.id
+  s = Service.find(:name => params[:servicename], :host_id => h).first
+  "#{s.to_json}"
 end
 
 get '/s/:servicename/?' do
@@ -75,7 +77,17 @@ end
 get '/c/:appname/:element/?' do
   a = Application.find(:name => params[:appname]).first
   c = Configuration.find(:name => params[:element], :application_id => a.id).first
-  "#{c.to_json}"
+  case c.format
+    when "json"
+      content_type 'application/json'
+    when "xml"
+      content_type 'text/xml'
+    when "yaml"
+      content_type 'text/x-yaml'
+    else
+      content_type 'text/plain'
+    end
+  "#{c.body}"
 end
 
 get '/c/:appname/?' do
@@ -91,6 +103,9 @@ get '/c/?' do
   "#{configs.to_json}"
 end
 
+get '/' do
+  haml :index, :format => :html5
+end
 
 # A route for adding a new host
 put '/h/:hostname' do

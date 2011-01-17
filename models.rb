@@ -87,7 +87,9 @@ class Application < Ohm::Model
   end
 
   def to_hash
-    super.merge(:name => name, :updated_at => updated_at)
+    arr = []
+    configurations.sort.each {|c| arr << c.to_hash}
+    super.merge(:name => name, :updated_at => updated_at, :configurations => arr)
   end
 end
 

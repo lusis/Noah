@@ -20,6 +20,11 @@ _rackup config.ru_
 	[2011-01-17 08:00:30] INFO  ruby 1.9.2 (2010-12-25) [x86_64-linux]
 	[2011-01-17 08:00:30] INFO  WEBrick::HTTPServer#start: pid=15349 port=9292
 
+## Example links
+[Noah Start Page](http://localhost:9292/)
+
+If you have Noah running, you can hit the above link for some links created by the setup samples.
+
 ## All configs
 _curl http://localhost:9292/c/_
 
