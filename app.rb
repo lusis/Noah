@@ -67,6 +67,55 @@ get '/a/:appname/?' do
   "#{app.to_json}"
 end
 
+put '/a/:appname/?' do
+  begin
+    app = Application.find(:name => params[:appname]).first ||= Application.create(:name => params[:appname])
+    data = JSON.parse(request.body.read)
+    app.name = data['name']
+    if app.valid?
+      app.save
+      status 200
+      content_type 'application/json'
+      r = {"result" => "success","id" => "#{app.id}"}
+      r.to_json
+    else
+      status 500
+      content_type 'application/json'
+      r = {"result" => "failure","error" => "#{app.errors}"}
+      r.to_json
+    end
+  rescue Exception => e
+    status 500
+    content_type 'application/json'
+    r = {"result" => "failure","error" => "#{e.message}"}
+    r.to_json
+  end
+end
+
+delete '/a/:appname/?' do
+  begin
+    app = Application.find(:name => params[:appname]).first
+    if app
+      Configuration.find(:application_id => app.id).sort.each {|x| x.delete} if app.configurations.size > 0
+      app.delete
+      status 200
+      content_type 'application/json'
+      r = {"result" => "success", "id" => "#{app.id}"}
+      r.to_json
+    else
+      status 404
+      content_type 'application/json'
+      r = {"result" => "failure","error" => "Application not found"}
+      r.to_json
+    end
+  rescue Exception => e
+    status 500
+    content_type 'application/json'
+    r = {"result" => "failure", "error" => "#{e.message}"}
+    r.to_json
+  end
+end
+
 get '/a/?' do
   apps = []
   Application.all.sort.each {|a| apps << a.to_hash}
