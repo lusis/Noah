@@ -24,16 +24,6 @@ class Host < Ohm::Model
   end
 end
 
-class Hosts
-  def self.all(options = {})
-    if options.empty?
-      Host.all.sort
-    else
-      Host.find(options).sort
-    end
-  end
-end
-
 class Service < Ohm::Model
   include Ohm::Typecast
   include Ohm::Timestamping
@@ -53,16 +43,6 @@ class Service < Ohm::Model
 
   def to_hash
     super.merge(:name => name, :state => state, :updated_at => updated_at, :host => Host[host_id].name)
-  end
-end
-
-class Services
-  def self.all(options = {})
-    if options.empty?
-      Service.all.sort
-    else
-      Service.find(options).sort
-    end
   end
 end
 
