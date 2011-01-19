@@ -22,7 +22,16 @@ class Host < Ohm::Model
     services.sort.each {|s| arr << s.to_hash}
     super.merge(:name => name, :state => state, :updated_at => updated_at, :services => arr)
   end
+end
 
+class Hosts
+  def self.all(options = {})
+    if options.empty?
+      Host.all.sort
+    else
+      Host.find(options).sort
+    end
+  end
 end
 
 class Service < Ohm::Model
@@ -44,6 +53,16 @@ class Service < Ohm::Model
 
   def to_hash
     super.merge(:name => name, :state => state, :updated_at => updated_at, :host => Host[host_id].name)
+  end
+end
+
+class Services
+  def self.all(options = {})
+    if options.empty?
+      Service.all.sort
+    else
+      Service.find(options).sort
+    end
   end
 end
 
@@ -111,3 +130,28 @@ class Watcher < Ohm::Model #NYI
     assert_unique [:client, :endpoint, :event, :action]
   end
 end
+
+# Some pluralized helper objects
+class Hosts
+  def self.all(options = {})
+    options.empty? ? Host.all.sort : Host.find(options).sort
+  end
+end
+
+class Services
+  def self.all(options = {})
+    options.empty? ? Service.all.sort : Service.find(options).sort
+  end
+end
+
+class Applications
+  def self.all(options = {})
+    options.empty? ? Application.all.sort : Application.find(options).sort
+  end
+end
+
+class Configurations
+  def self.all(options = {})
+    options.empty? ? Configuration.all.sort : Configuration.find(options).sort
+  end
+end  
