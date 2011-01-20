@@ -68,6 +68,16 @@ class Configuration < Ohm::Model
   def to_hash
     super.merge(:name => name, :format => format, :body => body, :update_at => updated_at, :application => Application[application_id].name)
   end
+
+  class << self
+  def find_or_create(opts={})
+    begin
+      find(opts).first.nil? ? (conf = create(opts)) : (conf = find(opts).first)
+    rescue Exception => e
+      e.message
+    end
+  end
+  end
 end
 
 class Application < Ohm::Model
@@ -90,6 +100,22 @@ class Application < Ohm::Model
     configurations.sort.each {|c| arr << c.to_hash}
     super.merge(:name => name, :updated_at => updated_at, :configurations => arr)
   end
+
+  class << self
+  def find_or_create(opts = {})
+    begin
+      find(opts).first.nil? ? (app = create(opts)) : (app = find(opts).first)
+      if app.valid?
+        app.save
+        app
+      else
+        raise app.errors
+      end
+    rescue Exception => e
+      e.message
+    end
+  end
+  end
 end
 
 class Watcher < Ohm::Model #NYI
@@ -111,7 +137,7 @@ class Watcher < Ohm::Model #NYI
   end
 end
 
-# Some pluralized helper objects
+# Some pluralized helper models
 class Hosts
   def self.all(options = {})
     options.empty? ? Host.all.sort : Host.find(options).sort

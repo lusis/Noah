@@ -126,20 +126,19 @@ namespace "/a" do
 end
 
 namespace '/c' do
-  
+
+  # Need to move this out to configuration.
+  # Maybe bootstrap them from itself?
+  content_type_mapping = {
+            :yaml => "text/x-yaml",
+            :json => "application/json",
+            :xml => "text/xml"
+  }
+
   get '/:appname/:element/?' do
     a = Application.find(:name => params[:appname]).first
     c = Configuration.find(:name => params[:element], :application_id => a.id).first
-    case c.format
-      when "json"
-        content_type 'application/json'
-      when "xml"
-        content_type 'text/xml'
-      when "yaml"
-        content_type 'text/x-yaml'
-      else
-        content_type 'text/plain'
-      end
+    content_type content_type_mapping[c.format.to_sym] if content_type_mapping[c.format.to_sym]
     "#{c.body}"
   end
 
@@ -154,6 +153,30 @@ namespace '/c' do
     configs = []
     Configuration.all.sort.each {|c| configs << c.to_hash}
     "#{configs.to_json}"
+  end
+
+  put '/:appname/:element?' do |appname, item|
+    begin
+      app = Application.find_or_create(:name => appname)
+      config = Configuration.find_or_create(:name => item, :application_id => app.id)
+      required_params = ["format", "body"]
+      data = JSON.parse(request.body.read)
+      data.keys.sort == required_params.sort  ? (config.format = data["format"]; config.body = data["body"]) : (raise "Missing Parameters")
+      if config.valid?
+        config.save
+        status 200
+        r = {"result" => "success","id" => "#{config.id}"}
+        r.to_json
+      else
+        status 500
+        r = {"result" => "failure","error" => "#{config.errors}"}
+        r.to_json
+      end
+    rescue Exception => e
+      status 500
+      r = {"result" => "failure","error" => "#{e.message}"}
+      r.to_json
+    end
   end
 
 end
