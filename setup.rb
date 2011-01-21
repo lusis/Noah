@@ -8,11 +8,11 @@ require File.join(File.dirname(__FILE__), 'models')
 Ohm.redis.flushdb
 # Add an entry for my localhost
 puts "Creating Host entry for 'localhost'"
-h = Host.create(:name => 'localhost', :state => 1)
+h = Host.create(:name => 'localhost', :status => "up")
 if h.save
   %w[redis noah].each do |service|
     puts "Create Service entry for #{service}"
-    s = Service.create(:name => service, :state => 1, :host => h)
+    s = Service.create(:name => service, :status => "up", :host => h)
     h.services << s
   end
 end
@@ -31,10 +31,10 @@ end
 
 puts "Creating sample entries - Host and Service"
 %w[host1.domain.com host2.domain.com host3.domain.com].each do |host|
-  h = Host.create(:name => host, :state => 0)
+  h = Host.create(:name => host, :status => "up")
   if h.save
     %w[http https smtp mysql].each do |service|
-      s = Service.create(:name => service, :state =>0, :host => h)
+      s = Service.create(:name => service, :status => "pending", :host => h)
       h.services << s
     end
   end

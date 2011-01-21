@@ -4,23 +4,44 @@ class Host < Ohm::Model
   include Ohm::Typecast
   include Ohm::Timestamping
   include Ohm::Callbacks
+  include Ohm::ExtraValidations
 
   attribute :name
-  attribute :state, Boolean
+  attribute :status
   collection :services, Service
 
   index :name
-  index :state
+  index :status
 
   def validate
-    assert_present :name, :state
+    assert_present :name, :status
     assert_unique :name
+    assert_member :status, ["up","down","pending"]
   end
 
   def to_hash
     arr = []
     services.sort.each {|s| arr << s.to_hash}
-    super.merge(:name => name, :state => state, :updated_at => updated_at, :services => arr)
+    super.merge(:name => name, :status => status, :updated_at => updated_at, :services => arr)
+  end
+
+  class << self
+  def find_or_create(opts = {})
+    begin
+      # exclude requested status from lookup
+      h = find(opts.reject{|key,value| key == :status}).first
+      host = h.nil? ? create(opts) : h
+      host.status = opts[:status]
+      if host.valid?
+        host.save
+        host 
+      else
+        raise host.errors
+      end
+    rescue Exception => e
+      e.message
+    end
+  end
   end
 end
 
@@ -28,21 +49,23 @@ class Service < Ohm::Model
   include Ohm::Typecast
   include Ohm::Timestamping
   include Ohm::Callbacks
+  include Ohm::ExtraValidations
 
   attribute :name
-  attribute :state, Boolean
+  attribute :status
   reference :host, Host
 
   index :name
-  index :state
+  index :status
 
   def validate
-    assert_present :name, :state
+    assert_present :name, :status
     assert_unique [:name, :host_id]
+    assert_member :status, ["up", "down", "pending"]
   end
 
   def to_hash
-    super.merge(:name => name, :state => state, :updated_at => updated_at, :host => Host[host_id].name)
+    super.merge(:name => name, :status => status, :updated_at => updated_at, :host => Host[host_id].name)
   end
 end
 
@@ -50,6 +73,7 @@ class Configuration < Ohm::Model
   include Ohm::Typecast
   include Ohm::Timestamping
   include Ohm::Callbacks
+  include Ohm::ExtraValidations
 
   attribute :name
   attribute :format
@@ -84,6 +108,7 @@ class Application < Ohm::Model
   include Ohm::Typecast
   include Ohm::Timestamping
   include Ohm::Callbacks
+  include Ohm::ExtraValidations
 
   attribute :name
   collection :configurations, Configuration

@@ -21,14 +21,8 @@ end
 
 namespace "/h" do
 
-  get '/:hostname/s/:servicename/?' do |hostname, servicename|
+  get '/:hostname/:servicename/?' do |hostname, servicename|
     host_service(hostname, servicename).to_json
-  end
-
-  get '/:hostname/s/?' do |hostname|
-    hs = host_services(hostname)
-    hs.map! {|x| x.to_hash} 
-    hs.to_json
   end
 
   get '/:hostname/?' do |hostname|
@@ -40,11 +34,32 @@ namespace "/h" do
     hosts.to_json
   end
 
+  put '/?' do
+    begin
+      required_params = ["name", "status"]
+      data = JSON.parse(request.body.read)
+      data.keys.sort == required_params.sort  ? (host = Host.find_or_create(:name => data['name'], :status => data['status'])) : (raise "Missing Parameters")
+      if host.valid?
+        status 200
+        r = {"result" => "success","id" => "#{host.id}","status" => "#{host.status}", "name" => "#{host.name}"}
+        r.to_json
+      else
+        status 500
+        r = {"result" => "failure","error" => "#{app.errors}"}
+        r.to_json
+      end
+    rescue Exception => e
+      status 500
+      r = {"result" => "failure","error" => "#{e.message}"}
+      r.to_json
+    end
+  end
+
 end
 
 namespace "/s" do
 
-  get '/:servicename/h/:hostname/?' do |servicename, hostname|
+  get '/:servicename/:hostname/?' do |servicename, hostname|
     host_service(hostname, servicename).to_json
   end
 
@@ -155,10 +170,10 @@ namespace '/c' do
     "#{configs.to_json}"
   end
 
-  put '/:appname/:element?' do |appname, item|
+  put '/:appname/:element?' do |appname, element|
     begin
       app = Application.find_or_create(:name => appname)
-      config = Configuration.find_or_create(:name => item, :application_id => app.id)
+      config = Configuration.find_or_create(:name => element, :application_id => app.id)
       required_params = ["format", "body"]
       data = JSON.parse(request.body.read)
       data.keys.sort == required_params.sort  ? (config.format = data["format"]; config.body = data["body"]) : (raise "Missing Parameters")
@@ -179,23 +194,28 @@ namespace '/c' do
     end
   end
 
-end
+  delete '/:appname/:element?' do |appname, element|
+    begin
+      app = Application.find(:name => appname).first
+      if app
+        config = Configuration.find(:name=> element, :application_id => app.id).first
+        if config
+          config.delete
+          status 200
+          r = {"result" => "success", "id" => "#{config.id}", "item" => "#{appname}/#{element}"}
+          r.to_json
+        else
+          r = {"result" => "failure","error" => "Configuration element not found"}
+          halt 404, r.to_json
+        end
+      else
+        r = {"result" => "failure","error" => "Application not found"}
+        halt 404, r.to_json
+      end
+    rescue Exception => e
+      r = {"result" => "failure", "error" => "#{e.message}"}
+      halt 500, r.to_json
+    end
+  end
 
-# A route for adding a new host
-put '/h/:hostname' do
-  host = params[:hostname]
-  data = JSON.parse(request.body.read)
-  begin
-    h = Host.find(:name => host).first
-    h.state = 1
-  rescue
-    # If we have to register the host, we mark it as inactive
-    # Feels like the right thing to do in case of accidental creation
-    # from mispelling
-    h = Host.create(:name => params[:hostname], :state => 0)
-  end
-  if h.save
-    data['services'].each {|x| h.services << Service.create(:name=> x['name'], :state => x['state'], :host => h)} if data['services']
-    {"msg" => "success"}.to_json
-  end
 end
