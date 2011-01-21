@@ -26,12 +26,39 @@ namespace "/h" do
   end
 
   get '/:hostname/?' do |hostname|
-    host(:name => hostname).to_json
+    begin
+      h = host(:name => hostname)
+      if h.nil?
+        status 404
+        r = {"result" => "failure","error" => "Host not found"}
+        r.to_json
+      else
+        status 200
+        h.to_json
+      end
+    rescue Exception => e
+      status 500
+      r = {"result" => "failure","error" => "#{e.message}"}
+      r.to_json
+    end
   end
 
   get '/?' do
-    hosts.map {|h| h.to_hash}
-    hosts.to_json
+    begin
+      hosts.map {|h| h.to_hash}
+      if hosts.size == 0
+        status 200
+        r = {"result" => "success", "response" => "No hosts found"}
+        r.to_json
+      else
+        status 200
+        hosts.to_json
+      end
+    rescue Exception => e  
+      status 500
+      r = {"result" => "failure","error" => "#{e.message}"}
+      r.to_json
+    end
   end
 
   put '/?' do
@@ -82,13 +109,28 @@ end
 namespace "/s" do
 
   get '/:servicename/:hostname/?' do |servicename, hostname|
-    host_service(hostname, servicename).to_json
+    begin
+      hs = host_service(hostname, servicename)
+      status 200
+      hs.to_json
+    rescue Exception => e
+      status 500
+      r = {"result" => "failure", "error" => "#{e.message}"}
+      r.to_json
+    end  
   end
 
   get '/:servicename/?' do |servicename|
-    s = services(:name => servicename)
-    s.map {|x| x.to_hash}
-    s.to_json
+    begin
+      s = services(:name => servicename)
+      s.map {|x| x.to_hash}
+      status 200
+      s.to_json
+    rescue Exception => e
+      status 500
+      r = {"result" => "failure", "error" => "#{e.message}"}
+      r.to_json
+    end  
   end
 
   get '/?' do
@@ -107,8 +149,21 @@ namespace "/a" do
   end
 
   get '/:appname/?' do
-    app = Application.find(:name => params[:appname]).first
-    "#{app.to_json}"
+    begin
+      app = Application.find(:name => params[:appname]).first
+      if app.nil?
+        status 404
+        r = {"result" => "failure","error" => "Application not found"}
+        r.to_json
+      else
+        status 200
+        "#{app.to_json}"
+      end
+    rescue Exception => e
+      status 500
+      r = {"result" => "failure","error" => "#{e.message}"}
+      r.to_json
+    end
   end
 
   put '/:appname/?' do
@@ -136,15 +191,15 @@ namespace "/a" do
   delete '/:appname/?' do
     begin
       app = Application.find(:name => params[:appname]).first
-      if app
+      if app.nil?
+        status 404
+        r = {"result" => "failure","error" => "Application not found"}
+        r.to_json
+      else  
         Configuration.find(:application_id => app.id).sort.each {|x| x.delete} if app.configurations.size > 0
         app.delete
         status 200
         r = {"result" => "success", "id" => "#{app.id}"}
-        r.to_json
-      else
-        status 404
-        r = {"result" => "failure","error" => "Application not found"}
         r.to_json
       end
     rescue Exception => e
