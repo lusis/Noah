@@ -55,6 +55,28 @@ namespace "/h" do
     end
   end
 
+  delete '/:hostname/?' do
+    begin
+      host = Host.find(:name => params[:hostname]).first
+      if host
+        services = []
+        Service.find(:host_id => host.id).sort.each {|x| services << x; x.delete} if host.services.size > 0
+        host.delete
+        status 200
+        r = {"result" => "success", "id" => "#{host.id}", "name" => "#{host.name}", "service_count" => "#{services.size}"}
+        r.to_json
+      else
+        status 404
+        r = {"result" => "failure","error" => "Host not found"}
+        r.to_json
+      end
+    rescue Exception => e
+      status 500
+      r = {"result" => "failure", "error" => "#{e.message}"}
+      r.to_json
+    end
+  end
+
 end
 
 namespace "/s" do
