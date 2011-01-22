@@ -64,7 +64,7 @@ namespace "/h" do
       r = {"result" => "success","id" => "#{host.id}","status" => "#{host.status}", "name" => "#{host.name}"}
       r.to_json
     else
-      raise host.errors
+      raise "#{host.errors}"
     end
   end
 
@@ -113,12 +113,36 @@ namespace "/s" do
     end  
   end
 
-  put '/?' do
+  put '/:servicename/?' do |servicename|
     # NYI
+    # message format: {"status":"initial_status", "host":"hostname"}
+    required_params = ["status", "host"]
+    data = JSON.parse(request.body.read)
+    if data.keys.sort == required_params.sort
+      h = Host.find(:name => data['host']).first || (raise "Invalid Host")
+      service = Service.create(:name => servicename, :status => data['status'], :host => h)
+      if service.valid?
+        service.save
+        r = {"action" => "add", "result" => "success", "id" => service.id}
+        r.to_json
+      else
+        raise "#{service.errors}"
+      end
+    else
+      raise "Missing Parameters"
+    end  
   end
 
-  delete '/:servicename/?' do |servicename|
-    #NYI
+  delete '/:servicename/:hostname/?' do |servicename, hostname|
+    host = Host.find(:name => hostname).first || (halt 404)
+    service = Service.find(:name => servicename, :host_id => host.id).first || (halt 404)
+    if host && service
+      service.delete
+      r = {"action" => "delete", "result" => "success", "id" => service.id, "host" => host.name}
+      r.to_json
+    else
+      halt 404
+    end  
   end  
 
 end
@@ -153,10 +177,10 @@ namespace "/a" do
         r = {"result" => "success","id" => "#{app.id}"}
         r.to_json
       else
-        raise app.errors
+        raise "#{app.errors}"
       end  
     else
-      raise app.errors
+      raise "#{app.errors}"
     end
   end
 
@@ -238,7 +262,7 @@ namespace '/c' do
       r = {"result" => "success","id" => "#{config.id}"}
       r.to_json
     else
-      raise config.errors
+      raise "#{config.errors}"
     end
   end
 
