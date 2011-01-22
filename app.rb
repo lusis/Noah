@@ -56,7 +56,7 @@ namespace "/h" do
     end
   end
 
-  put '/?' do
+  put '/:hostname/?' do
     required_params = ["name", "status"]
     data = JSON.parse(request.body.read)
     data.keys.sort == required_params.sort  ? (host = Host.find_or_create(:name => data['name'], :status => data['status'])) : (raise "Missing Parameters")
@@ -74,7 +74,7 @@ namespace "/h" do
       services = []
       Service.find(:host_id => host.id).sort.each {|x| services << x; x.delete} if host.services.size > 0
       host.delete
-      r = {"result" => "success", "id" => "#{host.id}", "name" => "#{host.name}", "service_count" => "#{services.size}"}
+      r = {"result" => "success", "id" => "#{host.id}", "name" => "#{hostname}", "service_count" => "#{services.size}"}
       r.to_json
     else
       halt 404
@@ -114,16 +114,15 @@ namespace "/s" do
   end
 
   put '/:servicename/?' do |servicename|
-    # NYI
     # message format: {"status":"initial_status", "host":"hostname"}
-    required_params = ["status", "host"]
+    required_params = ["status", "host", "name"]
     data = JSON.parse(request.body.read)
     if data.keys.sort == required_params.sort
       h = Host.find(:name => data['host']).first || (raise "Invalid Host")
       service = Service.create(:name => servicename, :status => data['status'], :host => h)
       if service.valid?
         service.save
-        r = {"action" => "add", "result" => "success", "id" => service.id}
+        r = {"action" => "add", "result" => "success", "id" => service.id, "host" => h.name, "name" => service.name}
         r.to_json
       else
         raise "#{service.errors}"
@@ -138,7 +137,7 @@ namespace "/s" do
     service = Service.find(:name => servicename, :host_id => host.id).first || (halt 404)
     if host && service
       service.delete
-      r = {"action" => "delete", "result" => "success", "id" => service.id, "host" => host.name}
+      r = {"action" => "delete", "result" => "success", "id" => service.id, "host" => host.name, "service" => servicename}
       r.to_json
     else
       halt 404
@@ -272,7 +271,7 @@ namespace '/c' do
       config = Configuration.find(:name=> element, :application_id => app.id).first
       if config
         config.delete
-        r = {"result" => "success", "id" => "#{config.id}", "item" => "#{appname}/#{element}"}
+        r = {"result" => "success", "id" => "#{config.id}", "action" => "delete", "application" => "#{app.name}", "item" => "#{element}"}
         r.to_json
       else
         halt 404
