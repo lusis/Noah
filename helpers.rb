@@ -16,13 +16,21 @@ helpers do
   end 
 
   def host_service(hostname, servicename)
-    id = Host.find(:name => hostname).first.id
-    Service.find(:host_id => id, :name => servicename).first
+    h = Host.find(:name => hostname).first
+    if h.nil?
+      nil
+    else  
+      Service.find(:host_id => h.id, :name => servicename).first
+    end  
   end
 
   def host_services(hostname)
-    id = Host.find(:name => hostname).first.id
-    Services.all(:host_id => id)
+    h = Host.find(:name => hostname).first
+    if h.nil?
+      nil
+    else  
+      Services.all(:host_id => id)
+    end  
   end 
 
   def application(opts = {})
