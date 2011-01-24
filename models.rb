@@ -25,6 +25,10 @@ class Host < Ohm::Model
     super.merge(:name => name, :status => status, :updated_at => updated_at, :services => arr)
   end
 
+  def is_new?
+    self.created_at == self.updated_at
+  end
+
   class << self
   def find_or_create(opts = {})
     begin
@@ -67,6 +71,10 @@ class Service < Ohm::Model
   def to_hash
     super.merge(:name => name, :status => status, :updated_at => updated_at, :host => Host[host_id].name)
   end
+
+  def is_new?
+    self.created_at == self.updated_at
+  end
 end
 
 class Configuration < Ohm::Model
@@ -78,6 +86,7 @@ class Configuration < Ohm::Model
   attribute :name
   attribute :format
   attribute :body
+  attribute :new_record
   reference :application, Application
 
   index :name
@@ -93,10 +102,18 @@ class Configuration < Ohm::Model
     super.merge(:name => name, :format => format, :body => body, :update_at => updated_at, :application => Application[application_id].name)
   end
 
+  def is_new?
+    self.created_at == self.updated_at
+  end
+
   class << self
   def find_or_create(opts={})
     begin
-      find(opts).first.nil? ? (conf = create(opts)) : (conf = find(opts).first)
+      if find(opts).first.nil?
+        conf = create(opts)
+      else  
+        conf = find(opts).first
+      end  
     rescue Exception => e
       e.message
     end
@@ -124,6 +141,10 @@ class Application < Ohm::Model
     arr = []
     configurations.sort.each {|c| arr << c.to_hash}
     super.merge(:name => name, :updated_at => updated_at, :configurations => arr)
+  end
+
+  def is_new?
+    self.created_at == self.updated_at
   end
 
   class << self

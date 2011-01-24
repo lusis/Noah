@@ -1,6 +1,10 @@
 require 'sinatra/reloader' if development?
 require 'ohm'
-require 'json'
+begin
+  require 'yajl'
+rescue LoadError  
+  require 'json'
+end  
 require 'haml'
 
 require File.join(File.dirname(__FILE__), 'config/db')
@@ -168,16 +172,18 @@ namespace "/a" do
   end
 
   put '/:appname/?' do |appname|
-    app = Application.find(:name => appname).first ||= Application.create(:name => appname)
+    required_params = ["name"]
     data = JSON.parse(request.body.read)
-    app.name = data['name']
+    if data.keys.sort == required_params.sort && data['name'] == appname
+      app = Application.find_or_create(:name => appname)
+    else
+      raise "Missing or invalid parameters"
+    end  
     if app.valid?
-      if app.save
-        r = {"result" => "success","id" => "#{app.id}"}
-        r.to_json
-      else
-        raise "#{app.errors}"
-      end  
+      action = app.is_new? ? "create" : "update"
+      app.save
+      r = {"result" => "success","id" => app.id, "action" => action, "name" => app.name }
+      r.to_json
     else
       raise "#{app.errors}"
     end
@@ -257,8 +263,10 @@ namespace '/c' do
     data = JSON.parse(request.body.read)
     data.keys.sort == required_params.sort  ? (config.format = data["format"]; config.body = data["body"]) : (raise "Missing Parameters")
     if config.valid?
+      action = config.is_new? ? "create" : "update"
+      dependency_action = app.is_new? ? "created" : "updated"
       config.save
-      r = {"result" => "success","id" => "#{config.id}"}
+      r = {"result" => "success","id" => "#{config.id}", "action" => action, "dependencies" => dependency_action, "application" => app.name, "item" => config.name}
       r.to_json
     else
       raise "#{config.errors}"
