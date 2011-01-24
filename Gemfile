@@ -6,6 +6,8 @@ gem "ohm-contrib", "= 0.1.0"
 gem "haml", "= 3.0.25"
 group :development do
   gem "sinatra-reloader", "= 0.5.0"
+  gem "rspec", "= 2.4.0"
+  gem "rcov", "= 0.9.9"
 end
 platforms :mri do
   gem "yajl-ruby", "= 0.7.9", :require => "yajl"
