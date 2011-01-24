@@ -14,7 +14,8 @@ class Host < Ohm::Model
   index :status
 
   def validate
-    assert_present :name, :status
+    assert_present :name
+    assert_present :status
     assert_unique :name
     assert_member :status, ["up","down","pending"]
   end
