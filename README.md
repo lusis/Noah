@@ -2,9 +2,9 @@
 (make sure redis is running)
 
 ## Setup
-Edit setup.rb and config/db.rb if you want to point to a different db on your local redis install
+Edit `bin/setup` and config/db.rb if you want to point to a different db on your local redis install
 
-_ruby setup.rb_
+_bin/setup_
 
 	Creating Host entry for 'localhost'
 	Create Service entry for redis
@@ -16,7 +16,7 @@ _ruby setup.rb_
 	Setup successful!
 
 ## Run it
-_rackup config.ru_
+_rackup config.ru_ or _ruby noah.rb_
 
 	[2011-01-17 08:00:30] INFO  WEBrick 1.3.1
 	[2011-01-17 08:00:30] INFO  ruby 1.9.2 (2010-12-25) [x86_64-linux]
