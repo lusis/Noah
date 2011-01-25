@@ -48,7 +48,7 @@ describe "Host", :reset_redis => true do
     host.valid?.should == true
     host.save
     host.is_new?.should == true
-    sleep 3
+    sleep 1
     host1 = Host.find_or_create(:name => hostname, :status => newstatus)
     host1.save
     host1.is_new?.should == false

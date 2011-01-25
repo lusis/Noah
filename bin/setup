@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'ohm'
 begin
   require 'yajl'
@@ -5,8 +6,8 @@ rescue LoadError
   require 'json'
 end
 
-require File.join(File.dirname(__FILE__), 'config/db')
-require File.join(File.dirname(__FILE__), 'models')
+require File.join(File.dirname(__FILE__), '../config/db')
+require File.join(File.dirname(__FILE__), '../lib/models')
 
 # Flush the DB
 Ohm.redis.flushdb

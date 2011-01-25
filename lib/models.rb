@@ -64,7 +64,9 @@ class Service < Ohm::Model
   index :status
 
   def validate
-    assert_present :name, :status
+    assert_present :name
+    assert_present :status
+    assert_present :host_id
     assert_unique [:name, :host_id]
     assert_member :status, ["up", "down", "pending"]
   end
@@ -75,6 +77,30 @@ class Service < Ohm::Model
 
   def is_new?
     self.created_at == self.updated_at
+  end
+
+  class << self
+  def find_or_create(opts = {})
+    begin
+      # convert passed host object to host_id if passed
+      if opts.has_key?(:host)
+        opts.merge!({:host_id => opts[:host].id})
+        opts.reject!{|key, value| key == :host}
+      end  
+      # exclude requested status from lookup
+      s = find(opts.reject{|key,value| key == :status}).first
+      service = s.nil? ? create(opts) : s
+      service.status = opts[:status]
+      if service.valid?
+        service.save
+        service
+      else
+        raise service.errors
+      end
+    rescue Exception => e
+      e.message
+    end
+  end
   end
 end
 

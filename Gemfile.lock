@@ -16,6 +16,8 @@ GEM
     ohm-contrib (0.1.0)
       ohm
     rack (1.2.1)
+    rack-test (0.5.7)
+      rack (>= 1.0)
     rake (0.8.7)
     rcov (0.9.9)
     rcov (0.9.9-java)
@@ -55,6 +57,7 @@ DEPENDENCIES
   json-jruby (= 1.4.6)
   ohm (= 0.1.3)
   ohm-contrib (= 0.1.0)
+  rack-test (= 0.5.7)
   rake (= 0.8.7)
   rcov (= 0.9.9)
   rspec (= 2.4.0)

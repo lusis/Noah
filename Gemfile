@@ -9,6 +9,7 @@ group :development do
   gem "sinatra-reloader", "= 0.5.0"
   gem "rspec", "= 2.4.0"
   gem "rcov", "= 0.9.9"
+  gem "rack-test", "= 0.5.7", :require => "rack/test"
 end
 platforms :mri do
   gem "yajl-ruby", "= 0.7.9", :require => "yajl"
