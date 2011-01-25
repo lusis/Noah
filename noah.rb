@@ -44,6 +44,7 @@ class NoahApp < Sinatra::Base
   end
 
   not_found do
+    content_type "application/json"
     erb :'404'
   end
 
