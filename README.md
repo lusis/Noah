@@ -23,9 +23,9 @@ _rake sample_
 _rackup config.ru_ or _ruby noah.rb_
 
   == Sinatra/1.1.2 has taken the stage on 9292 for development with backup from Thin
-   Thin web server (v1.2.7 codename No Hup)
-   Maximum connections set to 1024
-   Listening on 0.0.0.0:9292, CTRL+C to stop
+  Thin web server (v1.2.7 codename No Hup)
+  Maximum connections set to 1024
+  Listening on 0.0.0.0:9292, CTRL+C to stop
 
 ## Example links
 [Noah Start Page](http://localhost:9292/)
