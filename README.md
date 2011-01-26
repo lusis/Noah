@@ -2,9 +2,13 @@
 (make sure redis is running)
 
 ## Setup
-Edit `bin/setup` and config/db.rb if you want to point to a different db on your local redis install
+Edit `config/db.yml` if you want to point to a different db on your local redis install.
 
-_bin/setup_
+   * `RACK_ENV` is honored. production listens on 9291, development 9292, test 9293.
+   * `rake sample` populates the development database
+   * `rake spec` populates the test database
+
+_rake sample_
 
 	Creating Host entry for 'localhost'
 	Create Service entry for redis
@@ -18,9 +22,10 @@ _bin/setup_
 ## Run it
 _rackup config.ru_ or _ruby noah.rb_
 
-	[2011-01-17 08:00:30] INFO  WEBrick 1.3.1
-	[2011-01-17 08:00:30] INFO  ruby 1.9.2 (2010-12-25) [x86_64-linux]
-	[2011-01-17 08:00:30] INFO  WEBrick::HTTPServer#start: pid=15349 port=9292
+  == Sinatra/1.1.2 has taken the stage on 9292 for development with backup from Thin
+  >> Thin web server (v1.2.7 codename No Hup)
+  >> Maximum connections set to 1024
+  >> Listening on 0.0.0.0:9292, CTRL+C to stop
 
 ## Example links
 [Noah Start Page](http://localhost:9292/)

@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe "Host", :reset_redis => true do
+describe "Noah Host Model", :reset_redis => true do
 
   it "should create a new Host with no services" do
     hostname = "host1.domain.com"

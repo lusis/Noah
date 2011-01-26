@@ -1,0 +1,12 @@
+production:
+  host: localhost
+  port: 6379
+  db: 0
+development:
+  host: localhost
+  port: 6379
+  db: 1
+test:
+  host: localhost
+  port: 6379
+  db: 2

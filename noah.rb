@@ -1,7 +1,6 @@
+#!/usr/bin/env ruby
 require 'sinatra/base'
-require 'sinatra/reloader'
 require 'sinatra/namespace'
-
 require 'ohm'
 begin
   require 'yajl'
@@ -9,30 +8,40 @@ rescue LoadError
   require 'json'
 end  
 require 'haml'
+require 'yaml'
 
-require File.join(File.dirname(__FILE__), 'config/db')
 require File.join(File.dirname(__FILE__), 'lib/models')
 require File.join(File.dirname(__FILE__), 'lib/helpers')
+
+@db_settings = YAML::load File.new(File.join(File.dirname(__FILE__),'config','db.yml')).read
 
 class NoahApp < Sinatra::Base
   register Sinatra::Namespace
   helpers Sinatra::NoahHelpers
+  config_file = YAML::load File.new(File.join(File.dirname(__FILE__),'config','db.yml')).read
+  db = config_file["#{environment}"]
+  Ohm.connect(:url => "redis://#{db["host"]}:#{db["port"]}/#{db["db"]}")
 
-  configure(:development) do
-    register Sinatra::Reloader
-    also_reload "models.rb"
-    also_reload "helpers.rb"
-  end
   configure do
     set :app_file, __FILE__
     set :root, File.dirname(__FILE__)
     set :server, %w[thin mongrel webrick]
-    set :port, 9292
+    set :port, 9291
     set :logging, true
     set :raise_errors, false
     set :show_exceptions, false
   end
-    
+  configure(:development) do
+    require 'sinatra/reloader'
+    register Sinatra::Reloader
+    also_reload "models.rb"
+    also_reload "helpers.rb"
+    set :port, 9292
+  end
+  configure(:test) do
+    set :port, 9294
+  end
+
   get '/' do
     content_type "text/html"
 

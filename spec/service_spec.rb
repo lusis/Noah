@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe "Service", :reset_redis => true do
+describe "Noah Service Model", :reset_redis => true do
 
   it "should create a new Service" do
     servicename = "myservice"
