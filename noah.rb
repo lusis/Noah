@@ -25,7 +25,7 @@ class NoahApp < Sinatra::Base
   configure do
     set :app_file, __FILE__
     set :root, File.dirname(__FILE__)
-    set :server, %w[thin mongrel webrick]
+    set :server, %w[thin mongrel webrick kirk]
     set :port, 9291
     set :logging, true
     set :raise_errors, false
