@@ -1,9 +1,3 @@
-GIT
-  remote: git://github.com/strobecorp/kirk.git
-  revision: 561ae9cf0108a9bda675c8d0fd07cfba3f670ee8
-  specs:
-    kirk (0.1.0.beta.1-java)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -73,7 +67,6 @@ DEPENDENCIES
   haml (= 3.0.25)
   jruby-openssl (= 0.7.3)
   json-jruby (= 1.4.6)
-  kirk!
   ohm (= 0.1.3)
   ohm-contrib (= 0.1.0)
   rack-test (= 0.5.7)

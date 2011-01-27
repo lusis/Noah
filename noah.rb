@@ -58,6 +58,7 @@ class NoahApp < Sinatra::Base
   end
 
   error do
+    content_type "application/json"
     erb :'500'
   end
 
@@ -95,7 +96,7 @@ class NoahApp < Sinatra::Base
       data = JSON.parse(request.body.read)
       data.keys.sort == required_params.sort  ? (host = Host.find_or_create(:name => data['name'], :status => data['status'])) : (raise "Missing Parameters")
       if host.valid?
-        r = {"result" => "success","id" => "#{host.id}","status" => "#{host.status}", "name" => "#{host.name}"}
+        r = {"result" => "success","id" => "#{host.id}","status" => "#{host.status}", "name" => "#{host.name}", "new_record" => host.is_new?}
         r.to_json
       else
         raise "#{host.errors}"

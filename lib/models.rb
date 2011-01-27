@@ -39,10 +39,8 @@ class Host < Ohm::Model
       host.status = opts[:status]
       if host.valid?
         host.save
-        host 
-      else
-        raise host.errors
       end
+      host
     rescue Exception => e
       e.message
     end
@@ -93,10 +91,8 @@ class Service < Ohm::Model
       service.status = opts[:status]
       if service.valid?
         service.save
-        service
-      else
-        raise service.errors
       end
+      service
     rescue Exception => e
       e.message
     end
@@ -180,10 +176,8 @@ class Application < Ohm::Model
       find(opts).first.nil? ? (app = create(opts)) : (app = find(opts).first)
       if app.valid?
         app.save
-        app
-      else
-        raise app.errors
       end
+      app
     rescue Exception => e
       e.message
     end
