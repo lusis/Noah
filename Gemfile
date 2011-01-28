@@ -16,7 +16,6 @@ platforms :mri do
 end
 platforms :jruby do
   gem "json-jruby", "= 1.4.6", :require => "json"
-#  gem "kirk", :git => "git://github.com/strobecorp/kirk.git"
   gem "warbler", "= 1.2.1"
   gem "jruby-openssl", "= 0.7.3"
 end

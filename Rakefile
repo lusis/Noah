@@ -90,3 +90,14 @@ end
 RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
+
+namespace :coverage do
+  desc "Delete aggregate coverage data."
+  task(:clean) { rm_f "coverage.data" }
+end
+desc "Run Rcov code coverage analysis"
+RSpec::Core::RakeTask.new(:coverage) do |t|
+  t.rcov = true
+  t.verbose = true
+  t.rcov_opts = %q[--aggregate coverage.data --sort coverage --text-report --exclude "config,.bundle/*,gems/*,spec/*" -o doc/coverage -Ilib -i "noah.rb"]
+end

@@ -51,7 +51,7 @@ GEM
     sinatra-sugar (0.5.0)
       monkey-lib (~> 0.5.0)
       sinatra (~> 1.0)
-    tilt (1.2.1)
+    tilt (1.2.2)
     warbler (1.2.1)
       jruby-jars (>= 1.4.0)
       jruby-rack (>= 1.0.0)

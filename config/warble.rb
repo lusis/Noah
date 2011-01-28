@@ -6,7 +6,7 @@ Warbler::Config.new do |config|
   # Features: additional options controlling how the jar is built.
   # Currently the following features are supported:
   # - gemjar: package the gem repository in a jar file in WEB-INF/lib
-  # config.features = %w(gemjar)
+  config.features = %w(gemjar)
 
   # Application directories to be included in the webapp.
   config.dirs = %w(config lib views)
@@ -35,17 +35,17 @@ Warbler::Config.new do |config|
   # Path to the pre-bundled gem directory inside the war file. Default
   # is 'WEB-INF/gems'. Specify path if gems are already bundled
   # before running Warbler. This also sets 'gem.path' inside web.xml.
-  # config.gem_path = "WEB-INF/vendor/bundler_gems"
+  #config.gem_path = "WEB-INF/gems"
 
   # Bundler support is built-in. If Warbler finds a Gemfile in the
   # project directory, it will be used to collect the gems to bundle
   # in your application. If you wish to explicitly disable this
   # functionality, uncomment here.
-  config.bundler = true
+  # config.bundler = false
 
   # An array of Bundler groups to avoid including in the war file.
   # Defaults to ["development", "test"].
-  config.bundle_without = ["development", "test"]
+  # config.bundle_without = []
 
   # Files for WEB-INF directory (next to web.xml). This contains
   # web.xml by default. If there is an .erb-File it will be processed
@@ -80,7 +80,7 @@ Warbler::Config.new do |config|
   # Array of regular expressions matching relative paths in gems to be
   # excluded from the war. Defaults to empty, but you can set it like
   # below, which excludes test files.
-  # config.gem_excludes = [/^(test|spec)\//]
+  config.gem_excludes = [/^(test|spec)\//]
 
   # Files to be included in the root of the webapp.  Note that files in public
   # will have the leading 'public/' part of the path stripped during staging.
@@ -94,7 +94,7 @@ Warbler::Config.new do |config|
 
   # Name of the war file (without the .war) -- defaults to the basename
   # of RAILS_ROOT
-  config.war_name = "noah"
+  # config.war_name = "mywar"
 
   # Name of the MANIFEST.MF template for the war file. Defaults to a simple
   # MANIFEST.MF that contains the version of Warbler used to create the war file.
@@ -104,12 +104,12 @@ Warbler::Config.new do |config|
   # files will be compiled. Default is to compile all \.rb files in
   # the application.
   # config.compiled_ruby_files = FileList['app/**/*.rb']
-
+  config.compiled_ruby_files = FileList['lib/**/*.rb', 'noah.rb']
   # Value of RAILS_ENV for the webapp -- default as shown below
-  config.webxml.rails.env = ENV['RAILS_ENV'] || 'development'
+  config.webxml.rails.env = ENV['RAILS_ENV'] || 'production'
 
   # Application booter to use, one of :rack, :rails, or :merb (autodetected by default)
-  # config.webxml.booter = :rails
+  config.webxml.booter = :rack
 
   # When using the :rack booter, "Rackup" script to use.
   # - For 'rackup.path', the value points to the location of the rackup
@@ -121,7 +121,7 @@ Warbler::Config.new do |config|
   # The script is evaluated in a Rack::Builder to load the application.
   # Examples:
   #config.webxml.rackup.path = 'WEB-INF/config.ru'
-  # config.webxml.rackup = %{require './lib/demo'; run Rack::Adapter::Camping.new(Demo)}
+  config.webxml.rackup = %{require './noah'; run NoahApp}
   # config.webxml.rackup = require 'cgi' && CGI::escapeHTML(File.read("config.ru"))
 
   # Control the pool of Rails runtimes. Leaving unspecified means
