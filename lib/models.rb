@@ -23,7 +23,8 @@ class Host < Ohm::Model
   def to_hash
     arr = []
     services.sort.each {|s| arr << s.to_hash}
-    super.merge(:name => name, :status => status, :updated_at => updated_at, :services => arr)
+    h = {:name => name, :status => status, :created_at => created_at, :updated_at => updated_at, :services => arr}
+    super.merge(h)
   end
 
   def is_new?

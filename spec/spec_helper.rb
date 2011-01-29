@@ -19,6 +19,7 @@ RSpec.configure do |config|
   config.formatter = "documentation"
   config.before(:each, :reset_redis => true) { Ohm::redis.flushdb }
   config.after(:each, :reset_redis => true) {Ohm::redis.flushdb }
+  config.after(:all, :populate_sample_data => true) {Ohm::redis.flushdb }
   config.before(:all, :populate_sample_data => true) do
     Ohm::redis.flushdb
     h = Host.create(:name => 'localhost', :status => "up")
@@ -71,3 +72,10 @@ end
 def app
   NoahApp
 end
+
+RSpec::Matchers.define :return_json do |attribute|
+  match do |last_response|
+    last_response.headers["Content-Type"].should == "application/json"
+    response = JSON.parse(last_response.body)
+  end
+end  
