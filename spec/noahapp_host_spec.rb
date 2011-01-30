@@ -95,29 +95,28 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
     end
 
     describe "DELETE" do
+      before(:all) do
+        @h = Host.create(:name => 'h', :status => 'up')
+        sparms = {:name => 's', :status => "up"}
+        @h.services << Service.create(sparms.merge({:host => @h}))
+        @h.save
+        @s = @h.services.first
+      end  
       it "existing host should work" do
-        h = Host.find(:name => "localhost").first
-        svc_size = h.services.size
-        host_data = {:name => "localhost"}
-        delete '/h/localhost', host_data, "CONTENT_TYPE" => "application/json"
+        svc_size = @h.services.size
+        delete "/h/#{@h.name}"
         last_response.should be_ok
         response = last_response.should return_json
 
         response["result"].should == "success"
-        response["id"].should == h.id
-        response["name"].should == "localhost"
+        response["id"].should == @h.id
+        response["name"].should == @h.name
         response["service_count"].should == svc_size.to_s
       end
 
       it "invalid host should not work" do
-        host_data = {:name => "invalid_host.asdf.com"}
-        delete '/h/invalid_host.asdf.com', host_data, "CONTENT_TYPE" => "application/json"
-        last_response.should_not be_ok
-        last_response.status.should == 404
-        response = last_response.should return_json
-
-        response["result"].should == "failure"
-        response["error_message"].should == "Resource not found"
+        delete "/h/#{@h.name}"
+        last_response.should be_missing
       end
     end
 

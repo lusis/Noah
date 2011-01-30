@@ -295,9 +295,9 @@ class NoahApp < Sinatra::Base
       data = JSON.parse(request.body.read)
       data.keys.sort == required_params.sort  ? (config.format = data["format"]; config.body = data["body"]) : (raise "Missing Parameters")
       if config.valid?
+        config.save
         action = config.is_new? ? "create" : "update"
         dependency_action = app.is_new? ? "created" : "updated"
-        config.save
         r = {"result" => "success","id" => "#{config.id}", "action" => action, "dependencies" => dependency_action, "application" => app.name, "item" => config.name}
         r.to_json
       else

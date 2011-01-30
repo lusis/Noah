@@ -73,9 +73,23 @@ def app
   NoahApp
 end
 
-RSpec::Matchers.define :return_json do |attribute|
+RSpec::Matchers.define :return_json do
   match do |last_response|
     last_response.headers["Content-Type"].should == "application/json"
     response = JSON.parse(last_response.body)
+  end
+
+  failure_message_for_should do
+    "Response was not valid JSON"
+  end  
+end
+
+RSpec::Matchers.define :be_missing do
+  match do |last_response|
+    last_response.headers["Content-Type"].should == "application/json"
+    last_response.status.should == 404
+    response = JSON.parse(last_response.body)
+    response["result"].should == "failure"
+    response["error_message"].should == "Resource not found"
   end
 end  

@@ -52,15 +52,70 @@ describe "Using the Configuration API", :reset_redis => false, :populate_sample_
     end
 
     describe "PUT" do
-      it "new configuration should work"
-      it "existing configuration should work"
-      it "new configuration with missing format should not work"
-      it "new configuration with missing body should not work"
+      it "new configuration should work" do
+        config_data = {:format => "string", :body => "sample_config_entry"}.to_json
+        put '/c/newapp/newconfig', config_data, "CONTENT_TYPE" => "application/json"
+        last_response.should be_ok
+        response = last_response.should return_json
+        response["result"].should == "success"
+        response["action"].should == "create"
+        response["dependencies"].should == "created"
+        response["application"].should == "newapp"
+        response["item"].should == "newconfig"
+      end
+      it "existing configuration should work" do
+        config_data = {:format => "string", :body => "sample_config_entry"}.to_json
+        sleep 3
+        put '/c/newapp/newconfig', config_data, "CONTENT_TYPE" => "application/json"
+        last_response.should be_ok
+        response = last_response.should return_json
+        response["result"].should == "success"
+        response["action"].should == "update"
+        response["dependencies"].should == "updated"
+        response["application"].should == "newapp"
+        response["item"].should == "newconfig"
+      end
+      it "new configuration with missing format should not work" do
+        config_data = {:body => "a string"}.to_json
+        put '/c/newnewapp/someconfig', config_data, "CONTENT_TYPE" => "application/json"
+        last_response.should_not be_ok
+        response = last_response.should return_json
+        response["result"].should == "failure"
+        response["error_message"].should == "Missing Parameters"
+      end
+      it "new configuration with missing body should not work" do
+        config_data = {:body => "a string"}.to_json
+        put '/c/newnewapp/someconfig', config_data, "CONTENT_TYPE" => "application/json"
+        last_response.should_not be_ok
+        response = last_response.should return_json
+        response["result"].should == "failure"
+        response["error_message"].should == "Missing Parameters"
+      end  
     end
 
     describe "DELETE" do
-      it "existing configuration should work"
-      it "invalid configuration should not work"
+      before(:all) do
+        cparms = {:name => 'a', :format => 'string', :body => 'asdf'}
+        @a = Application.create(:name => 'delete_test_app')
+        @a.configurations << Configuration.create(cparms)
+        @a.save
+        @c = @a.configurations.first
+      end
+
+      it "existing configuration should work" do
+        delete "/c/#{@a.name}/#{@c.name}"
+        last_response.should be_ok
+        response = last_response.should return_json
+        response["result"].should == "success"
+        response["id"].should == @c.id
+        response["action"].should == "delete"
+        response["application"].should == @a.name
+        response["item"].should == @c.name
+      end
+      it "invalid configuration should not work" do
+        delete "/c/#{@a.name}/#{@c.name}"
+        last_response.should be_missing
+      end
     end
 
   end
