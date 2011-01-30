@@ -39,15 +39,11 @@ describe "Using the Configuration API", :reset_redis => false, :populate_sample_
       end
       it "invalid application should not work" do
         get '/c/badapp'
-        last_response.should_not be_ok
-        last_response.status.should == 404
-        response = last_response.should return_json
+        last_response.should be_missing
       end  
       it "invalid configuration for application should not work" do
         get '/c/badapp/badconfig'
-        last_response.should_not be_ok
-        last_response.status.should == 404
-        response = last_response.should return_json
+        last_response.should be_missing
       end  
     end
 
@@ -78,18 +74,12 @@ describe "Using the Configuration API", :reset_redis => false, :populate_sample_
       it "new configuration with missing format should not work" do
         config_data = {:body => "a string"}.to_json
         put '/c/newnewapp/someconfig', config_data, "CONTENT_TYPE" => "application/json"
-        last_response.should_not be_ok
-        response = last_response.should return_json
-        response["result"].should == "failure"
-        response["error_message"].should == "Missing Parameters"
+        last_response.should be_invalid
       end
       it "new configuration with missing body should not work" do
         config_data = {:body => "a string"}.to_json
         put '/c/newnewapp/someconfig', config_data, "CONTENT_TYPE" => "application/json"
-        last_response.should_not be_ok
-        response = last_response.should return_json
-        response["result"].should == "failure"
-        response["error_message"].should == "Missing Parameters"
+        last_response.should be_invalid
       end  
     end
 

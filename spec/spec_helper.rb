@@ -92,4 +92,13 @@ RSpec::Matchers.define :be_missing do
     response["result"].should == "failure"
     response["error_message"].should == "Resource not found"
   end
+end
+
+RSpec::Matchers.define :be_invalid do
+  match do |last_response|
+    last_response.headers["Content-Type"].should == "application/json"
+    response = JSON.parse(last_response.body)
+    response["result"].should == "failure"
+    response["error_message"].should == "Missing Parameters"
+  end
 end  

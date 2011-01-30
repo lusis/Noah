@@ -66,21 +66,13 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
       it "host missing name parameter should not work" do
         host_data = {:status => "pending"}.to_json
         put '/h/host100.domain.com', host_data, "CONTENT_TYPE" => "application/json"
-        last_response.should_not be_ok
-        response = last_response.should return_json
-
-        response["result"].should == "failure"
-        response["error_message"].should == "Missing Parameters"
+        last_response.should be_invalid
       end
 
       it "host missing status parameter should not work" do
         host_data = {:name => "host100.domain.com"}.to_json
         put '/h/host100.domain.com', host_data, "CONTENT_TYPE" => "application/json"
-        last_response.should_not be_ok
-        response = last_response.should return_json
-
-        response["result"].should == "failure"
-        response["error_message"].should == "Missing Parameters"
+        last_response.should be_invalid
       end 
 
       it "host with invalid status parameter should not work" do
