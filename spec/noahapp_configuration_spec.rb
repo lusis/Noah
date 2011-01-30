@@ -4,12 +4,51 @@ describe "Using the Configuration API", :reset_redis => false, :populate_sample_
   describe "calling" do
 
     describe "GET" do
-      it "all configurations should work"
-      it "named application should work"
-      it "named configuration for application should work"
-      it "named configuration should work with mime-type"
-      it "invalid application should not work"
-      it "invalid configuration for application should not work"
+      it "all configurations should work" do
+        get '/c'
+        last_response.should be_ok
+        last_response.should return_json
+      end
+      it "named application should work" do
+        get '/c/noah'
+        last_response.should be_ok
+        response = last_response.should return_json
+
+        response.is_a?(Array).should == true
+        response.first["name"].should == "redis"
+        response.first["format"].should == "string"
+        response.first["body"].should == "redis://127.0.0.1:6379/0"
+        response.first["application"].should == "noah"
+      end
+      it "named configuration for application should work" do
+        get '/c/noah/redis'
+        last_response.should be_ok
+        response = last_response.body
+        response.should == "redis://127.0.0.1:6379/0"
+      end
+      it "named configuration should work with mime-type" do
+        require 'yaml'
+        get '/c/myrailsapp1/database.yml'
+        last_response.should be_ok
+        last_response.headers["Content-Type"].should == "text/x-yaml;charset=utf-8"
+        response = YAML.load(last_response.body)
+        response.is_a?(Hash).should == true
+        response.keys.should == ["development"]
+        response["development"].keys.should == ["database", "adapter", "username", "password"]
+        response["development"].values.should == ["development_database", "mysql", "dev_user", "dev_password"]
+      end
+      it "invalid application should not work" do
+        get '/c/badapp'
+        last_response.should_not be_ok
+        last_response.status.should == 404
+        response = last_response.should return_json
+      end  
+      it "invalid configuration for application should not work" do
+        get '/c/badapp/badconfig'
+        last_response.should_not be_ok
+        last_response.status.should == 404
+        response = last_response.should return_json
+      end  
     end
 
     describe "PUT" do

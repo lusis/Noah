@@ -10,6 +10,9 @@ group :development do
   gem "rspec", "= 2.4.0"
   gem "rcov", "= 0.9.9"
   gem "rack-test", "= 0.5.7", :require => "rack/test"
+  gem "ZenTest", "= 4.4.2"
+  gem "autotest", "= 4.4.6"
+  gem "autotest-growl", "= 0.2.9", :require => "autotest/growl"
 end
 platforms :mri do
   gem "yajl-ruby", "= 0.7.9", :require => "yajl"

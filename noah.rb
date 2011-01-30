@@ -252,7 +252,8 @@ class NoahApp < Sinatra::Base
     content_type_mapping = {
               :yaml => "text/x-yaml",
               :json => "application/json",
-              :xml => "text/xml"
+              :xml => "text/xml",
+              :string => "text/plain"
     }
 
     get '/:appname/:element/?' do |appname, element|
