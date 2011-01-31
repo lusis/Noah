@@ -91,10 +91,10 @@ class NoahApp < Sinatra::Base
       end
     end
 
-    put '/:hostname/?' do
+    put '/:hostname/?' do |hostname|
       required_params = ["name", "status"]
       data = JSON.parse(request.body.read)
-      data.keys.sort == required_params.sort  ? (host = Host.find_or_create(:name => data['name'], :status => data['status'])) : (raise "Missing Parameters")
+      (data.keys.sort == required_params.sort && data['name'] == hostname) ? (host = Host.find_or_create(:name => data['name'], :status => data['status'])) : (raise "Missing Parameters")
       if host.valid?
         r = {"result" => "success","id" => "#{host.id}","status" => "#{host.status}", "name" => "#{host.name}", "new_record" => host.is_new?}
         r.to_json
@@ -149,15 +149,15 @@ class NoahApp < Sinatra::Base
     end
 
     put '/:servicename/?' do |servicename|
-      # message format: {"status":"initial_status", "host":"hostname"}
       required_params = ["status", "host", "name"]
       data = JSON.parse(request.body.read)
       if data.keys.sort == required_params.sort
         h = Host.find(:name => data['host']).first || (raise "Invalid Host")
-        service = Service.create(:name => servicename, :status => data['status'], :host => h)
+        service = Service.find_or_create(:name => servicename, :status => data['status'], :host => h)
         if service.valid?
+          action = service.is_new? ? "create" : "update"
           service.save
-          r = {"action" => "add", "result" => "success", "id" => service.id, "host" => h.name, "name" => service.name}
+          r = {"action" => action, "result" => "success", "id" => service.id, "host" => h.name, "name" => service.name}
           r.to_json
         else
           raise "#{service.errors}"
@@ -208,7 +208,7 @@ class NoahApp < Sinatra::Base
       if data.keys.sort == required_params.sort && data['name'] == appname
         app = Application.find_or_create(:name => appname)
       else
-        raise "Missing or invalid parameters"
+        raise "Missing Parameters"
       end  
       if app.valid?
         action = app.is_new? ? "create" : "update"
@@ -228,7 +228,7 @@ class NoahApp < Sinatra::Base
         configurations = []
         Configuration.find(:application_id => app.id).sort.each {|x| configurations << x; x.delete} if app.configurations.size > 0
         app.delete
-        r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{app.name}", "configurations" => "#{configurations.size}"}
+        r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{appname}", "configurations" => "#{configurations.size}"}
         r.to_json
       end
     end
