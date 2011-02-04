@@ -1,0 +1,6 @@
+logfile: logs/noah.log
+loglevel: DEBUG
+mode: development
+production: "redis://localhost:6379/0"
+development: "redis://localhost:6379/1"
+test: "redis://localhost:6379/2"

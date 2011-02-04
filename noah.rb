@@ -20,8 +20,14 @@ class NoahApp < Sinatra::Base
   helpers Sinatra::NoahHelpers
   config_file = YAML::load File.new(File.join(File.dirname(__FILE__),'config','db.yml')).read
   db = config_file["#{environment}"]
-  Ohm.connect(:url => "redis://#{db["host"]}:#{db["port"]}/#{db["db"]}")
-
+  begin
+    Ohm.connect(:url => "redis://#{db["host"]}:#{db["port"]}/#{db["db"]}")
+    Ohm.redis.ping
+  rescue Errno::ECONNREFUSED => e
+    puts "Unable to connect to Redis. Shutting down...."
+    puts e.message
+    exit 1
+  end  
   configure do
     set :app_file, __FILE__
     set :root, File.dirname(__FILE__)
@@ -30,6 +36,9 @@ class NoahApp < Sinatra::Base
     set :logging, true
     set :raise_errors, false
     set :show_exceptions, false
+    log = File.new("logs/noah.log", "a")
+    STDOUT.reopen(log)
+    STDERR.reopen(log)
   end
   configure(:development) do
     require 'sinatra/reloader'
