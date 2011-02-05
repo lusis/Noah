@@ -1,5 +1,5 @@
 module Noah
-  module Helpers
+  module SinatraHelpers
 
     def host(opts = {})
       Noah::Models::Host.find(opts).first
@@ -51,5 +51,5 @@ module Noah
       Configurations.all(opts)
     end
   end
-  helpers NoahHelpers
+
 end    

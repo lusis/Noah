@@ -21,4 +21,5 @@ platforms :jruby do
   gem "json-jruby", "= 1.4.6", :require => "json"
   gem "warbler", "= 1.2.1"
   gem "jruby-openssl", "= 0.7.3"
+  gem "rack-jetty", "= 0.2.0"
 end

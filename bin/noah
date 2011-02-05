@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
-require File.join(File.dirname(__FILE__), './../noah')
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
+require 'noah/cli'
 
-NoahApp.run!
+n = Noah::CLI.new
+n.parse_options
+#NoahApp.run!
