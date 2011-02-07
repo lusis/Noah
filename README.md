@@ -134,11 +134,11 @@ Most other combinations of endpoints work as well:
 	}
 
 # Adding new entries
-I've not yet flushed out all the put support for each route yet. I've been doing additions via `irb` for now:
+There are two ways to add new objects: via irb and via the [API](https://github.com/lusis/Noah/wiki/Stabilize-API) on a running instance. The API is still in a state of flux.
 
 ## Adding a new application and configuration item
 
-	irb -r ./irbstub.rb
+	irb -rohm -rohm/contrib -r./lib/noah/models.rb
 
 	a1 = Application.create(:name => 'myapplication')
 	if a1.save
