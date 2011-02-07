@@ -11,6 +11,23 @@ require 'rake'
 require 'rspec/core'
 require 'rspec/core/rake_task'
 
+require 'jeweler'
+Jeweler::Tasks.new do |gem|
+  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+  gem.name = "noah"
+  gem.homepage = "http://github.com/lusis/noah"
+  gem.license = "Apache 2.0"
+  gem.summary = %Q{Lightweight registry based on Apache Zookeeper}
+  gem.description = %Q{Lightweight registry based on Apache Zookeeper}
+  gem.email = "lusis.org+rubygems.org@gmail.com"
+  gem.authors = ["lusis"]
+  # Include your dependencies below. Runtime dependencies are required when using your gem,
+  # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
+  #  gem.add_runtime_dependency 'jabber4r', '> 0.1'
+  #  gem.add_development_dependency 'rspec', '> 1.2.3'
+end
+Jeweler::RubygemsDotOrgTasks.new
+
 desc "Populate database with sample dataset"
 task :sample, :redis_url do |t, args|
   require 'ohm'

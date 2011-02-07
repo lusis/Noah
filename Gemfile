@@ -7,6 +7,7 @@ gem "haml", "= 3.0.25"
 gem "rake", "= 0.8.7"
 gem "vegas", "= 0.1.8"
 group :development do
+  gem "jeweler", "= 1.5.2"
   gem "sinatra-reloader", "= 0.5.0"
   gem "rspec", "= 2.4.0"
   gem "rcov", "= 0.9.9"

@@ -2,3 +2,4 @@
 *.swp
 coverage.data
 .idea
+.gem
