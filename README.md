@@ -30,7 +30,7 @@ Edit config.ru to change the redis instance or rack environment.
 ### bin/noah
 The binary script in bin was created using [Vegas](https://github.com/quirkey/vegas). It accepts the familiar rack options as well as an option for specifying the redis url.
 
-	bin/noah -p 9292 -s thin -d -F -e production -r redis://localhost:9292/2
+	bin/noah -p 9292 -s thin -d -F -e production -r redis://localhost:6379/2
 	[2011-02-07 16:48:15 -0500] Starting 'noah'...
 	[2011-02-07 16:48:15 -0500] trying port 9292...
 	Couldn't get a file descriptor referring to the console
