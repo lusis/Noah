@@ -2,11 +2,13 @@
 (make sure redis is running)
 
 ## Setup
-Edit `config/db.yml` if you want to point to a different db on your local redis install.
+There is no specific configuration file in use anymore. Everything is configured via command-line options to the noah binary or stored in config.ru.
 
-   * `RACK_ENV` is honored. production listens on 9291, development 9292, test 9293.
-   * `rake sample` populates the development database
-   * `rake spec` populates the test database
+   * The instance of Redis is configured via the `REDIS_URL` env setting. This is honored by Ohm.
+   * Redis DSN strings are in the format of "redis://hostname:port/db"
+   * `RACK_ENV` is honored.
+   * `rake sample["redis://localhost:6379/2"]` populates the locally running redis instance - db 2
+   * `rake spec` runs the test suite (using 'redis://localhost:6379/3' for storing test data)
 
 _rake sample_
 
@@ -20,12 +22,24 @@ _rake sample_
 	Setup successful!
 
 ## Run it
-_rackup config.ru_ or _ruby noah.rb_
+There are two way to run Noah
 
-    == Sinatra/1.1.2 has taken the stage on 9292 for development with backup from Thin
-    Thin web server (v1.2.7 codename No Hup)
-    Maximum connections set to 1024
-    Listening on 0.0.0.0:9292, CTRL+C to stop
+### config.ru
+Edit config.ru to change the redis instance or rack environment.
+
+### bin/noah
+The binary script in bin was created using [Vegas](https://github.com/quirkey/vegas). It accepts the familiar rack options as well as an option for specifying the redis url.
+
+	bin/noah -p 9292 -s thin -d -F -e production -r redis://localhost:9292/2
+	[2011-02-07 16:48:15 -0500] Starting 'noah'...
+	[2011-02-07 16:48:15 -0500] trying port 9292...
+	Couldn't get a file descriptor referring to the console
+	[2011-02-07 16:48:15 -0500] Running with Rack handler: Rack::Handler::Thin
+	>> Thin web server (v1.2.7 codename No Hup)
+	>> Maximum connections set to 1024
+	>> Listening on 0.0.0.0:9292, CTRL+C to stop
+
+If you leave off `-F`, all information will be logged to `$HOME/.vegas/noah`. Run `bin/noah -h` for more options.
 
 ## Example links
 [Noah Start Page](http://localhost:9292/)
