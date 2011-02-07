@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
-require 'noah/cli'
+require 'noah'
+require 'vegas'
 
-n = Noah::CLI.new
-n.parse_options
-#NoahApp.run!
+Vegas::Runner.new(Noah::App, 'noah') do |runner, opts, app|
+  opts.on("-r", "--redis URL", "redis url to connect to (default: redis://localhost:6379/0)") {|r| ENV["REDIS_URL"] = r }
+end

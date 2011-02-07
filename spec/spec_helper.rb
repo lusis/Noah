@@ -4,13 +4,14 @@ begin
   require 'yajl'
 rescue LoadError
   require 'json'
-end  
+end
+
 ENV['RACK_ENV'] = 'test'
-config_file = YAML::load File.new(File.join(File.dirname(__FILE__), '..', 'config','db.yml')).read
-Ohm::connect(:url => "redis://#{config_file["test"]["host"]}:#{config_file["test"]["port"]}/#{config_file["test"]["db"]}")
+ENV['REDIS_URL'] = 'redis://localhost:6379/3'
+Ohm::connect
   
-require File.join(File.dirname(__FILE__), '..', 'lib', 'models')
-require File.join(File.dirname(__FILE__), '..', 'noah')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'noah')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'noah', 'app')
 require 'rspec'
 require 'rack/test'
 
@@ -70,7 +71,7 @@ EOJ
 end
 
 def app
-  NoahApp
+  Noah::App
 end
 
 RSpec::Matchers.define :return_json do

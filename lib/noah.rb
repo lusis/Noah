@@ -1,5 +1,3 @@
-require 'sinatra/base'
-require 'sinatra/namespace'
 require 'ohm'
 require 'ohm/contrib'
 begin
@@ -9,9 +7,12 @@ rescue LoadError
 end
 require 'haml'
 require 'yaml'
+require 'sinatra/base'
+require 'sinatra/namespace'
 
-require 'noah/config'
-require 'noah/helpers'
-require 'noah/models'
-
-require 'noah/app'
+require File.join(File.dirname(__FILE__), 'noah','hosts')
+require File.join(File.dirname(__FILE__), 'noah','services')
+require File.join(File.dirname(__FILE__), 'noah','applications')
+require File.join(File.dirname(__FILE__), 'noah','configurations')
+require File.join(File.dirname(__FILE__), 'noah','watchers')
+require File.join(File.dirname(__FILE__), 'noah','app')

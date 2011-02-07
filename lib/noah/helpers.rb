@@ -1,12 +1,14 @@
+require File.join(File.dirname(__FILE__), 'models')
 module Noah
   module SinatraHelpers
+  extend(Ohm)
 
     def host(opts = {})
-      Noah::Models::Host.find(opts).first
+     Host.find(opts).first
     end
 
     def hosts(opts = {})
-      Noah::Models::Hosts.all(opts)
+      Hosts.all(opts)
     end
 
     def service(opts = {})
@@ -52,4 +54,4 @@ module Noah
     end
   end
 
-end    
+end

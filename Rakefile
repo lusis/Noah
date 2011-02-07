@@ -12,17 +12,17 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 
 desc "Populate database with sample dataset"
-task :sample do |t|
+task :sample, :redis_url do |t, args|
   require 'ohm'
   begin
     require 'yajl'
   rescue LoadError
     require 'json'
   end
-  require File.join(File.dirname(__FILE__), 'lib','models')
+  require File.join(File.dirname(__FILE__), 'lib','noah')
 
-  config_file = YAML::load File.new(File.join(File.dirname(__FILE__),'config','db.yml')).read
-  Ohm::connect(:url => "redis://#{config_file["development"]["host"]}:#{config_file["development"]["port"]}/#{config_file["development"]["db"]}")
+  
+  Ohm::connect(:url => args.redis_url)
   Ohm::redis.flushdb 
   puts "Creating Host entry for 'localhost'"
   h = Host.create(:name => 'localhost', :status => "up")
