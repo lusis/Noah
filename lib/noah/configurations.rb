@@ -11,6 +11,8 @@ class Configuration < Ohm::Model
   reference :application, Application
 
   index :name
+  index :format
+  index :body
 
   def validate
     assert_present :name
