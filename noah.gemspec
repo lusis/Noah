@@ -19,17 +19,20 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.add_dependency("redis", ["= 2.2.1"])
+  s.add_dependency("nest", ["= 1.1.0"])
+  s.add_dependency("rack", ["= 1.2.1"])
   s.add_dependency("rake", ["= 0.8.7"])
+  s.add_dependency("tilt", ["= 1.2.1"])
   s.add_dependency("sinatra", ["= 1.1.2"])
   s.add_dependency("sinatra-namespace", ["0.6.1"])
   s.add_dependency("ohm", ["= 0.1.3"])
-  s.add_dependency("ohm-contrib", ["= 0.1.0"])
+  s.add_dependency("ohm-contrib", ["= 0.1.1"])
   s.add_dependency("haml", ["= 3.0.25"])
   s.add_dependency("vegas", ["= 0.1.8"])
   s.add_dependency("yajl-ruby", ["= 0.7.9"]) if s.platform.to_s == 'ruby'
-  s.add_dependency("jruby-json", ["= 1.5.0"]) if s.platform.to_s == 'jruby'
+  s.add_dependency("json", ["= 1.5.1"]) if s.platform.to_s == 'jruby'
   s.add_dependency("thin", ["= 1.2.7"]) if s.platform.to_s == 'ruby'
-  s.add_dependency("json-jruby", ["= 1.4.6"]) if s.platform.to_s == 'jruby'
   s.add_dependency("jruby-openssl", ["= 0.7.3"]) if s.platform.to_s == 'jruby'
 
   s.add_development_dependency("sinatra-reloader", ["= 0.5.0"])

@@ -1,4 +1,3 @@
-require 'bundler/setup'
 require 'ohm'
 begin
   require 'yajl'
