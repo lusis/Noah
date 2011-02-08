@@ -1,0 +1,5 @@
+require File.join(File.dirname(__FILE__),'hosts')
+require File.join(File.dirname(__FILE__),'services')
+require File.join(File.dirname(__FILE__),'applications')
+require File.join(File.dirname(__FILE__),'configurations')
+require File.join(File.dirname(__FILE__),'watchers')

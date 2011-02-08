@@ -1,2 +1,7 @@
 .rvmrc
 *.swp
+coverage.data
+.idea
+.gem
+pkg/*
+logs/*
