@@ -1,6 +1,9 @@
 # Noah testing quickstart
 (make sure redis is running)
 
+## Install
+You can either do `gem install noah` or `git clone git://github.com/lusis/Noah.git noah` and do the `bundle` dance.
+
 ## Setup
 There is no specific configuration file in use anymore. Everything is configured via command-line options to the noah binary or stored in config.ru.
 
