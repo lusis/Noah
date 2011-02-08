@@ -3,3 +3,5 @@
 coverage.data
 .idea
 .gem
+pkg/*
+logs/*

@@ -22,10 +22,14 @@ module Noah
     end
 
     configure(:development) do
-      require 'sinatra/reloader'
-      register Sinatra::Reloader
-      also_reload File.join(File.dirname(__FILE__), 'models.rb')
-      also_reload File.join(File.dirname(__FILE__), 'helpers.rb')
+      begin
+        require 'sinatra/reloader'
+        register Sinatra::Reloader
+        also_reload File.join(File.dirname(__FILE__), 'models.rb')
+        also_reload File.join(File.dirname(__FILE__), 'helpers.rb')
+      rescue LoadError
+        puts "sinatra-reloader gem missing. reloading disabled"
+      end
     end
 
     before do

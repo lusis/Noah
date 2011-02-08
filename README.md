@@ -41,6 +41,10 @@ The binary script in bin was created using [Vegas](https://github.com/quirkey/ve
 
 If you leave off `-F`, all information will be logged to `$HOME/.vegas/noah`. Run `bin/noah -h` for more options.
 
+Please note on JRuby that the port setting does not work for some f'cking reason. Bug claims to have been fixed. Until then, when on Jruby run like so:
+
+  noah -F -d -r redis://localhost:6379/0
+
 ## Example links
 [Noah Start Page](http://localhost:9292/)
 
