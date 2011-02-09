@@ -1,10 +1,12 @@
 require 'rubygems'
 require 'sinatra'
-require File.join(File.dirname(__FILE__), 'lib','noah')
-ENV['REDIS_URL'] = "redis://localhost:6379/0"
+require File.join('.', 'lib','noah')
+## Uncomment the following to hardcode a redis url
+#ENV['REDIS_URL'] = "redis://localhost:6379/0"
 noah = Noah::App.new do
   set :run, false
   set :environment, :production
-  set :server, %w[thin mongrel webrick Jetty Kirk]
+## Set your server list up here
+#  set :server, %w[thin mongrel webrick Jetty Kirk]
 end  
 run noah

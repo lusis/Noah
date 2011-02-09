@@ -8,3 +8,5 @@ logs/*
 *.class
 tmp/*
 *.war
+.bundle
+warbler/*

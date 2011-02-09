@@ -1,11 +1,11 @@
 require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
+#begin
+#  Bundler.setup(:default, :development)
+#rescue Bundler::BundlerError => e
+#  $stderr.puts e.message
+#  $stderr.puts "Run `bundle install` to install missing gems"
+#  exit e.status_code
+#end
 require 'rake'
 
 require 'rspec/core'
@@ -103,3 +103,4 @@ RSpec::Core::RakeTask.new(:coverage) do |t|
   t.verbose = true
   t.rcov_opts = %q[--aggregate coverage.data --sort coverage --text-report --exclude "config,.bundle/*,gems/*,spec/*" -o doc/coverage -Ilib -i "noah.rb"]
 end
+
