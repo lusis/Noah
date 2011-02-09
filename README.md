@@ -2,7 +2,7 @@
 (make sure redis is running)
 
 ## Install
-You can either do `gem install noah` or `git clone git://github.com/lusis/Noah.git noah` and do the `bundle` dance.
+You can either do `gem install noah`, `git clone git://github.com/lusis/Noah.git noah` and do the `bundle` dance or download `noah.war` from the downloads link.
 
 ## Setup
 There is no specific configuration file in use anymore. Everything is configured via command-line options to the noah binary or stored in config.ru.
@@ -25,7 +25,22 @@ _rake sample_
 	Setup successful!
 
 ## Run it
-There are two way to run Noah
+There are three (well four)  ways to run Noah
+
+### downloaded war file
+You can either deploy the war file to an existing container (tomcat and Jetty6 tested) or run it in standalone mode using the embedded winstone server.
+
+Please note that you'll need to set the environment variable `REDIS_URL` if you want to point to any Redis server OTHER than localhost:6379/0.
+
+#### Using winstone
+
+	export REDIS_URL=redis://hostname:port/dbnumber
+	java -server [-d64] -jar noah.war [-httpPort=<portnumber>] [--prefix=<different context root>]
+
+_Winstone doesn't do ANY error checking on options passed to it. Please check carefully that you're using `--var=value` after the war file name._
+
+#### Deploying to a container
+Just copy noah.war to your webapps folder. It will be served from `/noah` unless you rename it to ROOT.war or create a context file (under Jetty)
 
 ### config.ru
 Edit config.ru to change the redis instance or rack environment.
