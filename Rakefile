@@ -104,3 +104,31 @@ RSpec::Core::RakeTask.new(:coverage) do |t|
   t.rcov_opts = %q[--aggregate coverage.data --sort coverage --text-report --exclude "config,.bundle/*,gems/*,spec/*" -o doc/coverage -Ilib -i "noah.rb"]
 end
 
+if RUBY_ENGINE == 'jruby'
+  require 'warbler'
+  wt = Warbler::Task.new
+  task :default => wt.name
+
+  desc "Generate a configuration file to customize your archive"
+  task :config => "#{wt.name}:config"
+
+  desc "Install Warbler tasks in your Rails application"
+  task :pluginize => "#{wt.name}:pluginize"
+
+  desc "Feature: package gem repository inside a jar"
+  task :gemjar => "#{wt.name}:gemjar"
+
+  desc "Feature: make an executable archive"
+  task :executable => "#{wt.name}:executable"
+
+  desc "Feature: precompile all Ruby files"
+  task :compiled => "#{wt.name}:compiled"
+
+  desc "Display version of Warbler"
+  task :version => "#{wt.name}:version"
+
+  desc "Demo environment"
+  task :start_demo do
+    puts "Soon, young padawan"
+  end
+end
