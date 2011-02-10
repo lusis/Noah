@@ -16,3 +16,9 @@ class Watcher < Ohm::Model #NYI
     assert_unique [:client, :endpoint, :event, :action]
   end
 end
+
+class Watchers
+  def self.all(options = {})
+    options.empty? ? Watcher.all.sort : Watcher.find(options).sort
+  end
+end

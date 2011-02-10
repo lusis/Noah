@@ -52,6 +52,14 @@ module Noah
       erb :'500'
     end
 
+    # Placeholder for admin functions
+    namespace "/ark" do
+    end
+
+    # Placeholder for watchers
+    namespace "/w" do
+    end
+
     namespace "/h" do
 
       get '/:hostname/:servicename/?' do |hostname, servicename|
