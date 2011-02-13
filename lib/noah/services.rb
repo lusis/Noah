@@ -11,6 +11,9 @@ class Service < Ohm::Model
   index :name
   index :status
 
+  after :create, :notify_via_redis
+  after :update, :notify_via_redis
+
   def validate
     assert_present :name
     assert_present :status
@@ -47,6 +50,12 @@ class Service < Ohm::Model
       e.message
     end
   end
+  end
+
+  protected
+  def notify_via_redis
+    msg = self.to_hash.merge({:class => self.class})
+    Ohm.redis.publish(:noah, msg.to_json)
   end
 end
 

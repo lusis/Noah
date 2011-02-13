@@ -14,6 +14,9 @@ class Configuration < Ohm::Model
   index :format
   index :body
 
+  after :create, :notify_via_redis
+  after :update, :notify_via_redis
+
   def validate
     assert_present :name
     assert_present :format
@@ -41,6 +44,12 @@ class Configuration < Ohm::Model
       e.message
     end
   end
+  end
+
+  protected
+  def notify_via_redis
+    msg = self.to_hash.merge({:class => self.class})
+    Ohm.redis.publish(:noah, msg.to_json)
   end
 end
 
