@@ -11,10 +11,14 @@ class Service < Ohm::Model
   index :name
   index :status
 
-  after :create, :notify_via_redis
-  after :update, :notify_via_redis
+  after :save, :notify_via_redis_save
+  after :create, :notify_via_redis_create
+  after :update, :notify_via_redis_update
+  before :delete, :stash_name
+  after :delete, :notify_via_redis_delete
 
   def validate
+    super
     assert_present :name
     assert_present :status
     assert_present :host_id
@@ -23,7 +27,8 @@ class Service < Ohm::Model
   end
 
   def to_hash
-    super.merge(:name => name, :status => status, :updated_at => updated_at, :host => Host[host_id].name)
+    Host[host_id].nil? ? host_name=nil : host_name=Host[host_id].name
+    super.merge(:name => name, :status => status, :updated_at => updated_at, :host => host_name)
   end
 
   def is_new?
@@ -53,9 +58,18 @@ class Service < Ohm::Model
   end
 
   protected
-  def notify_via_redis
-    msg = self.to_hash.merge({:class => self.class})
-    Ohm.redis.publish(:noah, msg.to_json)
+  def stash_name
+    @deleted_name = self.name
+  end
+
+  ["save", "create", "update", "delete"].each do |meth|
+    class_eval do
+      define_method("notify_via_redis_#{meth}".to_sym) do
+        self.name.nil? ? name=@deleted_name : name=self.name
+        pub_category = "noah.#{self.class.to_s}[name].#{meth}"
+        Ohm.redis.publish(pub_category, self.to_json)
+      end
+    end
   end
 end
 

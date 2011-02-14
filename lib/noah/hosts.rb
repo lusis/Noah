@@ -11,10 +11,14 @@ class Host < Ohm::Model
   index :name
   index :status
 
-  after :create, :notify_via_redis
-  after :update, :notify_via_redis
+  after :save, :notify_via_redis_save
+  after :create, :notify_via_redis_create
+  after :update, :notify_via_redis_update
+  before :delete, :stash_name
+  after :delete, :notify_via_redis_delete
 
   def validate
+    super
     assert_present :name
     assert_present :status
     assert_unique :name
@@ -50,9 +54,18 @@ class Host < Ohm::Model
   end
 
   protected
-  def notify_via_redis
-    msg = self.to_hash.merge({:class => self.class})
-    Ohm.redis.publish(:noah, msg.to_json)
+  def stash_name
+    @deleted_name = self.name
+  end
+
+  ["save", "create", "update", "delete"].each do |meth|
+    class_eval do
+      define_method("notify_via_redis_#{meth}".to_sym) do
+        self.name.nil? ? name=@delete_name : name=self.name
+        pub_category = "noah.#{self.class.to_s}[#{name}].#{meth}"
+        Ohm.redis.publish(pub_category, self.to_json)
+      end
+    end
   end
 end
 

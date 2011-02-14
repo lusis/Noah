@@ -9,10 +9,14 @@ class Application < Ohm::Model
 
   index :name
 
-  after :create, :notify_via_redis
-  after :update, :notify_via_redis
+  after :save, :notify_via_redis_save
+  after :create, :notify_via_redis_create
+  after :update, :notify_via_redis_update
+  before :delete, :stash_name
+  after :delete, :notify_via_redis_delete
 
   def validate
+    super
     assert_present :name
     assert_unique :name
   end
@@ -20,7 +24,7 @@ class Application < Ohm::Model
   def to_hash
     arr = []
     configurations.sort.each {|c| arr << c.to_hash}
-    super.merge(:name => name, :updated_at => updated_at, :configurations => arr)
+    super.merge(:name => name, :created_at => created_at, :updated_at => updated_at, :configurations => arr)
   end
 
   def is_new?
@@ -42,9 +46,17 @@ class Application < Ohm::Model
   end
 
   protected
-  def notify_via_redis
-    msg = self.to_hash.merge({:class => self.class})
-    Ohm.redis.publish(:noah, msg.to_json)
+  def stash_name
+    @deleted_name = self.name
+  end
+
+  ["save", "create", "update", "delete"].each do |meth|
+    class_eval do
+      define_method("notify_via_redis_#{meth}".to_sym) do
+        pub_category = "noah.#{self.class.to_s}[#{self.name ||= @deleted_name}].#{meth}"
+        Ohm.redis.publish(pub_category, self.to_json)
+      end
+    end
   end
 end
 
