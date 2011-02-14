@@ -19,6 +19,7 @@ module Noah
       set :logging, true
       set :raise_errors, false
       set :show_exceptions, false
+      set :run, false
     end
 
     configure(:development) do

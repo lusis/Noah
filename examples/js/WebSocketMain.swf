@@ -1,0 +1,830 @@
+
+    
+
+  
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <title>examples/js/WebSocketMain.swf at master from igrigorik's em-websocket - GitHub</title>
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub" />
+    <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub" />
+
+    <link href="https://assets2.github.com/stylesheets/bundle_common.css?fcea8a71e43a6abea9b38ae62a9eeb7e84f5652a" media="screen" rel="stylesheet" type="text/css" />
+<link href="https://assets1.github.com/stylesheets/bundle_github.css?fcea8a71e43a6abea9b38ae62a9eeb7e84f5652a" media="screen" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+      if (typeof console == "undefined" || typeof console.log == "undefined")
+        console = { log: function() {} }
+    </script>
+    <script type="text/javascript" charset="utf-8">
+      var GitHub = {}
+      var github_user = null
+      
+    </script>
+    <script src="https://assets3.github.com/javascripts/jquery/jquery-1.4.2.min.js?fcea8a71e43a6abea9b38ae62a9eeb7e84f5652a" type="text/javascript"></script>
+    <script src="https://assets0.github.com/javascripts/bundle_common.js?fcea8a71e43a6abea9b38ae62a9eeb7e84f5652a" type="text/javascript"></script>
+<script src="https://assets0.github.com/javascripts/bundle_github.js?fcea8a71e43a6abea9b38ae62a9eeb7e84f5652a" type="text/javascript"></script>
+
+
+        <script type="text/javascript" charset="utf-8">
+      GitHub.spy({
+        repo: "igrigorik/em-websocket"
+      })
+    </script>
+
+    
+  
+    
+  
+
+  <link href="https://github.com/igrigorik/em-websocket/commits/master.atom" rel="alternate" title="Recent Commits to em-websocket:master" type="application/atom+xml" />
+
+        <meta name="description" content="EventMachine based WebSocket server" />
+    <script type="text/javascript">
+      GitHub.nameWithOwner = GitHub.nameWithOwner || "igrigorik/em-websocket";
+      GitHub.currentRef = 'master';
+      GitHub.commitSHA = "cdedd7bd5c43e25fd0b30236889bc131b5cbe495";
+      GitHub.currentPath = 'examples/js/WebSocketMain.swf';
+      GitHub.masterBranch = "master";
+
+      
+    </script>
+  
+
+            <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-3769691-2']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script');
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        ga.setAttribute('async', 'true');
+        document.documentElement.firstChild.appendChild(ga);
+      })();
+    </script>
+
+          <script type="text/javascript">
+      var mpq = [];
+      mpq.push(["init", "65fde2abd433eae3b32b38b7ebd2f37e"]);
+      (function() {
+      var mp = document.createElement("script"); mp.type = "text/javascript"; mp.async = true;
+      mp.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + "//api.mixpanel.com/site_media/js/api/mixpanel.js";
+      var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(mp, s);
+      })();
+      </script>
+
+  </head>
+
+  
+
+  <body class="logged_out page-blob">
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="subnavd" id="main">
+      <div id="header" class="true">
+        
+          <a class="logo boring" href="https://github.com">
+            <img src="/images/modules/header/logov3.png?changed" class="default" alt="github" />
+            <![if !IE]>
+            <img src="/images/modules/header/logov3-hover.png" class="hover" alt="github" />
+            <![endif]>
+          </a>
+        
+        
+        <div class="topsearch">
+  
+    <ul class="nav logged_out">
+      <li class="pricing"><a href="/plans">Pricing and Signup</a></li>
+      <li class="explore"><a href="/explore">Explore GitHub</a></li>
+      <li class="features"><a href="/features">Features</a></li>
+      <li class="blog"><a href="/blog">Blog</a></li>
+      <li class="login"><a href="/login?return_to=https://github.com/igrigorik/em-websocket/blob/master/examples/js/WebSocketMain.swf">Login</a></li>
+    </ul>
+  
+</div>
+
+      </div>
+
+      
+      
+        
+    <div class="site">
+      <div class="pagehead repohead vis-public   ">
+
+      
+
+      <div class="title-actions-bar">
+        <h1>
+          <a href="/igrigorik">igrigorik</a> / <strong><a href="https://github.com/igrigorik/em-websocket">em-websocket</a></strong>
+          
+          
+        </h1>
+
+        
+    <ul class="actions">
+      
+
+      
+        <li class="for-owner" style="display:none"><a href="https://github.com/igrigorik/em-websocket/admin" class="minibutton btn-admin "><span><span class="icon"></span>Admin</span></a></li>
+        <li>
+          <a href="/igrigorik/em-websocket/toggle_watch" class="minibutton btn-watch " id="watch_button" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var s = document.createElement('input'); s.setAttribute('type', 'hidden'); s.setAttribute('name', 'authenticity_token'); s.setAttribute('value', '7ee0ec2c300dda8607aa77a9bf60aa6ef031c060'); f.appendChild(s);f.submit();return false;" style="display:none"><span><span class="icon"></span>Watch</span></a>
+          <a href="/igrigorik/em-websocket/toggle_watch" class="minibutton btn-watch " id="unwatch_button" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var s = document.createElement('input'); s.setAttribute('type', 'hidden'); s.setAttribute('name', 'authenticity_token'); s.setAttribute('value', '7ee0ec2c300dda8607aa77a9bf60aa6ef031c060'); f.appendChild(s);f.submit();return false;" style="display:none"><span><span class="icon"></span>Unwatch</span></a>
+        </li>
+        
+          
+            <li class="for-notforked" style="display:none"><a href="/igrigorik/em-websocket/fork" class="minibutton btn-fork " id="fork_button" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var s = document.createElement('input'); s.setAttribute('type', 'hidden'); s.setAttribute('name', 'authenticity_token'); s.setAttribute('value', '7ee0ec2c300dda8607aa77a9bf60aa6ef031c060'); f.appendChild(s);f.submit();return false;"><span><span class="icon"></span>Fork</span></a></li>
+            <li class="for-hasfork" style="display:none"><a href="#" class="minibutton btn-fork " id="your_fork_button"><span><span class="icon"></span>Your Fork</span></a></li>
+          
+
+          
+        
+      
+      
+      <li class="repostats">
+        <ul class="repo-stats">
+          <li class="watchers"><a href="/igrigorik/em-websocket/watchers" title="Watchers" class="tooltipped downwards">365</a></li>
+          <li class="forks"><a href="/igrigorik/em-websocket/network" title="Forks" class="tooltipped downwards">20</a></li>
+        </ul>
+      </li>
+    </ul>
+
+      </div>
+
+        
+  <ul class="tabs">
+    <li><a href="https://github.com/igrigorik/em-websocket" class="selected" highlight="repo_source">Source</a></li>
+    <li><a href="https://github.com/igrigorik/em-websocket/commits/master" highlight="repo_commits">Commits</a></li>
+    <li><a href="/igrigorik/em-websocket/network" highlight="repo_network">Network</a></li>
+    <li><a href="/igrigorik/em-websocket/pulls" highlight="repo_pulls">Pull Requests (1)</a></li>
+
+    
+
+    
+      
+      <li><a href="/igrigorik/em-websocket/issues" highlight="issues">Issues (7)</a></li>
+    
+
+                <li><a href="/igrigorik/em-websocket/wiki" highlight="repo_wiki">Wiki (1)</a></li>
+        
+    <li><a href="/igrigorik/em-websocket/graphs" highlight="repo_graphs">Graphs</a></li>
+
+    <li class="contextswitch nochoices">
+      <span class="toggle leftwards" >
+        <em>Branch:</em>
+        <code>master</code>
+      </span>
+    </li>
+  </ul>
+
+  <div style="display:none" id="pl-description"><p><em class="placeholder">click here to add a description</em></p></div>
+  <div style="display:none" id="pl-homepage"><p><em class="placeholder">click here to add a homepage</em></p></div>
+
+  <div class="subnav-bar">
+  
+  <ul>
+    <li>
+      <a href="#" class="dropdown">Switch Branches (4)</a>
+      <ul>
+        
+          
+          
+            <li><a href="/igrigorik/em-websocket/blob/draft03/examples/js/WebSocketMain.swf" action="show">draft03</a></li>
+          
+        
+          
+            <li><strong>master &#x2713;</strong></li>
+            
+          
+          
+            <li><a href="/igrigorik/em-websocket/blob/onerror/examples/js/WebSocketMain.swf" action="show">onerror</a></li>
+          
+        
+          
+          
+            <li><a href="/igrigorik/em-websocket/blob/ruby19fixes/examples/js/WebSocketMain.swf" action="show">ruby19fixes</a></li>
+          
+        
+      </ul>
+    </li>
+    <li>
+      <a href="#" class="dropdown ">Switch Tags (2)</a>
+              <ul>
+                      
+              <li><a href="/igrigorik/em-websocket/blob/v0.2.0/examples/js/WebSocketMain.swf">v0.2.0</a></li>
+            
+                      
+              <li><a href="/igrigorik/em-websocket/blob/v0.1.4/examples/js/WebSocketMain.swf">v0.1.4</a></li>
+            
+                  </ul>
+      
+    </li>
+    <li>
+    
+    <a href="/igrigorik/em-websocket/branches" class="manage">Branch List</a>
+    
+    </li>
+  </ul>
+</div>
+
+  
+  
+  
+  
+  
+  
+
+
+
+        
+    <div class="frame frame-center tree-finder" style="display: none">
+      <div class="breadcrumb">
+        <b><a href="/igrigorik/em-websocket">em-websocket</a></b> /
+        <input class="tree-finder-input" type="text" name="query" autocomplete="off" spellcheck="false">
+      </div>
+
+      
+        <div class="octotip">
+          <p>
+            <a href="/igrigorik/em-websocket/dismiss-tree-finder-help" class="dismiss js-dismiss-tree-list-help" title="Hide this notice forever">Dismiss</a>
+            <strong>Octotip:</strong> You've activated the <em>file finder</em> by pressing <span class="kbd">t</span>
+            Start typing to filter the file list. Use <span class="kbd badmono">↑</span> and <span class="kbd badmono">↓</span> to navigate,
+            <span class="kbd">enter</span> to view files.
+          </p>
+        </div>
+      
+
+      <table class="tree-browser" cellpadding="0" cellspacing="0">
+        <tr class="js-header"><th>&nbsp;</th><th>name</th></tr>
+        <tr class="js-no-results no-results" style="display: none">
+          <th colspan="2">No matching files</th>
+        </tr>
+        <tbody class="js-results-list">
+        </tbody>
+      </table>
+    </div>
+
+    <div id="repo_details" class="metabox clearfix">
+      <div id="repo_details_loader" class="metabox-loader" style="display:none">Sending Request&hellip;</div>
+
+        <a href="/igrigorik/em-websocket/downloads" class="download-source" id="download_button" title="Download source, tagged packages and binaries."><span class="icon"></span>Downloads</a>
+
+      <div id="repository_desc_wrapper">
+      <div id="repository_description" rel="repository_description_edit">
+        
+          <p>EventMachine based WebSocket server
+            <span id="read_more" style="display:none">&mdash; <a href="#readme">Read more</a></span>
+          </p>
+        
+      </div>
+
+      <div id="repository_description_edit" style="display:none;" class="inline-edit">
+        <form action="/igrigorik/em-websocket/admin/update" method="post"><div style="margin:0;padding:0"><input name="authenticity_token" type="hidden" value="7ee0ec2c300dda8607aa77a9bf60aa6ef031c060" /></div>
+          <input type="hidden" name="field" value="repository_description">
+          <input type="text" class="textfield" name="value" value="EventMachine based WebSocket server">
+          <div class="form-actions">
+            <button class="minibutton"><span>Save</span></button> &nbsp; <a href="#" class="cancel">Cancel</a>
+          </div>
+        </form>
+      </div>
+
+      
+      <div class="repository-homepage" id="repository_homepage" rel="repository_homepage_edit">
+        <p><a href="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/" rel="nofollow">http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/</a></p>
+      </div>
+
+      <div id="repository_homepage_edit" style="display:none;" class="inline-edit">
+        <form action="/igrigorik/em-websocket/admin/update" method="post"><div style="margin:0;padding:0"><input name="authenticity_token" type="hidden" value="7ee0ec2c300dda8607aa77a9bf60aa6ef031c060" /></div>
+          <input type="hidden" name="field" value="repository_homepage">
+          <input type="text" class="textfield" name="value" value="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">
+          <div class="form-actions">
+            <button class="minibutton"><span>Save</span></button> &nbsp; <a href="#" class="cancel">Cancel</a>
+          </div>
+        </form>
+      </div>
+      </div>
+      <div class="rule "></div>
+            <div id="url_box" class="url-box">
+        <ul class="clone-urls">
+          
+            
+            <li id="http_clone_url"><a href="https://github.com/igrigorik/em-websocket.git" data-permissions="Read-Only">HTTP</a></li>
+            <li id="public_clone_url"><a href="git://github.com/igrigorik/em-websocket.git" data-permissions="Read-Only">Git Read-Only</a></li>
+          
+          
+        </ul>
+        <input type="text" spellcheck="false" id="url_field" class="url-field" />
+              <span style="display:none" id="url_box_clippy"></span>
+      <span id="clippy_tooltip_url_box_clippy" class="clippy-tooltip tooltipped" title="copy to clipboard">
+      <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+              width="14"
+              height="14"
+              class="clippy"
+              id="clippy" >
+      <param name="movie" value="https://assets3.github.com/flash/clippy.swf?v5"/>
+      <param name="allowScriptAccess" value="always" />
+      <param name="quality" value="high" />
+      <param name="scale" value="noscale" />
+      <param NAME="FlashVars" value="id=url_box_clippy&amp;copied=&amp;copyto=">
+      <param name="bgcolor" value="#FFFFFF">
+      <param name="wmode" value="opaque">
+      <embed src="https://assets3.github.com/flash/clippy.swf?v5"
+             width="14"
+             height="14"
+             name="clippy"
+             quality="high"
+             allowScriptAccess="always"
+             type="application/x-shockwave-flash"
+             pluginspage="http://www.macromedia.com/go/getflashplayer"
+             FlashVars="id=url_box_clippy&amp;copied=&amp;copyto="
+             bgcolor="#FFFFFF"
+             wmode="opaque"
+      />
+      </object>
+      </span>
+
+        <p id="url_description">This URL has <strong>Read+Write</strong> access</p>
+      </div>
+    </div>
+
+
+        
+
+      </div><!-- /.pagehead -->
+
+      
+
+
+
+
+
+<script type="text/javascript">
+  GitHub.downloadRepo = '/igrigorik/em-websocket/archives/master'
+  GitHub.revType = "master"
+
+  GitHub.controllerName = "blob"
+  GitHub.actionName     = "show"
+  GitHub.currentAction  = "blob#show"
+
+  
+
+  
+</script>
+
+
+
+
+
+
+<div class="flash-messages"></div>
+
+
+  <div id="commit">
+    <div class="group">
+        
+  <div class="envelope commit">
+    <div class="human">
+      
+        <div class="message"><pre><a href="/igrigorik/em-websocket/commit/cdedd7bd5c43e25fd0b30236889bc131b5cbe495">Added Gemfile.lock to gitignore</a> </pre></div>
+      
+
+      <div class="actor">
+        <div class="gravatar">
+          
+          <img src="https://secure.gravatar.com/avatar/b96c2426a6ef84c069876e80e49a600b?s=140&d=https://github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" alt="" width="30" height="30"  />
+        </div>
+        <div class="name"><a href="/mloughran">mloughran</a> <span>(author)</span></div>
+        <div class="date">
+          <abbr class="relatize" title="2011-02-07 04:29:18">Mon Feb 07 04:29:18 -0800 2011</abbr>
+        </div>
+      </div>
+
+      
+
+    </div>
+    <div class="machine">
+      <span>c</span>ommit&nbsp;&nbsp;<a href="/igrigorik/em-websocket/commit/cdedd7bd5c43e25fd0b30236889bc131b5cbe495" hotkey="c">cdedd7bd5c43e25fd0b3</a><br />
+      <span>t</span>ree&nbsp;&nbsp;&nbsp;&nbsp;<a href="/igrigorik/em-websocket/tree/cdedd7bd5c43e25fd0b30236889bc131b5cbe495" hotkey="t">087af53398020bbc09b5</a><br />
+      
+        <span>p</span>arent&nbsp;
+        
+        <a href="/igrigorik/em-websocket/tree/97c850128ccd49063d12dde2512cbdd1d3c128a2" hotkey="p">97c850128ccd49063d12</a>
+      
+
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+
+
+  <div id="slider">
+
+  
+
+    <div class="breadcrumb" data-path="examples/js/WebSocketMain.swf/">
+      <b><a href="/igrigorik/em-websocket/tree/cdedd7bd5c43e25fd0b30236889bc131b5cbe495">em-websocket</a></b> / <a href="/igrigorik/em-websocket/tree/cdedd7bd5c43e25fd0b30236889bc131b5cbe495/examples">examples</a> / <a href="/igrigorik/em-websocket/tree/cdedd7bd5c43e25fd0b30236889bc131b5cbe495/examples/js">js</a> / WebSocketMain.swf       <span style="display:none" id="clippy_3183">examples/js/WebSocketMain.swf</span>
+      
+      <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+              width="110"
+              height="14"
+              class="clippy"
+              id="clippy" >
+      <param name="movie" value="https://assets2.github.com/flash/clippy.swf?v5"/>
+      <param name="allowScriptAccess" value="always" />
+      <param name="quality" value="high" />
+      <param name="scale" value="noscale" />
+      <param NAME="FlashVars" value="id=clippy_3183&amp;copied=copied!&amp;copyto=copy to clipboard">
+      <param name="bgcolor" value="#FFFFFF">
+      <param name="wmode" value="opaque">
+      <embed src="https://assets2.github.com/flash/clippy.swf?v5"
+             width="110"
+             height="14"
+             name="clippy"
+             quality="high"
+             allowScriptAccess="always"
+             type="application/x-shockwave-flash"
+             pluginspage="http://www.macromedia.com/go/getflashplayer"
+             FlashVars="id=clippy_3183&amp;copied=copied!&amp;copyto=copy to clipboard"
+             bgcolor="#FFFFFF"
+             wmode="opaque"
+      />
+      </object>
+      
+
+    </div>
+
+    <div class="frames">
+      <div class="frame frame-center" data-path="examples/js/WebSocketMain.swf/">
+        
+
+        <div id="files">
+          <div class="file">
+            <div class="meta">
+              <div class="info">
+                <span class="icon"><img alt="Txt" height="16" src="https://assets3.github.com/images/icons/txt.png?03ad842eba9fc581233193a04c4cc3290def09be" width="16" /></span>
+                <span class="mode" title="File Mode">100644</span>
+                
+                <span>11.791 kb</span>
+              </div>
+              <ul class="actions">
+                <li><a href="/igrigorik/em-websocket/raw/master/examples/js/WebSocketMain.swf" id="raw-url">raw</a></li>
+                
+                <li><a href="/igrigorik/em-websocket/commits/master/examples/js/WebSocketMain.swf">history</a></li>
+              </ul>
+            </div>
+            
+  <div class="data type-text">
+    
+      <div class="image">
+        
+        
+          <a href="/igrigorik/em-websocket/raw/master/examples/js/WebSocketMain.swf">View Raw</a>
+        
+      </div>
+    
+  </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+  </div>
+
+
+<div class="frame frame-loading" style="display:none;">
+  <img src="/images/modules/ajax/big_spinner_336699.gif">
+</div>
+
+    </div>
+  
+      
+    </div>
+
+    <div id="footer" class="clearfix">
+      <div class="site">
+        <div class="sponsor">
+          <a href="http://www.rackspace.com" class="logo">
+            <img alt="Dedicated Server" src="https://assets1.github.com/images/modules/footer/rackspace_logo.png?v2?fcea8a71e43a6abea9b38ae62a9eeb7e84f5652a" />
+          </a>
+          Powered by the <a href="http://www.rackspace.com ">Dedicated
+          Servers</a> and<br/> <a href="http://www.rackspacecloud.com">Cloud
+          Computing</a> of Rackspace Hosting<span>&reg;</span>
+        </div>
+
+        <ul class="links">
+          <li class="blog"><a href="https://github.com/blog">Blog</a></li>
+          <li><a href="http://support.github.com">Support</a></li>
+          <li><a href="https://github.com/training">Training</a></li>
+          <li><a href="http://jobs.github.com">Job Board</a></li>
+          <li><a href="http://shop.github.com">Shop</a></li>
+          <li><a href="https://github.com/contact">Contact</a></li>
+          <li><a href="http://develop.github.com">API</a></li>
+          <li><a href="http://status.github.com">Status</a></li>
+        </ul>
+        <ul class="sosueme">
+          <li class="main">&copy; 2011 <span id="_rrt" title="0.09310s from fe4.rs.github.com">GitHub</span> Inc. All rights reserved.</li>
+          <li><a href="/site/terms">Terms of Service</a></li>
+          <li><a href="/site/privacy">Privacy</a></li>
+          <li><a href="https://github.com/security">Security</a></li>
+        </ul>
+      </div>
+    </div><!-- /#footer -->
+
+    
+      
+      
+        <!-- current locale:  -->
+        <div class="locales">
+          <div class="site">
+
+            <ul class="choices clearfix limited-locales">
+              <li><span class="current">English</span></li>
+              
+                  <li><a rel="nofollow" href="?locale=de">Deutsch</a></li>
+              
+                  <li><a rel="nofollow" href="?locale=fr">Français</a></li>
+              
+                  <li><a rel="nofollow" href="?locale=ja">日本語</a></li>
+              
+                  <li><a rel="nofollow" href="?locale=pt-BR">Português (BR)</a></li>
+              
+                  <li><a rel="nofollow" href="?locale=ru">Русский</a></li>
+              
+                  <li><a rel="nofollow" href="?locale=zh">中文</a></li>
+              
+              <li class="all"><a href="#" class="minibutton btn-forward js-all-locales"><span><span class="icon"></span>See all available languages</span></a></li>
+            </ul>
+
+            <div class="all-locales clearfix">
+              <h3>Your current locale selection: <strong>English</strong>. Choose another?</h3>
+              
+              
+                <ul class="choices">
+                  
+                      <li><a rel="nofollow" href="?locale=en">English</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=af">Afrikaans</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=ca">Català</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=cs">Čeština</a></li>
+                  
+                </ul>
+              
+                <ul class="choices">
+                  
+                      <li><a rel="nofollow" href="?locale=de">Deutsch</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=es">Español</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=fr">Français</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=hr">Hrvatski</a></li>
+                  
+                </ul>
+              
+                <ul class="choices">
+                  
+                      <li><a rel="nofollow" href="?locale=id">Indonesia</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=it">Italiano</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=ja">日本語</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=nl">Nederlands</a></li>
+                  
+                </ul>
+              
+                <ul class="choices">
+                  
+                      <li><a rel="nofollow" href="?locale=no">Norsk</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=pl">Polski</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=pt-BR">Português (BR)</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=ru">Русский</a></li>
+                  
+                </ul>
+              
+                <ul class="choices">
+                  
+                      <li><a rel="nofollow" href="?locale=sr">Српски</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=sv">Svenska</a></li>
+                  
+                      <li><a rel="nofollow" href="?locale=zh">中文</a></li>
+                  
+                </ul>
+              
+            </div>
+
+          </div>
+          <div class="fade"></div>
+        </div>
+      
+    
+
+    <script>window._auth_token = "7ee0ec2c300dda8607aa77a9bf60aa6ef031c060"</script>
+    <div id="keyboard_shortcuts_pane" style="display:none">
+  <h2>Keyboard Shortcuts</h2>
+
+  <div class="columns threecols">
+    <div class="column first">
+      <h3>Site wide shortcuts</h3>
+      <dl class="keyboard-mappings">
+        <dt>s</dt>
+        <dd>Focus site search</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>?</dt>
+        <dd>Bring up this help dialog</dd>
+      </dl>
+    </div><!-- /.column.first -->
+    <div class="column middle">
+      <h3>Commit list</h3>
+      <dl class="keyboard-mappings">
+        <dt>j</dt>
+        <dd>Move selected down</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>k</dt>
+        <dd>Move selected up</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>t</dt>
+        <dd>Open tree</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>p</dt>
+        <dd>Open parent</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>c <em>or</em> o <em>or</em> enter</dt>
+        <dd>Open commit</dd>
+      </dl>
+    </div><!-- /.column.first -->
+    <div class="column last">
+      <h3>Pull request list</h3>
+      <dl class="keyboard-mappings">
+        <dt>j</dt>
+        <dd>Move selected down</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>k</dt>
+        <dd>Move selected up</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>o <em>or</em> enter</dt>
+        <dd>Open issue</dd>
+      </dl>
+    </div><!-- /.columns.last -->
+  </div><!-- /.columns.equacols -->
+
+  <div class="rule"></div>
+
+  <h3>Issues</h3>
+
+  <div class="columns threecols">
+    <div class="column first">
+      <dl class="keyboard-mappings">
+        <dt>j</dt>
+        <dd>Move selected down</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>k</dt>
+        <dd>Move selected up</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>x</dt>
+        <dd>Toggle select target</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>o <em>or</em> enter</dt>
+        <dd>Open issue</dd>
+      </dl>
+    </div><!-- /.column.first -->
+    <div class="column middle">
+      <dl class="keyboard-mappings">
+        <dt>I</dt>
+        <dd>Mark selected as read</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>U</dt>
+        <dd>Mark selected as unread</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>e</dt>
+        <dd>Close selected</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>y</dt>
+        <dd>Remove selected from view</dd>
+      </dl>
+    </div><!-- /.column.middle -->
+    <div class="column last">
+      <dl class="keyboard-mappings">
+        <dt>c</dt>
+        <dd>Create issue</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>l</dt>
+        <dd>Create label</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>i</dt>
+        <dd>Back to inbox</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>u</dt>
+        <dd>Back to issues</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>/</dt>
+        <dd>Focus issues search</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <h3>Network Graph</h3>
+  <div class="columns equacols">
+    <div class="column first">
+      <dl class="keyboard-mappings">
+        <dt>← <em>or</em> h</dt>
+        <dd>Scroll left</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>→ <em>or</em> l</dt>
+        <dd>Scroll right</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>↑ <em>or</em> k</dt>
+        <dd>Scroll up</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>↓ <em>or</em> j</dt>
+        <dd>Scroll down</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>t</dt>
+        <dd>Toggle visibility of head labels</dd>
+      </dl>
+    </div><!-- /.column.first -->
+    <div class="column last">
+      <dl class="keyboard-mappings">
+        <dt>shift ← <em>or</em> shift h</dt>
+        <dd>Scroll all the way left</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>shift → <em>or</em> shift l</dt>
+        <dd>Scroll all the way right</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>shift ↑ <em>or</em> shift k</dt>
+        <dd>Scroll all the way up</dd>
+      </dl>
+      <dl class="keyboard-mappings">
+        <dt>shift ↓ <em>or</em> shift j</dt>
+        <dd>Scroll all the way down</dd>
+      </dl>
+    </div><!-- /.column.last -->
+  </div>
+
+</div>
+    
+
+    <!--[if IE 8]>
+    <script type="text/javascript" charset="utf-8">
+      $(document.body).addClass("ie8")
+    </script>
+    <![endif]-->
+
+    <!--[if IE 7]>
+    <script type="text/javascript" charset="utf-8">
+      $(document.body).addClass("ie7")
+    </script>
+    <![endif]-->
+
+    
+    <script type='text/javascript'></script>
+    
+  </body>
+</html>
+
