@@ -8,9 +8,9 @@ This is an example of how the Webhook system would work
 
 You'll need a few additional gems
 
-* (em-hiredis)[https://github.com/mloughran/em-hiredis]
+* [em-hiredis](https://github.com/mloughran/em-hiredis)
  You'll have to compile/install from source. Sorry. Should pull in the `hiredis` native ext.
-* (em-http-request)[https://github.com/igrigorik/em-http-request]
+* [em-http-request](https://github.com/igrigorik/em-http-request)
  Available via rubygems
 
 ### Running
@@ -54,9 +54,9 @@ This is an example of using Websockets, EventMachine and Redis PubSub to provide
 
 You'll need to grab a few additional gems
 
-* (em-hiredis)[https://github.com/mloughran/em-hiredis]
+* [em-hiredis](https://github.com/mloughran/em-hiredis)
  You'll have to compile/install from source. Sorry. Should pull in the `hiredis` native ext.
-* (em-websocket)[https://github.com/igrigorik/em-websocket]
+* [em-websocket](https://github.com/igrigorik/em-websocket)
  Available via rubygems
 
 ### Running
