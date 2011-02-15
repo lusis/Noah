@@ -1,5 +1,51 @@
 # Examples
-These are some notes regarding the following examples
+These are some notes regarding the examples in this directory
+
+## httpclient.rb/httpclient-server.rb
+This is an example of how the Webhook system would work
+
+### Requirements
+
+You'll need a few additional gems
+
+* (em-hiredis)[https://github.com/mloughran/em-hiredis]
+ You'll have to compile/install from source. Sorry. Should pull in the `hiredis` native ext.
+* (em-http-request)[https://github.com/igrigorik/em-http-request]
+ Available via rubygems
+
+### Running
+
+To get the maximum effect, start with a clean Redis database
+
+* Start the webhook reciever
+
+	noah/examples$ ruby httpclient-server.rb 
+	== Sinatra/1.1.2 has taken the stage on 4567 for development with backup from Thin
+	>> Thin web server (v1.2.7 codename No Hup)
+	>> Maximum connections set to 1024
+	>> Listening on 0.0.0.0:4567, CTRL+C to stop
+
+* Start the webhook publisher
+
+	noah/examples$ ruby httpclient.rb
+
+* Run the rake sample script
+
+In the publisher window, you should see some messages like so:
+
+	Got message for noah.Host[localhost].create
+	Got message for noah.Host[localhost].save
+	Got message for noah.Host[localhost].save
+	Got message for noah.Host[localhost].update
+
+In the server window, you should see the following:
+
+	"{\"id\":\"1\",\"name\":\"localhost\",\"status\":\"up\",\"created_at\":\"2011-02-15 05:19:05 UTC\",\"updated_at\":\"2011-02-15 05:19:05 UTC\",\"services\":[]}"
+	127.0.0.1 - - [15/Feb/2011 00:19:05] "POST /webhook HTTP/1.1" 200 135 0.0024
+	"{\"id\":\"1\",\"name\":\"localhost\",\"status\":\"up\",\"created_at\":\"2011-02-15 05:19:05 UTC\",\"updated_at\":\"2011-02-15 05:19:05 UTC\",\"services\":[]}"
+	127.0.0.1 - - [15/Feb/2011 00:19:05] "POST /webhook HTTP/1.1" 200 135 0.0004
+	"{\"id\":\"1\",\"name\":\"localhost\",\"status\":\"up\",\"created_at\":\"2011-02-15 05:19:05 UTC\",\"updated_at\":\"2011-02-15 05:19:05 UTC\",\"services\":[]}"
+
 
 ## websocket.rb
 This is an example of using Websockets, EventMachine and Redis PubSub to provide a "status" console of sorts.
