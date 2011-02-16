@@ -1,5 +1,5 @@
 # Examples
-These are some notes regarding the examples in this directory
+The following is a list of notes regarding the examples in this directory.
 
 ## General Requirements
 
