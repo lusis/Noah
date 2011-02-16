@@ -1,10 +1,7 @@
 # Examples
 These are some notes regarding the examples in this directory
 
-## httpclient.rb/httpclient-server.rb
-This is an example of how the Webhook system would work
-
-### Requirements
+## General Requirements
 
 You'll need a few additional gems
 
@@ -12,6 +9,28 @@ You'll need a few additional gems
  You'll have to compile/install from source. Sorry. Should pull in the `hiredis` native ext.
 * [em-http-request](https://github.com/igrigorik/em-http-request)
  Available via rubygems
+* [em-websocket](https://github.com/igrigorik/em-websocket)
+ Available via rubygems
+
+## custom-watcher.rb
+This is an idea I'm tossing around for allowing easy custom watchers to be written.
+Essentially the idea is that you tap into the Redis subscription with a defined pattern and a destination.
+
+### Example
+
+	require './watcher-idea.rb'
+	f = Noah::Watcher.new do |f|
+	  f.pattern = "noah.Configuration"
+	  f.destination = Proc.new {|x| something_with(x)}
+	end
+	f.run!
+
+## logger.rb
+An example using logger as a watcher. Pretty straighforward.
+
+
+## httpclient.rb/httpclient-server.rb
+This is an example of how the Webhook system would work
 
 ### Running
 
@@ -49,15 +68,6 @@ In the server window, you should see the following:
 
 ## websocket.rb
 This is an example of using Websockets, EventMachine and Redis PubSub to provide a "status" console of sorts.
-
-### Requirements
-
-You'll need to grab a few additional gems
-
-* [em-hiredis](https://github.com/mloughran/em-hiredis)
- You'll have to compile/install from source. Sorry. Should pull in the `hiredis` native ext.
-* [em-websocket](https://github.com/igrigorik/em-websocket)
- Available via rubygems
 
 ### Running
 
