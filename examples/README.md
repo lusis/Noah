@@ -19,11 +19,12 @@ Essentially the idea is that you tap into the Redis subscription with a defined 
 ### Example
 
 	require './watcher-idea.rb'
-	f = Noah::Watcher.new do |f|
-	  f.pattern = "noah.Configuration"
-	  f.destination = Proc.new {|x| something_with(x)}
+
+	Noah::Watcher.watch do
+	  pattern "noah.Configuration"
+	  destination Proc.new {|x| something_with(x)}
+	  run!
 	end
-	f.run!
 
 ## logger.rb
 An example using logger as a watcher. Pretty straighforward.
