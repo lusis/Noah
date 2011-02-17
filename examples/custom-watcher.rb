@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 require './watcher-idea.rb'
 
-f = Noah::Watcher.new do |f|
-  f.pattern = "noah.Configuration*"
-  f.destination = Proc.new {|x| puts x}
+Noah::Watcher.watch do
+  pattern "noah.Configuration*"
+  destination Proc.new {|x| puts x}
+  run!
 end
-f.run!
