@@ -2,20 +2,14 @@
 $:.push File.expand_path("../lib", __FILE__)
 require "noah/version"
 
-begin
-  platform = RUBY_ENGINE
-rescue
-  case RUBY_PLATFORM
-  when "java"
-    platform = 'jruby'
-  else
-    platform = 'ruby'
-  end
+def engine
+  defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
 end
+
 Gem::Specification.new do |s|
   s.name        = "noah"
   s.version     = Noah::VERSION
-  s.platform    = platform
+  s.platform    = engine
   s.authors     = ["lusis"]
   s.email       = ["lusis.org+rubygems.org@gmail.com"]
   s.homepage    = "https://github.com/lusis/noah"
