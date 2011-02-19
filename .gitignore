@@ -10,3 +10,4 @@ tmp/*
 *.war
 .bundle
 warbler/*
+Gemfile.lock

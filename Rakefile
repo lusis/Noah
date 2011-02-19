@@ -1,29 +1,32 @@
 require 'bundler'
-#begin
-#  Bundler.setup(:default, :development)
-#rescue Bundler::BundlerError => e
-#  $stderr.puts e.message
-#  $stderr.puts "Run `bundle install` to install missing gems"
-#  exit e.status_code
-#end
-require 'rake'
-
 require 'rspec/core'
 require 'rspec/core/rake_task'
 
+task :default => [:spec]
+task :test => [:spec]
+
 Bundler::GemHelper.install_tasks
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = FileList['spec/**/*_spec.rb']
+end
+
+namespace :coverage do
+  desc "Delete aggregate coverage data."
+  task(:clean) { rm_f "coverage.data" }
+end
+desc "Run Rcov code coverage analysis"
+RSpec::Core::RakeTask.new(:coverage) do |t|
+  t.rcov = true
+  t.verbose = true
+  t.rcov_opts = %q[--aggregate coverage.data --sort coverage --text-report --exclude "config,.bundle/*,gems/*,spec/*" -o doc/coverage -Ilib -i "noah.rb"]
+end
 
 desc "Populate database with sample dataset"
 task :sample, :redis_url do |t, args|
   require 'ohm'
-  begin
-    require 'yajl'
-  rescue LoadError
-    require 'json'
-  end
+  require 'json'
   require File.join(File.dirname(__FILE__), 'lib','noah')
 
-  
   Ohm::connect(:url => args.redis_url)
   Ohm::redis.flushdb 
   puts "Creating Host entry for 'localhost'"
@@ -88,47 +91,7 @@ EOJ
   puts "Sample data populated!"
 end
   
-
-RSpec::Core::RakeTask.new(:spec) do |spec|
-  spec.pattern = FileList['spec/**/*_spec.rb']
-end
-
-namespace :coverage do
-  desc "Delete aggregate coverage data."
-  task(:clean) { rm_f "coverage.data" }
-end
-desc "Run Rcov code coverage analysis"
-RSpec::Core::RakeTask.new(:coverage) do |t|
-  t.rcov = true
-  t.verbose = true
-  t.rcov_opts = %q[--aggregate coverage.data --sort coverage --text-report --exclude "config,.bundle/*,gems/*,spec/*" -o doc/coverage -Ilib -i "noah.rb"]
-end
-
-if RUBY_ENGINE == 'jruby'
-  require 'warbler'
-  wt = Warbler::Task.new
-  task :default => wt.name
-
-  desc "Generate a configuration file to customize your archive"
-  task :config => "#{wt.name}:config"
-
-  desc "Install Warbler tasks in your Rails application"
-  task :pluginize => "#{wt.name}:pluginize"
-
-  desc "Feature: package gem repository inside a jar"
-  task :gemjar => "#{wt.name}:gemjar"
-
-  desc "Feature: make an executable archive"
-  task :executable => "#{wt.name}:executable"
-
-  desc "Feature: precompile all Ruby files"
-  task :compiled => "#{wt.name}:compiled"
-
-  desc "Display version of Warbler"
-  task :version => "#{wt.name}:version"
-
-  desc "Demo environment"
-  task :start_demo do
-    puts "Soon, young padawan"
-  end
+desc "Demo environment"
+task :start_demo do
+  puts "Soon, young padawan"
 end

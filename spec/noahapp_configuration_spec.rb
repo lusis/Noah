@@ -85,8 +85,8 @@ describe "Using the Configuration API", :reset_redis => false, :populate_sample_
 
     describe "DELETE" do
       before(:all) do
-        cparms = {:name => 'a', :format => 'string', :body => 'asdf'}
         @a = Application.create(:name => 'delete_test_app')
+        cparms = {:name => 'a', :format => 'string', :body => 'asdf', :application_id => @a.id}
         @a.configurations << Configuration.create(cparms)
         @a.save
         @c = @a.configurations.first

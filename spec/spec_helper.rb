@@ -1,18 +1,10 @@
-require 'ohm'
-begin
-  require 'yajl'
-rescue LoadError
-  require 'json'
-end
-
-ENV['RACK_ENV'] = 'test'
-ENV['REDIS_URL'] = 'redis://localhost:6379/3'
-Ohm::connect
-  
 require File.join(File.dirname(__FILE__), '..', 'lib', 'noah')
 require File.join(File.dirname(__FILE__), '..', 'lib', 'noah', 'app')
 require 'rspec'
 require 'rack/test'
+ENV['RACK_ENV'] = 'test'
+ENV['REDIS_URL'] = 'redis://localhost:6379/3'
+Ohm::connect
 
 RSpec.configure do |config|
   config.color_enabled = true

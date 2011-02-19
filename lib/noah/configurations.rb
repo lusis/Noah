@@ -25,12 +25,13 @@ class Configuration < Ohm::Model
     assert_present :name
     assert_present :format
     assert_present :body
+    assert_present :application_id
     assert_unique [:name, :application_id]
   end
 
   def to_hash
-    application.nil? ? app=nil : app=Application[application_id].name
-    super.merge(:name => name, :format => format, :body => body, :created_at => created_at, :updated_at => updated_at, :application => app)
+    Application[application_id].nil? ? app_name=nil : app_name=Application[application_id].name
+    super.merge(:name => name, :format => format, :body => body, :created_at => created_at, :updated_at => updated_at, :application => app_name)
   end
 
   def is_new?

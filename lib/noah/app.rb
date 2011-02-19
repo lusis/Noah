@@ -1,8 +1,4 @@
-require 'sinatra/base'
-require 'sinatra/namespace'
-require 'ohm'
-require 'ohm/contrib'
-
+require File.join(File.dirname(__FILE__), 'version')
 require File.join(File.dirname(__FILE__), 'helpers')
 require File.join(File.dirname(__FILE__), 'models')
 
@@ -20,6 +16,7 @@ module Noah
       set :raise_errors, false
       set :show_exceptions, false
       set :run, false
+      set :redis_url, ENV['REDIS_URL'] || 'redis://localhost:6379/0'
     end
 
     configure(:development) do
@@ -40,7 +37,7 @@ module Noah
     get '/' do
       content_type "text/html"
 
-      haml :index, :format => :html5
+      haml :index, :format => :html5, :locals => {:redis_url => settings.redis_url, :noah_version => Noah::VERSION}
     end
 
     not_found do
@@ -321,6 +318,5 @@ module Noah
       end
 
     end
-  #  run! if app_file == $0
   end
 end

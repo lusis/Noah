@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
+require 'rubygems'
 require 'noah'
 require 'vegas'
 
 Vegas::Runner.new(Noah::App, 'noah') do |runner, opts, app|
-  opts.on("-r", "--redis URL", "redis url to connect to (default: redis://localhost:6379/0)") {|r| ENV["REDIS_URL"] = r }
+  opts.on("-r", "--redis URL", "redis url to connect to (default: redis://localhost:6379/0)") {|r| ENV["REDIS_URL"] = r; Noah::App.set :redis_url, r }
 end
