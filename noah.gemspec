@@ -40,6 +40,7 @@ Gem::Specification.new do |s|
     s.add_dependency("thin")
   end
 
+  s.add_development_dependency("diff-lcs", ["= 1.1.2"])
   s.add_development_dependency("sinatra-reloader", ["= 0.5.0"])
   s.add_development_dependency("rspec", ["~> 2.5"])
   s.add_development_dependency("rcov", ["= 0.9.9"])
