@@ -12,3 +12,4 @@ tmp/*
 warbler/*
 Gemfile.lock
 doc
+.yardoc/*
