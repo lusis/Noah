@@ -4,7 +4,7 @@ module Noah
   extend(Ohm)
 
     def host(opts = {})
-     Host.find(opts).first
+      Host.find(opts).first
     end
 
     def hosts(opts = {})
