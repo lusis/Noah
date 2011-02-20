@@ -11,4 +11,4 @@ tmp/*
 .bundle
 warbler/*
 Gemfile.lock
-Gemfile.lock
+doc

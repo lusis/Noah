@@ -35,6 +35,7 @@ module Noah
         channel = EventMachine::Channel.new
 
         r = EventMachine::Hiredis::Client.connect
+        r.db(5)
         r.psubscribe(@my_pattern)
         r.on(:pmessage) do |pattern, event, message|
           channel.push "#{message}"

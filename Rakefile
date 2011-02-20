@@ -90,7 +90,21 @@ EOJ
   end
   puts "Sample data populated!"
 end
-  
+
+begin
+  require 'yard'
+  require 'yard/sinatra'
+  desc "Generate documentation"
+  YARD::Rake::YardocTask.new do |t|
+    t.files   = ['lib/**/*.rb']   # optional
+    t.options = ['--title', "Noah #{Noah::VERSION} Documentation"]
+    t.options += ['--plugin', "yard-sinatra"]
+    t.options += ['--protected', '--private'] # optional
+  end
+rescue LoadError
+  "You need YARD installed to generate docs"
+end
+
 desc "Demo environment"
 task :start_demo do
   puts "Soon, young padawan"

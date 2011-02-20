@@ -1,4 +1,6 @@
 class Host < Ohm::Model
+  # Host model
+  # @return {Host} a {Host} object
   include Ohm::Typecast
   include Ohm::Timestamping
   include Ohm::Callbacks
@@ -25,6 +27,7 @@ class Host < Ohm::Model
     assert_member :status, ["up","down","pending"]
   end
 
+  # @return [Hash] A hash representation of a {Host}
   def to_hash
     arr = []
     services.sort.each {|s| arr << s.to_hash}
@@ -32,6 +35,7 @@ class Host < Ohm::Model
     super.merge(h)
   end
 
+  # Evaluate if {Host} record is new or not
   def is_new?
     self.created_at == self.updated_at
   end
@@ -54,6 +58,7 @@ class Host < Ohm::Model
   end
 
   protected
+  # Saves the original {Host#name} attribute before deleting an object
   def stash_name
     @deleted_name = self.name
   end
@@ -70,6 +75,8 @@ class Host < Ohm::Model
 end
 
 class Hosts
+  # @param [Hash] optional filters for results
+  # @return [Array] Array of {Host} objects
   def self.all(options = {})
     options.empty? ? Host.all.sort : Host.find(options).sort
   end
