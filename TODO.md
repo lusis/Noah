@@ -1,11 +1,15 @@
 # Brain dump of stuff
+* Documentation
+
+    Need to finish documenting everything for YARD to pick up.
+
+* Namespace models
+
+   This is proving to be more of a headache than I though. In the interim, I'm going to prepend models with Noah (i.e. `Host` becomes `NoahHost`)
+
 * Stabilize API
 
     I'm seriously considering moving to a single endpoint with JSON request bodies. Still up in the air. I'm not totally sold on the current layout.
-
-* Consider ditching Sinatra::Namespace
-
-    I spent most of the effort around namespacing my stuff in what appears to be trying to work around sinatra-namespace. Need to do a test refactor. Also Ohm doesn't appear to play nice with namespaced models.
 
 * Write my own CLI class
 
@@ -41,6 +45,8 @@
 * Examples
   - Sort of done. Demo app is up! [[http://noah-demo.heroku.com/]]
 
+* Consider ditching Sinatra::Namespace
+  - Done. It was also causing issues with YARD generation. @rkh confirmed known issue via twitter.
 
 ## Watcher specific stuff
 * Implement a watcher client
