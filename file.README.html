@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Noah 0.0.6 Documentation</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html" title="Index">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><div id='filecontents'><h1>Noah</h1>
+
+<p>Noah is an application registry loosely based on <a href="http://zookeeper.apache.org">Apache ZooKeeper</a></p>
+
+<p>What does that mean? From the ZooKeeper Home Page:</p>
+
+<blockquote><p>ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. All of these kinds of services are used in some form or another by distributed applications.</p></blockquote>
+
+<p>Essentially Noah, is a port of those concepts into a stateless RESTful application.</p>
+
+<h2>Quick Start</h2>
+
+<p>The quickstart guide has been moved to the wiki:</p>
+
+<p><a href="https://github.com/lusis/Noah/wiki/Quick-Start">Quick Start Guide</a></p>
+
+<h2>Design Goals</h2>
+
+<p>Noah has a few basic design goals:</p>
+
+<ul>
+<li>The system <strong>MUST</strong> support RESTful interaction for operations where REST maps properly</li>
+<li>The system <strong>MUST</strong> support basic concepts of hosts, services, applications and configurations</li>
+<li>The system <strong>MUST</strong> support horizontal scaling.</li>
+</ul>
+
+
+<p>Additionally:</p>
+
+<ul>
+<li>The system <strong>SHOULD</strong> be flexible in deployment options.</li>
+<li>The system <strong>SHOULD</strong> support watches similar to ZooKeeper</li>
+<li>The system <strong>SHOULD</strong> support pluggable callbacks for watches.</li>
+<li>The system <strong>SHOULD</strong> support being a client of itself.</li>
+</ul>
+
+
+<h2>Opinionated Stack</h2>
+
+<p>Noah is somewhat opinionated in its stack. Noah attempts to minimize the external requirements wherever possible to allow for the widest possible installation options.
+However, excellent work has been done to create performant and well-tested libraries that would be foolish to ignore. To this end, the current requirements are:</p>
+
+<ul>
+<li><a href="http://redis.io">Redis 2.0</a></li>
+<li><a href="http://www.sinatrarb.com">Sinatra</a></li>
+<li><a href="http://ohm.keyvalue.org">Ohm/Ohm-Contrib</a></li>
+<li><a href="http://rubyeventmachine.com">EventMachine</a></li>
+</ul>
+
+
+<p>The above stack provides much of the functionality needed to port over ZooKeeper concepts.</p>
+
+<h3>Redis</h3>
+
+<p>Redis is the backbone of the system. Through the native <a href="http://redis.io/commands">datatypes</a> and <a href="http://redis.io/commands#pubsub">pubsub</a> capabilities, much of the heavy lifting has already been done.</p>
+
+<h3>Sinatra</h3>
+
+<p>Sinatra is the perfect library for creating API-only style applications. It allows you do focus on the meat of what an endpoint should do instead of the hassle of creating the endpoint.</p>
+
+<h3>Ohm</h3>
+
+<p>Ohm is quite simply the most unobtrusive and flexible orm for Redis. It gets out of the way and allows you to very easily interact directly with Redis if the need arises</p>
+
+<h3>EventMachine</h3>
+
+<p>EventMachine combined with Redis pubsub forms the basis of the Watcher and callback system.</p>
+
+<h2>Motivation</h2>
+
+<p>It's something I've wanted to do for a while. Everytime I've needed something like Zookeeper, Zookeeper has always been too bulky and had too many moving parts. I've also always needed to interact with it from more than just Java or C. Sometimes it's been Ruby and sometimes it's been Python.</p>
+
+<p>In the end, we reinvent the wheel ANYWAY. Maybe we do something like have our CM tool write our application config files with a list of memcached hosts. Maybe we write our own logic around (shudder) RMI to do some chatty broadcasting around the network for finding local nodes of type X. We always reinvent the wheel in some way.</p>
+
+<h2>More information</h2>
+
+<p>Here are a list of some key <a href="https://github.com/lusis/Noah/wiki">wiki</a> pages:</p>
+
+<ul>
+<li><a href="https://github.com/lusis/Noah/wiki/Concepts">Concepts</a>
+  How Noah views various object types in the system</li>
+<li><a href="https://github.com/lusis/Noah/wiki/Stablize-API">API</a>
+  The API is currently in draft state. It will be finalized before the 1.0 release.</li>
+<li><a href="https://github.com/lusis/Noah/wiki/Example-Use-Cases">Example Use Cases</a>
+  Some use cases for Noah and how it would fit into an existing application or infrastructure</li>
+<li><a href="https://github.com/lusis/Noah/wiki/Watchers-and-Callbacks">Watchers and Callbacks</a>
+  The general idea behind how Noah would implement watches</li>
+<li><a href="https://github.com/lusis/Noah/blob/master/examples/README.md">Watcher/Callback Examples</a>
+  Some example callbacks.</li>
+</ul>
+</div></div>
+    
+    <div id="footer">
+  Generated on Sun Feb 20 03:59:04 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.4 (ruby-1.9.2).
+</div>
+
+  </body>
+</html>
