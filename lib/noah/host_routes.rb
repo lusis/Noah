@@ -36,7 +36,7 @@ class Noah::App
   put '/h/:hostname/?' do |hostname|
     required_params = ["name", "status"]
     data = JSON.parse(request.body.read)
-    (data.keys.sort == required_params.sort && data['name'] == hostname) ? (host = ::Host.find_or_create(:name => data['name'], :status => data['status'])) : (raise "Missing Parameters")
+    (data.keys.sort == required_params.sort && data['name'] == hostname) ? (host = Noah::Host.find_or_create(:name => data['name'], :status => data['status'])) : (raise "Missing Parameters")
     if host.valid?
       r = {"result" => "success","id" => "#{host.id}","status" => "#{host.status}", "name" => "#{host.name}", "new_record" => host.is_new?}
       r.to_json
@@ -46,10 +46,10 @@ class Noah::App
   end
 
   delete '/h/:hostname/?' do |hostname|
-    host = ::Host.find(:name => hostname).first
+    host = Noah::Host.find(:name => hostname).first
     if host
       services = []
-      Service.find(:host_id => host.id).sort.each {|x| services << x; x.delete} if host.services.size > 0
+      Noah::Service.find(:host_id => host.id).sort.each {|x| services << x; x.delete} if host.services.size > 0
       host.delete
       r = {"result" => "success", "id" => "#{host.id}", "name" => "#{hostname}", "service_count" => "#{services.size}"}
       r.to_json

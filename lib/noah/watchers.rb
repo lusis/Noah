@@ -1,24 +1,23 @@
-class Watcher < Ohm::Model #NYI
-  include Ohm::Typecast
-  include Ohm::Timestamping
-  include Ohm::Callbacks
+module Noah
+  class Watcher < Model #NYI
 
-  attribute :client
-  attribute :endpoint
-  attribute :event
-  attribute :action 
+    attribute :client
+    attribute :endpoint
+    attribute :event
+    attribute :action 
 
-  index :client
-  index :event
+    index :client
+    index :event
 
-  def validate
-    assert_present :client, :endpoint, :event, :action
-    assert_unique [:client, :endpoint, :event, :action]
+    def validate
+      assert_present :client, :endpoint, :event, :action
+      assert_unique [:client, :endpoint, :event, :action]
+    end
   end
-end
 
-class Watchers
-  def self.all(options = {})
-    options.empty? ? Watcher.all.sort : Watcher.find(options).sort
+  class Watchers
+    def self.all(options = {})
+      options.empty? ? Watcher.all.sort : Watcher.find(options).sort
+    end
   end
 end

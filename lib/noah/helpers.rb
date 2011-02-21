@@ -1,56 +1,54 @@
-require File.join(File.dirname(__FILE__), 'models')
 module Noah
   module SinatraHelpers
-  extend(Ohm)
 
     def host(opts = {})
-      Host.find(opts).first
+      Noah::Host.find(opts).first
     end
 
     def hosts(opts = {})
-      Hosts.all(opts)
+      Noah::Hosts.all(opts)
     end
 
     def service(opts = {})
-      Service.find(options)
+      Noah::Service.find(options)
     end
 
     def services(opts = {})
-      Services.all(opts)
+      Noah::Services.all(opts)
     end 
 
     def host_service(hostname, servicename)
-      h = Host.find(:name => hostname).first
+      h = Noah::Host.find(:name => hostname).first
       if h.nil?
         nil
       else  
-        Service.find(:host_id => h.id, :name => servicename).first
+        Noah::Service.find(:host_id => h.id, :name => servicename).first
       end  
     end
 
     def host_services(hostname)
-      h = Host.find(:name => hostname).first
+      h = Noah::Host.find(:name => hostname).first
       if h.nil?
         nil
       else  
-        Services.all(:host_id => id)
+        Noah::Services.all(:host_id => id)
       end  
     end 
 
     def application(opts = {})
-      Application.find(opts).first
+      Noah::Application.find(opts).first
     end
 
     def applications(opts = {})
-      Applications.all(opts)
+      Noah::Applications.all(opts)
     end
 
     def configuration(opts = {})
-      Configuration.find(opts).first
+      Noah::Configuration.find(opts).first
     end
 
     def configurations(opts = {})
-      Configurations.all(opts)
+      Noah::Configurations.all(opts)
     end
   end
 

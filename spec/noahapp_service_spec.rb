@@ -4,10 +4,10 @@ describe "Using the Service API", :reset_redis => false, :populate_sample_data =
   before(:all) do
     @sample_host = {:name => 'rspec_sample_host', :status => 'up'}
     @sample_service = {:name => 'rspec_sample_service', :status => 'up'}
-    @h = Host.create(:name => 'rspec_sample_host', :status => 'up')
-    @h.services << Service.create({:host => @h}.merge(@sample_service))
+    @h = Noah::Host.create(:name => 'rspec_sample_host', :status => 'up')
+    @h.services << Noah::Service.create({:host => @h}.merge(@sample_service))
     @h.save
-    @s = Service.find(@sample_service).first
+    @s = Noah::Service.find(@sample_service).first
   end  
   describe "calling" do
     
@@ -57,8 +57,8 @@ describe "Using the Service API", :reset_redis => false, :populate_sample_data =
         response["id"].nil?.should == false
         response["name"].should == @payload[:name]
         response["host"].should == @payload[:host]
-        Service.find(:name => @payload[:name]).size.should == 1
-        Service.find(:name => @payload[:name]).first.is_new?.should == true
+        Noah::Service.find(:name => @payload[:name]).size.should == 1
+        Noah::Service.find(:name => @payload[:name]).first.is_new?.should == true
       end
       it "new service without host should not work" do
         put "/s/foobar", {:name => "foobar", :status => "up"}.to_json, "CONTENT_TYPE" => "application/json"
@@ -88,15 +88,15 @@ describe "Using the Service API", :reset_redis => false, :populate_sample_data =
         response["id"].nil?.should == false
         response["name"].should == @payload[:name]
         response["host"].should == @payload[:host]
-        Service.find(:name => @payload[:name]).size.should == 1
-        Service.find(:name => @payload[:name]).first.is_new?.should == false
+        Noah::Service.find(:name => @payload[:name]).size.should == 1
+        Noah::Service.find(:name => @payload[:name]).first.is_new?.should == false
       end
     end
 
     describe "DELETE" do
       before(:all) do
-        @h = Host.create(:name => "h1", :status => "up")
-        @h.services << Service.create(:name => "s1", :status => "up", :host => @h)
+        @h = Noah::Host.create(:name => "h1", :status => "up")
+        @h.services << Noah::Service.create(:name => "s1", :status => "up", :host => @h)
         @h.save
         @s = @h.services.first
       end  

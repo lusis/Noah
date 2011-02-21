@@ -14,19 +14,19 @@ RSpec.configure do |config|
   config.after(:all, :populate_sample_data => true) {Ohm::redis.flushdb }
   config.before(:all, :populate_sample_data => true) do
     Ohm::redis.flushdb
-    h = Host.create(:name => 'localhost', :status => "up")
+    h = Noah::Host.create(:name => 'localhost', :status => "up")
     if h.save
       %w[redis noah].each do |service|
-        s = Service.create(:name => service, :status => "up", :host => h)
+        s = Noah::Service.create(:name => service, :status => "up", :host => h)
         h.services << s
       end
     end
 
-    a = Application.create(:name => 'noah')
+    a = Noah::Application.create(:name => 'noah')
     if a.save
-      cr = Configuration.create(:name => 'redis', :format => 'string', :body => 'redis://127.0.0.1:6379/0', :application => a)
-      ch = Configuration.create(:name => 'host', :format => 'string', :body => 'localhost', :application  => a)
-      cp = Configuration.create(:name => 'port', :format => 'string', :body => '9292', :application => a)
+      cr = Noah::Configuration.create(:name => 'redis', :format => 'string', :body => 'redis://127.0.0.1:6379/0', :application => a)
+      ch = Noah::Configuration.create(:name => 'host', :format => 'string', :body => 'localhost', :application  => a)
+      cp = Noah::Configuration.create(:name => 'port', :format => 'string', :body => '9292', :application => a)
       %w[cr ch cp].each do |c|
         a.configurations << eval(c)
       end
@@ -46,15 +46,15 @@ EOY
     }
 EOJ
 
-    a1 = Application.create(:name => 'myrailsapp1')
+    a1 = Noah::Application.create(:name => 'myrailsapp1')
     if a1.save
-      c1 = Configuration.create(:name => 'database.yml', :format => 'yaml', :body => my_yaml, :application => a1)
+      c1 = Noah::Configuration.create(:name => 'database.yml', :format => 'yaml', :body => my_yaml, :application => a1)
       a1.configurations << c1
     end
 
-    a2 = Application.create(:name => 'myrestapp1')
+    a2 = Noah::Application.create(:name => 'myrestapp1')
     if a2.save
-      c2 = Configuration.create(:name => 'config.json', :format => 'json', :body => my_json, :application => a2)
+      c2 = Noah::Configuration.create(:name => 'config.json', :format => 'json', :body => my_json, :application => a2)
       a2.configurations << c2
     end
   end

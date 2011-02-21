@@ -5,7 +5,7 @@ require 'logger'
 log = Logger.new(STDOUT)
 
 Noah::Watcher.watch do
-  pattern "noah.Application*"
+  pattern "noah.Noah::Application*"
   destination Proc.new {|x| log.debug(x)}
   run!
 end

@@ -7,11 +7,11 @@ class Noah::App
   }
   # Configuration URIs
   get '/c/:appname/:element/?' do |appname, element|
-    a = ::Application.find(:name => appname).first
+    a = Noah::Application.find(:name => appname).first
     if a.nil?
       halt 404
     else 
-      c = ::Configuration.find(:name => element, :application_id => a.id).first
+      c = Noah::Configuration.find(:name => element, :application_id => a.id).first
       content_type content_type_mapping[c.format.to_sym] if content_type_mapping[c.format.to_sym]
       c.body
     end  
@@ -19,18 +19,18 @@ class Noah::App
 
   get '/c/:appname/?' do |appname|
     config = []
-    a = ::Application.find(:name => appname).first
+    a = Noah::Application.find(:name => appname).first
     if a.nil?
       halt 404
     else  
-      ::Configuration.find(:application_id => a.id).sort.each {|c| config << c.to_hash}
+      Noah::Configuration.find(:application_id => a.id).sort.each {|c| config << c.to_hash}
       config.to_json
     end  
   end
 
   get '/c/?' do
     configs = []
-    ::Configuration.all.sort.each {|c| configs << c.to_hash}
+    Noah::Configuration.all.sort.each {|c| configs << c.to_hash}
     if configs.empty?
       halt 404
     else  
@@ -39,8 +39,8 @@ class Noah::App
   end
 
   put '/c/:appname/:element?' do |appname, element|
-    app = ::Application.find_or_create(:name => appname)
-    config = ::Configuration.find_or_create(:name => element, :application_id => app.id)
+    app = Noah::Application.find_or_create(:name => appname)
+    config = Noah::Configuration.find_or_create(:name => element, :application_id => app.id)
     required_params = ["format", "body"]
     data = JSON.parse(request.body.read)
     data.keys.sort == required_params.sort  ? (config.format = data["format"]; config.body = data["body"]) : (raise "Missing Parameters")
@@ -56,9 +56,9 @@ class Noah::App
   end
 
   delete '/c/:appname/:element?' do |appname, element|
-    app = ::Application.find(:name => appname).first
+    app = Noah::Application.find(:name => appname).first
     if app
-      config = ::Configuration.find(:name=> element, :application_id => app.id).first
+      config = Noah::Configuration.find(:name=> element, :application_id => app.id).first
       if config
         config.delete
         r = {"result" => "success", "id" => "#{config.id}", "action" => "delete", "application" => "#{app.name}", "item" => "#{element}"}

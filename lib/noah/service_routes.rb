@@ -34,8 +34,8 @@ class Noah::App
     required_params = ["status", "host", "name"]
     data = JSON.parse(request.body.read)
     if data.keys.sort == required_params.sort
-      h = ::Host.find(:name => data['host']).first || (raise "Invalid Host")
-      service = ::Service.find_or_create(:name => servicename, :status => data['status'], :host => h)
+      h = Noah::Host.find(:name => data['host']).first || (raise "Invalid Host")
+      service = Noah::Service.find_or_create(:name => servicename, :status => data['status'], :host => h)
       if service.valid?
         action = service.is_new? ? "create" : "update"
         service.save
@@ -50,8 +50,8 @@ class Noah::App
   end
 
   delete '/s/:servicename/:hostname/?' do |servicename, hostname|
-    host = ::Host.find(:name => hostname).first || (halt 404)
-    service = ::Service.find(:name => servicename, :host_id => host.id).first || (halt 404)
+    host = Noah::Host.find(:name => hostname).first || (halt 404)
+    service = Noah::Service.find(:name => servicename, :host_id => host.id).first || (halt 404)
     if host && service
       service.delete
       r = {"action" => "delete", "result" => "success", "id" => service.id, "host" => host.name, "service" => servicename}

@@ -88,9 +88,9 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
 
     describe "DELETE" do
       before(:all) do
-        @h = Host.create(:name => 'h', :status => 'up')
+        @h = Noah::Host.create(:name => 'h', :status => 'up')
         sparms = {:name => 's', :status => "up"}
-        @h.services << Service.create(sparms.merge({:host => @h}))
+        @h.services << Noah::Service.create(sparms.merge({:host => @h}))
         @h.save
         @s = @h.services.first
       end  

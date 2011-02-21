@@ -1,17 +1,17 @@
 class Noah::App
   # Application URIs
   get '/a/:appname/:config/?' do |appname, config|
-    app = ::Application.find(:name => appname).first
+    app = Noah::Application.find(:name => appname).first
     if app.nil?
       halt 404
     else  
-      c = ::Configuration.find(:name => config, :application_id => app.id).first
+      c = Noah::Configuration.find(:name => config, :application_id => app.id).first
       c.to_json
     end  
   end
 
   get '/a/:appname/?' do |appname|
-    app = ::Application.find(:name => appname).first
+    app = Noah::Application.find(:name => appname).first
     if app.nil?
       halt 404
     else
@@ -23,7 +23,7 @@ class Noah::App
     required_params = ["name"]
     data = JSON.parse(request.body.read)
     if data.keys.sort == required_params.sort && data['name'] == appname
-      app = ::Application.find_or_create(:name => appname)
+      app = Noah::Application.find_or_create(:name => appname)
     else
       raise "Missing Parameters"
     end  
@@ -38,12 +38,12 @@ class Noah::App
   end
 
   delete '/a/:appname/?' do |appname|
-    app = ::Application.find(:name => appname).first
+    app = Noah::Application.find(:name => appname).first
     if app.nil?
       halt 404
     else
       configurations = []
-      ::Configuration.find(:application_id => app.id).sort.each {|x| configurations << x; x.delete} if app.configurations.size > 0
+      Noah::Configuration.find(:application_id => app.id).sort.each {|x| configurations << x; x.delete} if app.configurations.size > 0
       app.delete
       r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{appname}", "configurations" => "#{configurations.size}"}
       r.to_json
@@ -52,7 +52,7 @@ class Noah::App
 
   get '/a/?' do
     apps = []
-    ::Application.all.sort.each {|a| apps << a.to_hash}
+    Noah::Application.all.sort.each {|a| apps << a.to_hash}
     if apps.empty?
       halt 404
     else  

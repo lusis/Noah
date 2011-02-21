@@ -2,8 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "Using the Application API", :reset_redis => false do
   before(:all) do
-    @a = Application.create(:name => 'rspec_sample_app')
-    @a.configurations << Configuration.create(:name => 'rspec_config', :format => 'string', :body => 'rspec is great', :application => @a)
+    @a = Noah::Application.create(:name => 'rspec_sample_app')
+    @a.configurations << Noah::Configuration.create(:name => 'rspec_config', :format => 'string', :body => 'rspec is great', :application => @a)
     @a.save
     @c = @a.configurations.first
   end  
@@ -62,8 +62,8 @@ describe "Using the Application API", :reset_redis => false do
         response["id"].nil?.should == false
         response["name"].should == @appdata[:name]
         response["action"].should == "create"
-        Application.find(:name => @appdata[:name]).size.should == 1
-        Application.find(:name => @appdata[:name]).first.is_new?.should == true
+        Noah::Application.find(:name => @appdata[:name]).size.should == 1
+        Noah::Application.find(:name => @appdata[:name]).first.is_new?.should == true
       end
       it "new application with missing name should not work" do
         put "/a/should_not_work", '{"foo":"bar"}', "CONTENT_TYPE" => "application/json"
@@ -79,8 +79,8 @@ describe "Using the Application API", :reset_redis => false do
         response["id"].nil?.should == false
         response["name"].should == @appdata[:name]
         response["action"].should == "update"
-        Application.find(:name => @appdata[:name]).size.should == 1
-        Application.find(:name => @appdata[:name]).first.is_new?.should == false
+        Noah::Application.find(:name => @appdata[:name]).size.should == 1
+        Noah::Application.find(:name => @appdata[:name]).first.is_new?.should == false
       end  
     end
 
