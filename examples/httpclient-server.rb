@@ -1,4 +1,6 @@
 require 'sinatra'
+require 'json'
 post '/webhook' do
-  p request.body.read
+  x = request.body.read
+  puts JSON.load(x)
 end

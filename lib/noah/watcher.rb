@@ -1,5 +1,9 @@
 require 'eventmachine'
 require 'uri'
+require 'logger'
+
+@log = Logger.new(STDOUT)
+@log.level = Logger::DEBUG
 
 require File.join(File.dirname(__FILE__), 'passthrough')
 require File.join(File.dirname(__FILE__), '..','vendor','em-hiredis','lib','em-hiredis')
@@ -42,17 +46,26 @@ module Noah
 
     private
     def self.run_watcher(dest)
+      log = Logger.new(STDOUT)
+      log.level = Logger::INFO
+      log.debug "#{dest.inspect}"
       redis_url = URI.parse(@my_redis)
       db = redis_url.path.gsub(/\//,'')
+
       EventMachine.run do
+        trap("TERM") { log.info "Killed"; EventMachine.stop }
+        trap("INT")  { log.info "Interrupted"; EventMachine.stop }
         channel = EventMachine::Channel.new
         r = EventMachine::Hiredis::Client.connect(redis_url.host, redis_url.port)
+        log.info "Binding to pattern #{db}:#{@my_pattern}"
         r.psubscribe("#{db}:#{@my_pattern}")
         r.on(:pmessage) do |pattern, event, message|
+          log.debug "Got message"
           channel.push "#{message}"
         end
+        r.errback { log.info "Something went tango-uniform"; EventMachine.stop }
 
-        sub = channel.subscribe {|msg| dest.call(msg)}
+        sub = channel.subscribe {|msg| log.info "Calling message handler"; dest.call(msg)}
       end
     end
   end

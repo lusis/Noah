@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
-require './watcher-idea.rb'
+
+require File.join(File.dirname(__FILE__), '..','lib','noah','watcher')
 require 'logger'
 
-log = Logger.new(STDOUT)
-
-Noah::Watcher.watch do
+class LoggingWatcher < Noah::Watcher
+  redis_host "redis://127.0.0.1:6379/5"
   pattern "noah.Noah::Application*"
-  destination Proc.new {|x| log.debug(x)}
+  destination Proc.new {|x| log = Logger.new(STDOUT); log.debug(x)}
   run!
 end
