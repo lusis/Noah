@@ -35,11 +35,21 @@ module Noah
       @deleted_name = self.name
     end
 
+    def dbnum
+      require 'uri'
+      o = Ohm.options.first
+      if o[:db].nil? && o[:url].nil?
+        # We're on db 0
+        "0"
+      else
+        o[:db].nil? ? "#{o[:url].split('/').last}" : "#{o[:db]}"
+      end
+    end
     ["save", "create", "update", "delete"].each do |meth|
       class_eval do
         define_method("notify_via_redis_#{meth}".to_sym) do
           self.name.nil? ? name=@deleted_name : name=self.name
-          pub_category = "noah.#{self.class.to_s}[name].#{meth}"
+          pub_category = "#{dbnum}:noah.#{self.class.to_s}[name].#{meth}"
           Ohm.redis.publish(pub_category, self.to_json)
         end
       end
@@ -47,8 +57,8 @@ module Noah
 
   end
 end
-require File.join(File.dirname(__FILE__), 'hosts')
-require File.join(File.dirname(__FILE__), 'services')
-require File.join(File.dirname(__FILE__), 'applications')
-require File.join(File.dirname(__FILE__), 'configurations')
-require File.join(File.dirname(__FILE__), 'watchers')
+require File.join(File.dirname(__FILE__), 'models','hosts')
+require File.join(File.dirname(__FILE__), 'models','services')
+require File.join(File.dirname(__FILE__), 'models','applications')
+require File.join(File.dirname(__FILE__), 'models','configurations')
+require File.join(File.dirname(__FILE__), 'models','watchers')
