@@ -3,10 +3,6 @@
 
     Need to finish documenting everything for YARD to pick up.
 
-* Namespace models
-
-   This is proving to be more of a headache than I though. In the interim, I'm going to prepend models with Noah (i.e. `Host` becomes `NoahHost`)
-
 * Stabilize API
 
     I'm seriously considering moving to a single endpoint with JSON request bodies. Still up in the air. I'm not totally sold on the current layout.
@@ -43,13 +39,19 @@
   - see [[https://github.com/downloads/lusis/Noah/noah.war]]
 
 * Examples
-  - Sort of done. Demo app is up! [[http://noah-demo.heroku.com/]]
+  - Sort of done. Demo app is up! [[http://noah-demo.heroku.com/]]. Also see `examples` directory.
 
 * Consider ditching Sinatra::Namespace
   - Done. It was also causing issues with YARD generation. @rkh confirmed known issue via twitter.
 
+* Namespace models
+  - Done.
+
+* Watchers
+  - Partially done. Framework is in place to create a custom Watcher by hooking directly into Redis. Need to expand that to "official" watchers
+
+
 ## Watcher specific stuff
-* Implement a watcher client
 * Implement a watcher endpoint
 * Implement webhooks
 * Implement AMQP
