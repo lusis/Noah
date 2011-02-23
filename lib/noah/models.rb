@@ -36,20 +36,18 @@ module Noah
     end
 
     def dbnum
-      require 'uri'
       o = Ohm.options.first
-      if o[:db].nil? && o[:url].nil?
-        # We're on db 0
-        "0"
-      else
-        o[:db].nil? ? "#{o[:url].split('/').last}" : "#{o[:db]}"
-      end
+      return "0" if o.nil?
+      return "0" if (o[:db].nil? && o[:url].nil?)
+      o[:db].nil? ? "#{o[:url].split('/').last}" : "#{o[:db]}"
     end
+
     ["save", "create", "update", "delete"].each do |meth|
       class_eval do
         define_method("notify_via_redis_#{meth}".to_sym) do
+          db = self.dbnum
           self.name.nil? ? name=@deleted_name : name=self.name
-          pub_category = "#{dbnum}:noah.#{self.class.to_s}[name].#{meth}"
+          pub_category = "#{db}:noah.#{self.class.to_s}[name].#{meth}"
           Ohm.redis.publish(pub_category, self.to_json)
         end
       end
