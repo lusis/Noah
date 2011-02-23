@@ -57,8 +57,10 @@ module Noah
         trap("INT")  { log.info "Interrupted"; EventMachine.stop }
         channel = EventMachine::Channel.new
         r = EventMachine::Hiredis::Client.connect(redis_url.host, redis_url.port)
-        log.info "Binding to pattern #{db}:#{@my_pattern}"
-        r.psubscribe("#{db}:#{@my_pattern}")
+        # Pulling out dbnum for now. Need to rethink it
+        #log.info "Binding to pattern #{db}:#{@my_pattern}"
+        log.info "Binding to pattern #{@my_pattern}"
+        r.psubscribe("#{@my_pattern}")
         r.on(:pmessage) do |pattern, event, message|
           log.debug "Got message"
           channel.push "#{message}"

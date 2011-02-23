@@ -47,8 +47,10 @@ module Noah
         define_method("notify_via_redis_#{meth}".to_sym) do
           db = self.dbnum
           self.name.nil? ? name=@deleted_name : name=self.name
-          pub_category = "#{db}:noah.#{self.class.to_s}[name].#{meth}"
-          Ohm.redis.publish(pub_category, self.to_json)
+          # Pulling out dbnum for now. Need to rethink it
+          #pub_category = "#{db}:noah.#{self.class.to_s}[#{name}].#{meth}"
+          pub_category = "noah.#{self.class.to_s}.#{name}.#{meth}"
+          Ohm.redis.publish(pub_category, self.to_hash.merge({"action" => meth, "pubcategory" => pub_category}).to_json)
         end
       end
     end
