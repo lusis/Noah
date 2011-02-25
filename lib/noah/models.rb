@@ -45,6 +45,7 @@ module Noah
           #pub_category = "#{db}:noah.#{self.class.to_s}[#{name}].#{meth}"
           pub_category = "noah.#{self.class.to_s}.#{name}.#{meth}"
           Ohm.redis.publish(pub_category, self.to_hash.merge({"action" => meth, "pubcategory" => pub_category}).to_json)
+          # self.method_defined? "#{meth}_hook".to_sym
         end
       end
     end
@@ -56,3 +57,4 @@ require File.join(File.dirname(__FILE__), 'models','services')
 require File.join(File.dirname(__FILE__), 'models','applications')
 require File.join(File.dirname(__FILE__), 'models','configurations')
 require File.join(File.dirname(__FILE__), 'models','watchers')
+require File.join(File.dirname(__FILE__), 'models','epehmerals')
