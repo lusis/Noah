@@ -65,7 +65,7 @@ module Noah
           log.debug "Got message"
           channel.push "#{message}"
         end
-        r.errback { log.info "Something went tango-uniform"; EventMachine.stop }
+        r.errback { log.info "Something went tango-uniform" }
 
         sub = channel.subscribe {|msg| log.info "Calling message handler"; dest.call(msg)}
       end
