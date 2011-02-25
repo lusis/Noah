@@ -1,3 +1,4 @@
+require 'digest/sha1'
 module Noah
   class Watcher < Model #NYI
     # This is a "special rainbow" of a class
@@ -12,9 +13,16 @@ module Noah
 
     def validate
       super
-      assert_present :client, :endpoint, :pattern
+      assert_present :client
+      assert_present :endpoint
+      assert_present :pattern
       assert_unique [:client, :endpoint, :pattern]
     end
+
+    def name
+      @name = Digest::SHA1.hexdigest "#{client}#{endpoint}#{pattern}"
+    end
+
   end
 
   class Watchers
