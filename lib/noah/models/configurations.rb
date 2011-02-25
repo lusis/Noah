@@ -1,16 +1,19 @@
 module Noah
   class Configuration < Model
 
+    attribute :name
     attribute :format
     attribute :body
     attribute :new_record
     reference :application, Application
 
+    index :name
     index :format
     index :body
 
     def validate
       super
+      assert_present :name
       assert_present :format
       assert_present :body
       assert_present :application_id

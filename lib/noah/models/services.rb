@@ -2,13 +2,16 @@ module Noah
 
   class Service < Model
 
+    attribute :name
     attribute :status
     reference :host, Host
 
+    index :name
     index :status
 
     def validate
       super
+      assert_present :name
       assert_present :status
       assert_present :host_id
       assert_unique [:name, :host_id]

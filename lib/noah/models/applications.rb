@@ -1,8 +1,15 @@
 require File.join(File.dirname(__FILE__), 'configurations')
 module Noah
   class Application < Model
-
+    attribute :name
     collection :configurations, Configuration
+
+    index :name
+
+    def validate
+      super
+      assert_present :name
+    end
 
     def to_hash
       arr = []

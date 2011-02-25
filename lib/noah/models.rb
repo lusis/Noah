@@ -9,8 +9,6 @@ module Noah
       model.send :include, Ohm::Callbacks
       model.send :include, Ohm::ExtraValidations
 
-      model.attribute :name
-      model.index :name
       model.after :save, :notify_via_redis_save
       model.after :create, :notify_via_redis_create
       model.after :update, :notify_via_redis_update
@@ -21,10 +19,6 @@ module Noah
   end
 
   module ModelClassMethods
-    def validate
-      super
-      assert_present :name
-    end
 
     def is_new?
       self.created_at == self.updated_at

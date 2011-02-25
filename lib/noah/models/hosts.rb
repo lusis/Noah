@@ -4,13 +4,16 @@ module Noah
     # Host model
     # @return {Host} a {Host} object
 
+    attribute :name
     attribute :status
     collection :services, Service
 
+    index :name
     index :status
 
     def validate
       super
+      assert_present :name
       assert_present :status
       assert_unique :name
       assert_member :status, ["up","down","pending"]

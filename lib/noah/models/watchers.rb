@@ -1,17 +1,19 @@
 module Noah
   class Watcher < Model #NYI
+    # This is a "special rainbow" of a class
 
     attribute :client
+    attribute :pattern
     attribute :endpoint
-    attribute :event
-    attribute :action 
 
     index :client
-    index :event
+    index :pattern
+    index :endpoint
 
     def validate
-      assert_present :client, :endpoint, :event, :action
-      assert_unique [:client, :endpoint, :event, :action]
+      super
+      assert_present :client, :endpoint, :pattern
+      assert_unique [:client, :endpoint, :pattern]
     end
   end
 
