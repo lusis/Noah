@@ -62,6 +62,8 @@ module Noah
     load File.join(File.dirname(__FILE__), 'service_routes.rb')
     load File.join(File.dirname(__FILE__), 'application_routes.rb')
     load File.join(File.dirname(__FILE__), 'configuration_routes.rb')
+    #load File.join(File.dirname(__FILE__), 'watcher_routes.rb')
+    #load File.joint(File.dirname(__FILE__), 'ephemeral_routes.rb')
 
   end
 end
