@@ -1,7 +1,8 @@
 require 'digest/sha1'
 module Noah
   class Watcher < Model #NYI
-    # This is a "special rainbow" of a class
+    # Don't trust anything in here yet
+    # I'm still trying a few things
 
     attribute :client
     attribute :pattern
@@ -23,6 +24,12 @@ module Noah
       @name = Digest::SHA1.hexdigest "#{client}#{endpoint}#{pattern}"
     end
 
+    private
+    def path_to_pattern 
+    end
+
+    def pattern_to_path
+    end
   end
 
   class Watchers
