@@ -10,7 +10,7 @@ module Noah
       model.send :include, Ohm::ExtraValidations
 
       model.after :save, :notify_via_redis_save
-      model.after :create, :notify_via_redis_create
+      #model.after :create, :notify_via_redis_create
       model.after :update, :notify_via_redis_update
       model.before :delete, :stash_name
       model.after :delete, :notify_via_redis_delete
@@ -44,7 +44,7 @@ module Noah
       
     protected
     def patternize_me
-      "noah.#{self.class_to_lower}.#{name}"
+      "//noah/#{self.class_to_lower}/#{name.gsub(/^\//,'')}"
     end
     def stash_name
       @deleted_name = self.name
@@ -69,7 +69,7 @@ module Noah
           #pub_category = "#{db}:noah.#{self.class.to_s}[#{name}].#{meth}"
           pub_category = "#{self.patternize_me}.#{meth}"
           Ohm.redis.publish(pub_category, self.to_hash.merge({"action" => meth, "pubcategory" => pub_category}).to_json)
-          # self.method_defined? "#{meth}_hook".to_sym
+          self.send("#{meth}_hook".to_sym) unless self.protected_methods.member?("#{meth}_hook".to_sym) == false
         end
       end
     end

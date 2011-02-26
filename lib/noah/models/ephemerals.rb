@@ -17,6 +17,9 @@ module Noah
       @name = path
     end
 
+    protected
+    def save_hook
+    end
   end
 
 end
