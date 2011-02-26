@@ -24,11 +24,35 @@ module Noah
       self.created_at == self.updated_at
     end
 
+
+    def watch!(opts={:endpoint => nil, :pattern => nil})
+      # TODO: There's still a condition here for duplicate watches
+      # i.e. User already has a wildcard for that endpoint and adds a more narrow scope
+      # need to handle that either here or in the watcher class
+      base_pattern = "#{self.patternize_me}."
+      opts[:endpoint].nil? ? (raise ArgumentError, "Need an endpoint") : endpoint=opts[:endpoint]
+      opts[:pattern].nil? ? pattern=base_pattern+"*" : pattern=base_pattern+opts[:pattern]
+
+      begin
+        w = Watcher.new :pattern => pattern, :endpoint => endpoint
+        w.valid? ? w.save : (raise "#{w.errors}")
+        w.name
+      rescue Exception => e
+        e.message
+      end
+    end
+      
     protected
+    def patternize_me
+      "noah.#{self.class_to_lower}.#{name}"
+    end
     def stash_name
       @deleted_name = self.name
     end
 
+    def class_to_lower
+      self.class.to_s.gsub(/(.*)::(\w)/,'\2').downcase
+    end
     def dbnum
       o = Ohm.options.first
       return "0" if o.nil?
@@ -43,7 +67,7 @@ module Noah
           self.name.nil? ? name=@deleted_name : name=self.name
           # Pulling out dbnum for now. Need to rethink it
           #pub_category = "#{db}:noah.#{self.class.to_s}[#{name}].#{meth}"
-          pub_category = "noah.#{self.class.to_s}.#{name}.#{meth}"
+          pub_category = "#{self.patternize_me}.#{meth}"
           Ohm.redis.publish(pub_category, self.to_hash.merge({"action" => meth, "pubcategory" => pub_category}).to_json)
           # self.method_defined? "#{meth}_hook".to_sym
         end

@@ -4,28 +4,27 @@ module Noah
     # Don't trust anything in here yet
     # I'm still trying a few things
 
-    attribute :client
     attribute :pattern
     attribute :endpoint
 
-    index :client
     index :pattern
     index :endpoint
 
     def validate
       super
-      assert_present :client
       assert_present :endpoint
       assert_present :pattern
-      assert_unique [:client, :endpoint, :pattern]
+      assert_unique [:endpoint, :pattern]
     end
 
     def name
-      @name = Digest::SHA1.hexdigest "#{client}#{endpoint}#{pattern}"
+      @name = Digest::SHA1.hexdigest "#{endpoint}#{pattern}"
     end
 
     private
-    def path_to_pattern 
+    # Not sure about these next two.
+    # Could get around patterns changing due to namespace changes
+    def path_to_pattern
     end
 
     def pattern_to_path
