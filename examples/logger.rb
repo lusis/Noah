@@ -5,7 +5,7 @@ require 'logger'
 
 class LoggingWatcher < Noah::Watcher
   redis_host "redis://127.0.0.1:6379/5"
-  pattern "noah.application.*"
+  pattern "//noah/application/*"
   destination Proc.new {|x| log = Logger.new(STDOUT); log.debug(x)}
   run!
 end

@@ -15,7 +15,7 @@ EventMachine.run do
 
   Thin::Server.start Noah::App
   r = EventMachine::Hiredis::Client.connect
-  r.psubscribe("noah.*")
+  r.psubscribe("//noah/*")
   r.on(:pmessage) do |pattern, event, message|
     @channel.push "(#{event}) #{message}"
   end

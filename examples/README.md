@@ -21,7 +21,7 @@ Essentially the idea is that you tap into the Redis subscription with a defined 
 	require './watcher-idea.rb'
 
 	Noah::Watcher.watch do
-	  pattern "noah.Configuration"
+	  pattern "//noah/configuration/*"
 	  destination Proc.new {|x| something_with(x)}
 	  run!
 	end
