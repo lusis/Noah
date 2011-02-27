@@ -19,7 +19,15 @@ module Noah
 
     protected
     def save_hook
+      # called after any create,update,delete
+      # logic needed to expire any orphaned ephemerals
     end
+
+    private
+    def path_protected?(path_part)
+      # Check for protected paths in ephemeral nodes
+    end
+      
   end
 
 end

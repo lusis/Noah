@@ -9,8 +9,9 @@ module Noah
       model.send :include, Ohm::Callbacks
       model.send :include, Ohm::ExtraValidations
 
-      model.after :save, :notify_via_redis_save
-      #model.after :create, :notify_via_redis_create
+      # removing this as it's simply redundant
+      # model.after :save, :notify_via_redis_save
+      model.after :create, :notify_via_redis_create
       model.after :update, :notify_via_redis_update
       model.before :delete, :stash_name
       model.after :delete, :notify_via_redis_delete
@@ -46,6 +47,7 @@ module Noah
     def patternize_me
       "//noah/#{self.class_to_lower}/#{name.gsub(/^\//,'')}"
     end
+
     def stash_name
       @deleted_name = self.name
     end
@@ -60,7 +62,7 @@ module Noah
       o[:db].nil? ? "#{o[:url].split('/').last}" : "#{o[:db]}"
     end
 
-    ["save", "create", "update", "delete"].each do |meth|
+    ["create", "update", "delete"].each do |meth|
       class_eval do
         define_method("notify_via_redis_#{meth}".to_sym) do
           db = self.dbnum
@@ -69,6 +71,9 @@ module Noah
           #pub_category = "#{db}:noah.#{self.class.to_s}[#{name}].#{meth}"
           pub_category = "#{self.patternize_me}.#{meth}"
           Ohm.redis.publish(pub_category, self.to_hash.merge({"action" => meth, "pubcategory" => pub_category}).to_json)
+
+          # The following provides a post post-action hook. It allows a class to provide it's own handling after the fact
+          # good example is in [Noah::Ephemeral] where it's used to check for/clean up expired ephemeral nodes entries
           self.send("#{meth}_hook".to_sym) unless self.protected_methods.member?("#{meth}_hook".to_sym) == false
         end
       end

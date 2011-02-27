@@ -1,3 +1,6 @@
+module Noah
+  PROTECTED_PATHS = %w[a c h s w]
+end
 begin
   require 'yajl'
 rescue LoadError
