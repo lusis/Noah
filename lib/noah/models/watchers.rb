@@ -21,6 +21,11 @@ module Noah
       @name = Digest::SHA1.hexdigest "#{endpoint}#{pattern}"
     end
 
+    def to_hash
+      h = {:pattern => pattern, :endpoint => endpoint, :created_at => created_at, :updated_at => updated_at}
+      super.merge(h)
+    end
+
     private
     # Not sure about these next two.
     # Could get around patterns changing due to namespace changes

@@ -7,38 +7,60 @@ require 'em-hiredis'
 require 'thin'
 require 'noah'
 
-EventMachine.run do
-  @logger = Logger.new(STDOUT)
-  # Passing messages...like a boss
-  @channel = EventMachine::Channel.new
+LOGGER = Logger.new(STDOUT)
 
-  r = EventMachine::Hiredis::Client.connect
-  r.psubscribe("//noah/*")
-  r.on(:pmessage) do |pattern, event, message|
-    
-    @channel.push "[#{event}] [#{message}]"
-    @logger.debug("Publishing [#{event}]")
+class EventMachine::NoahAgent
+  include EM::Deferrable
+
+  @@watchers = Noah::Watchers.all
+
+  def initialize
+    @logger = LOGGER
+    @logger.debug("Initializing with #{@@watchers.size} registered watches")
+    # Some logic to spawn protocol specific agents
+    # i.e. http, amqp, xmpp, redis, whatever
+    if EventMachine.reactor_running?
+      @http_channel = EventMachine::Channel.new
+      @redis_channel = EventMachine::Channel.new
+      @log_channel = EventMachine::Channel.new
+    else
+      log.fatal("Must be inside a reactor!")
+    end
   end
 
-  sub = @channel.subscribe {|msg|
-    puts msg
-  }
-#  EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 3001) do |ws|
-#    ws.onopen {
-#      sub = @channel.subscribe { |msg| 
-#        ws.send msg 
-#      }
-#
-#      @channel.push "#{sub} connected and waiting...."
-#
-#      ws.onmessage { |msg|
-#        @channel.push "<#{sub}>: #{msg}"
-#      }
-#
-#      ws.onclose {
-#        @channel.unsubscribe(sub)
-#      }
-#    }
-#  end
+  def watchers
+    @@watchers.size
+  end
 
+  def reread_watchers
+    @logger.debug("Found new watches")
+    @logger.debug("Current watch count: #{@@watchers.size}")
+    @@watchers = Noah::Watchers.all
+    @logger.debug("New watch count: #{@@watchers.size}")
+  end
+
+  def process_message(msg)
+    # This is just for testing for now
+    @logger.info(msg)
+  end
+end
+
+EventMachine.run do
+  logger = LOGGER
+  noah = EventMachine::NoahAgent.new
+  # Passing messages...like a boss
+  channel = EventMachine::Channel.new
+
+  r = EventMachine::Hiredis::Client.connect
+  logger.debug("Starting up")
+  r.psubscribe("//noah/*")
+  r.on(:pmessage) do |pattern, event, message|
+    noah.reread_watchers if event =~ /^\/\/noah\/watcher\/.*/
+    channel.push "[#{event}][#{message}]"
+    logger.debug("Publishing [#{event}]")
+  end
+
+  sub = channel.subscribe {|msg|
+    noah.process_message(msg) unless noah.watchers == 0
+  }
 end
