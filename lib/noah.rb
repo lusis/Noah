@@ -11,5 +11,6 @@ require 'yaml'
 require 'sinatra/base'
 require 'sinatra/namespace'
 
+require File.join(File.dirname(__FILE__), 'noah','validations')
 require File.join(File.dirname(__FILE__), 'noah','models')
 require File.join(File.dirname(__FILE__), 'noah','app')

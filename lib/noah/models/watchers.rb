@@ -3,6 +3,7 @@ module Noah
   class Watcher < Model #NYI
     # Don't trust anything in here yet
     # I'm still trying a few things
+    include WatcherValidations
 
     attribute :pattern
     attribute :endpoint
@@ -15,6 +16,8 @@ module Noah
       assert_present :endpoint
       assert_present :pattern
       assert_unique [:endpoint, :pattern]
+      assert_not_superset
+      assert_not_subset
     end
 
     def name
@@ -24,6 +27,22 @@ module Noah
     def to_hash
       h = {:pattern => pattern, :endpoint => endpoint, :created_at => created_at, :updated_at => updated_at}
       super.merge(h)
+    end
+
+    def self.watch_list
+      hsh = Hash.new
+      watch_list = self.all.sort_by(:pattern)
+      watch_list.each do |watch|
+        p = watch.pattern.to_sym
+        e = watch.endpoint
+        if hsh.has_key?(p)
+          hsh[p].push(watch.endpoint)
+        else
+          hsh[p] = Array.new
+          hsh[p].push(watch.endpoint)
+        end
+      end
+      hsh
     end
 
     private
