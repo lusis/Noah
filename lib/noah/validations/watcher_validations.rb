@@ -9,6 +9,10 @@ module Noah
         self.instance_of?(Noah::Watcher) ? (assert endpoint_overrides?, error) : (assert false, "Validation not applicable")
       end
 
+      def assert_valid_watch(error = [:pattern, :invalid_format])
+        self.instance_of?(Noah::Watcher) ? (assert pattern_valid?, error) : (assert false, "Validation not applicable")
+      end
+
       private
       def endpoint_covered?
         watches = Watcher.all.find(:endpoint => self.endpoint).sort
@@ -27,6 +31,14 @@ module Noah
           if (w.pattern.size > self.pattern.size) && w.pattern.match(/^#{self.pattern}/)
             return false
           end
+        end
+      rescue ArgumentError
+        return false
+      end
+
+      def pattern_valid?
+        unless self.pattern.match(/^\/\/noah\/.*\/$/)
+          return false
         end
       rescue ArgumentError
         return false

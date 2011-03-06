@@ -69,7 +69,7 @@ module Noah
           self.name.nil? ? name=@deleted_name : name=self.name
           # Pulling out dbnum for now. Need to rethink it
           #pub_category = "#{db}:noah.#{self.class.to_s}[#{name}].#{meth}"
-          pub_category = "#{self.patternize_me}.#{meth}"
+          pub_category = "#{self.patternize_me}"
           Ohm.redis.publish(pub_category, self.to_hash.merge({"action" => meth, "pubcategory" => pub_category}).to_json)
 
           # The following provides a post post-action hook. It allows a class to provide it's own handling after the fact

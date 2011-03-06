@@ -13,32 +13,24 @@ LOGGER = Logger.new(STDOUT)
 class EventMachine::NoahAgent
   include EM::Deferrable
 
-  @@watchers = Noah::Watchers.all
+  @@watchers = Noah::Watcher.watch_list
 
   def initialize
     @logger = LOGGER
     @logger.debug("Initializing with #{@@watchers.size} registered watches")
-    # Some logic to spawn protocol specific agents
-    # i.e. http, amqp, xmpp, redis, whatever
     if EventMachine.reactor_running?
-      @http_worker = EM.spawn {|msg, ep|
+      @worker = EM.spawn {|event, message, watch_list|
         logger = LOGGER
-        logger.debug("spawning http processor")
-        logger.info("got ep on http worker: #{ep}")
-        logger.info("got msg on http worker: #{msg}")
-      }
-      @redis_worker = EM.spawn {|msg|
-        logger = LOGGER
-        logger.debug("spawning redis worker")
-        logger.info("got msg on redis worker: #{msg}")
-      }
-      @log_worker = EM.spawn {|msg|
-        logger = LOGGER
-        logger.debug("spawning logger worker: #{msg}")
-      }
-      @amqp_worker = EM.spawn {|msg|
-        logger = LOGGER
-        logger.debug("spawning amqp worker: #{msg}")
+        logger.debug("Worker initiated")
+        logger.info("got event on http worker: #{event}")
+        logger.info("got message on http worker: #{message}")
+        matches = watch_list.find_all{|w| event =~ /^#{Base64.decode64(w)}/}
+        logger.debug("Found #{matches.size} matches for #{event}")
+        EM::Iterator.new(matches).each do |watch, iter|
+          p, ep = Base64.decode64(watch).split("|")
+          logger.info("Sending message to: #{ep} for pattern: #{p}")
+          iter.next
+        end
       }
     else
       logger.fatal("Must be inside a reactor!")
@@ -52,18 +44,18 @@ class EventMachine::NoahAgent
   def reread_watchers
     @logger.debug("Found new watches")
     @logger.debug("Current watch count: #{@@watchers.size}")
-    @@watchers = Noah::Watchers.all
+    @@watchers = Noah::Watcher.watch_list
     @logger.debug("New watch count: #{@@watchers.size}")
-    @logger.debug(@@watchers)
+    #@logger.debug(@@watchers)
   end
 
   def broker(msg)
     # This is just for testing for now
-    @logger.info(msg.class)
     @logger.warn(msg)
-    e,m = msg.split("\t")
-
-    @http_worker.notify m, e
+    e,m = msg.split("|")
+    be = Base64.encode64(e).gsub("\n","")
+    @logger.info("Encoded event: #{be}")
+    @worker.notify e, m, @@watchers.clone
   end
 end
 
@@ -78,11 +70,12 @@ EventMachine.run do
   r.psubscribe("//noah/*")
   r.on(:pmessage) do |pattern, event, message|
     noah.reread_watchers if event =~ /^\/\/noah\/watcher\/.*/
-    master_channel.push "#{event}\t#{message}"
+    master_channel.push "#{event}|#{message}"
     logger.debug("Publishing [#{event}]")
   end
 
   sub = master_channel.subscribe {|msg|
+    # We short circuit if we have no watchers
     noah.broker(msg) unless noah.watchers == 0
   }
 end

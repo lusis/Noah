@@ -21,7 +21,7 @@ module Noah
     end
 
     def name
-      @name = Digest::SHA1.hexdigest "#{endpoint}#{pattern}"
+      @name = Base64.encode64("#{pattern}|#{endpoint}").gsub("\n","")
     end
 
     def to_hash
@@ -30,19 +30,10 @@ module Noah
     end
 
     def self.watch_list
-      hsh = Hash.new
-      watch_list = self.all.sort_by(:pattern)
-      watch_list.each do |watch|
-        p = watch.pattern.to_sym
-        e = watch.endpoint
-        if hsh.has_key?(p)
-          hsh[p].push(watch.endpoint)
-        else
-          hsh[p] = Array.new
-          hsh[p].push(watch.endpoint)
-        end
-      end
-      hsh
+      arr = []
+      watches = self.all.sort_by(:pattern)
+      watches.each {|w| arr << w.name}
+      arr
     end
 
     private
