@@ -12,16 +12,16 @@ a.valid?
 a.save
 
 a.watch! :endpoint => 'http://localhost:4567/webhook' # Boom headshot
-pp Noah::Watcher.find(:pattern => "noah.application.my_kickass_application.*").first
-# Default watch pattern is 'noah.model.name.*'
+pp Noah::Watcher.find(:pattern => "//noah/application/my_kickass_application").first
+# Default watch pattern is '//noah/model/name'
 
-# You can also register a new watch with a custom pattern
-b = Noah::Application.new
-b.name = "my_other_awesome_app"
+# You can also register a new watch with a custom pattern - kind of pointless obviously
+b = Noah::Configuration.new
+b.name = "my_awesome_configuration"
 b.valid?
 b.save
-b.watch! :endpoint => 'http://localhost:4567/webhook', :pattern => 'delete'
-pp Noah::Watcher.find(:pattern => "noah.application.my_other_awesome_app.delete").first
+b.watch! :endpoint => 'http://localhost:4567/webhook', :pattern => '//noah/configuration/my_awesome_configuration'
+pp Noah::Watcher.find(:pattern => "//noah/configuration/my_awesome_configuration").first
 # There's now a watcher for pattern 'noah.application.my_other_awesome_app.delete'
 
 # The idea now is that some background watcher agent will pick up on these registered watches

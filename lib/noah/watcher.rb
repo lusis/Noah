@@ -25,7 +25,7 @@ module Noah
 
     def initialize
       @my_redis ||= ENV['REDIS_URL']
-      @my_pattern ||= 'noah.*'
+      @my_pattern ||= '//noah'
     end
 
     def self.redis_host(host)
@@ -60,7 +60,7 @@ module Noah
         # Pulling out dbnum for now. Need to rethink it
         #log.info "Binding to pattern #{db}:#{@my_pattern}"
         log.info "Binding to pattern #{@my_pattern}"
-        r.psubscribe("#{@my_pattern}")
+        r.psubscribe("#{@my_pattern}*")
         r.on(:pmessage) do |pattern, event, message|
           log.debug "Got message"
           channel.push "#{message}"

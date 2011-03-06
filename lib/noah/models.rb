@@ -27,12 +27,9 @@ module Noah
 
 
     def watch!(opts={:endpoint => nil, :pattern => nil})
-      # TODO: There's still a condition here for duplicate watches
-      # i.e. User already has a wildcard for that endpoint and adds a more narrow scope
-      # need to handle that either here or in the watcher class
-      base_pattern = "#{self.patternize_me}."
+      base_pattern = "#{self.patternize_me}"
       opts[:endpoint].nil? ? (raise ArgumentError, "Need an endpoint") : endpoint=opts[:endpoint]
-      opts[:pattern].nil? ? pattern=base_pattern+"*" : pattern=base_pattern+opts[:pattern]
+      opts[:pattern].nil? ? pattern=base_pattern : pattern=opts[:pattern]
 
       begin
         w = Watcher.new :pattern => pattern, :endpoint => endpoint
@@ -45,7 +42,7 @@ module Noah
       
     protected
     def patternize_me
-      "//noah/#{self.class_to_lower}/#{name.gsub(/^\//,'')}"
+      "//noah/#{self.class_to_lower}/#{name}"
     end
 
     def stash_name
