@@ -4,6 +4,8 @@ require 'rubygems'
 require 'logger'
 require 'optparse'
 require 'em-hiredis'
+require 'eventmachine'
+require 'em-http-request'
 require 'thin'
 require 'noah'
 require 'json'
@@ -29,6 +31,15 @@ class EventMachine::NoahAgent
         EM::Iterator.new(matches).each do |watch, iter|
           p, ep = Base64.decode64(watch).split("|")
           logger.info("Sending message to: #{ep} for pattern: #{p}")
+          http = EM::HttpRequest.new(ep, :connection_timeout => 2, :inactivity_timeout => 4).post :body => message
+          http.callback {
+            LOGGER.debug("Message posted to #{ep} successfully")
+            #iter.next
+          }
+          http.errback {
+            LOGGER.debug("Something went wrong")
+            #iter.net
+          }
           iter.next
         end
       }
@@ -71,7 +82,7 @@ EventMachine.run do
   r.on(:pmessage) do |pattern, event, message|
     noah.reread_watchers if event =~ /^\/\/noah\/watcher\/.*/
     master_channel.push "#{event}|#{message}"
-    logger.debug("Publishing [#{event}]")
+    logger.debug("Saw[#{event}]")
   end
 
   sub = master_channel.subscribe {|msg|
