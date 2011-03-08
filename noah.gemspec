@@ -19,12 +19,12 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.add_dependency("hiredis", ["= 0.3.1"])
   s.add_dependency("redis", ["= 2.1.1"])
   s.add_dependency("nest", ["= 1.1.0"])
   s.add_dependency("rack", ["= 1.2.1"])
   s.add_dependency("tilt", ["= 1.2.2"])
   s.add_dependency("sinatra", ["= 1.1.2"])
-  s.add_dependency("sinatra-namespace", ["0.6.1"])
   s.add_dependency("ohm", ["= 0.1.3"])
   s.add_dependency("ohm-contrib", ["= 0.1.1"])
   s.add_dependency("haml", ["= 3.0.25"])
@@ -45,7 +45,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rspec", ["~> 2.5"])
   s.add_development_dependency("rcov", ["= 0.9.9"])
   s.add_development_dependency("rack-test", ["= 0.5.7"])
-  s.add_development_dependency("ZenTest", ["= 4.5.0"])
-  s.add_development_dependency("autotest", ["= 4.4.6"])
-  s.add_development_dependency("autotest-growl", ["= 0.2.9"])
 end

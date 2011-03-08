@@ -3,12 +3,31 @@ require 'bundler'
 require 'rspec/core'
 require 'rspec/core/rake_task'
 
-task :default => [:spec]
-task :test => [:spec]
+REDIS_DIR = File.expand_path(File.join("..", "spec", "support"), __FILE__)
+REDIS_CNF = File.join(REDIS_DIR, "test-redis.conf")
 
 Bundler::GemHelper.install_tasks
 RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
+end
+
+
+task :default => :run
+task :test => [:start, :spec, :stop]
+
+desc "Run tests and manage server start/stop"
+task :run => [:start, :spec, :stop]
+
+desc "Start the Redis server"
+task :start do
+  puts "Starting redis-server"
+  system "redis-server #{REDIS_CNF}"
+end
+
+desc "Stop the Redis server"
+task :stop do
+  puts "Killing redis"
+  system "killall -TERM redis-server"
 end
 
 namespace :coverage do

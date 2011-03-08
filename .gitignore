@@ -13,3 +13,4 @@ warbler/*
 Gemfile.lock
 doc
 .yardoc/*
+examples/log/*
