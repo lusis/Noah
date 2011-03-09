@@ -38,6 +38,14 @@ class Noah::App
     end  
   end
 
+  put '/c/:configname/watch' do |configname|
+    required_params = ["endpoint"]
+    data = JSON.parse(request.body.read)
+    (data.keys.sort == required_params.sort) ? (c = Noah::Configuration.find(:name => configname).first) : (raise "Missing Parameters")
+    c.nil? ? (halt 404) : (w = c.watch!(:endpoint => data['endpoint']))
+    w.to_json
+  end
+
   put '/c/:appname/:element?' do |appname, element|
     app = Noah::Application.find_or_create(:name => appname)
     config = Noah::Configuration.find_or_create(:name => element, :application_id => app.id)

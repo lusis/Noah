@@ -25,7 +25,7 @@ module Noah
     end
 
     def to_hash
-      h = {:pattern => pattern, :endpoint => endpoint, :created_at => created_at, :updated_at => updated_at}
+      h = {:pattern => pattern, :name => name, :endpoint => endpoint, :created_at => created_at, :updated_at => updated_at}
       super.merge(h)
     end
 

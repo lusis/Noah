@@ -5,6 +5,10 @@ class Noah::App
     # Eventually I'll move to root path
   end
 
+  put '/e/*/watch' do
+    # Logic for adding watches to ephemerals
+  end
+
   put '/e/*' do
     # Some logic for creating ephemerals
   end

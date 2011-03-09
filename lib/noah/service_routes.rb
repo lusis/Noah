@@ -30,6 +30,14 @@ class Noah::App
     end  
   end
 
+  put '/s/:servicename/watch' do |servicename|
+    required_params = ["endpoint"]
+    data = JSON.parse(request.body.read)
+    (data.keys.sort == required_params.sort) ? (s = Noah::Service.find(:name => servicename).first) : (raise "Missing Parameters")
+    s.nil? ? (halt 404) : (w = s.watch!(:endpoint => data['endpoint']))
+    w.to_json
+  end
+
   put '/s/:servicename/?' do |servicename|
     required_params = ["status", "host", "name"]
     data = JSON.parse(request.body.read)
