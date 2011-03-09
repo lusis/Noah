@@ -1,4 +1,12 @@
 # Brain dump of stuff
+* Fix JRuby
+
+    This is an ongoing issue for me. I can't rely on stuff that's MRI only.
+
+* Break agent into separate gem
+
+    Again so that the server gem can be as lean as possible
+
 * Documentation
 
     Need to finish documenting everything for YARD to pick up.
@@ -13,15 +21,18 @@
 
 * Watchers
 
-    This is going to be a fun task. I'm serious.
+    **IN PROGRESS**
+    Need to resolve some issues around pathing for Configuration and Service nodes however watch registration and listing are up.    
+    Need to address alternative watcher URIs. Webhook is the only one supported right now.
 
 * Ephemeral nodes
 
+    **IN PROGRESS**
     Not sure how I want to implement that. Not too keen on storing them as in-memory hashes. Maybe a LRU in Redis?
 
 * Examples
 
-    I need to make some example apps to really demonstrate what I'm trying to accomplish. 
+    Pretty happy with the examples I have but I need more. Want some in other languages - Python, Java, whatever!
 
 * Clean up deps
 
@@ -34,9 +45,6 @@
 # Done TODOS
 * Github pages
   - see [[http://lusis.github.com/Noah/]]
-
-* Bundle a war
-  - see [[https://github.com/downloads/lusis/Noah/noah.war]]
 
 * Examples
   - Sort of done. Demo app is up! [[http://noah-demo.heroku.com/]]. Also see `examples` directory.
@@ -52,8 +60,6 @@
 
 
 ## Watcher specific stuff
-* Implement a watcher endpoint
-* Implement webhooks
 * Implement AMQP
 * Implement REST
 * Implement JMX on JRuby
