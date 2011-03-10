@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency("warbler", ["= 1.2.1"])
   else
     s.add_dependency("yajl-ruby") 
+    s.add_dependency("SystemTimer")
     s.add_dependency("thin")
   end
 

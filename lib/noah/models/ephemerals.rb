@@ -1,4 +1,3 @@
-require 'base64'
 module Noah
   class Ephemeral < Model #NYI
 
@@ -19,8 +18,7 @@ module Noah
     end
 
     def to_hash
-      data.nil? ? d=nil : d=Base64.decode64(data)
-      h = {:path => path, :data => d, :created_at => created_at, :updated_at => :updated_at}
+      h = {:path => path, :data => data, :created_at => created_at, :updated_at => :updated_at}
       super.merge(h)
     end
     protected
