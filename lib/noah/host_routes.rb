@@ -49,7 +49,7 @@ class Noah::App
       r = {"result" => "success","id" => "#{host.id}","status" => "#{host.status}", "name" => "#{host.name}", "new_record" => host.is_new?}
       r.to_json
     else
-      raise "#{host.errors}"
+      raise "#{format_errors(host)}"
     end
   end
 

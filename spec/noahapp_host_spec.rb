@@ -82,7 +82,7 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
         response = last_response.should return_json
 
         response["result"].should == "failure"
-        response["error_message"].should == "[[:status, :not_member]]"
+        response["error_message"].should == "Status must be up, down or pending"
       end
     end
 

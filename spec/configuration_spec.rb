@@ -1,18 +1,15 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "Using the Configuration Model", :reset_redis => true do
-  before(:all) do
-    app = Noah::Application.create(:name => "my_application")
-    app.save
-    @appconf_string = {:name => "mystringconf", :format => "string", :body => "some_var", :application_id => app.id}
-    @appconf_json = {:name => "myjsonconf", :format => "json", :body => @appconf_string.to_json, :application_id => app.id}
-    @appconf_missing_name = @appconf_string.reject {|x| x == :name}
-    @appconf_missing_format = @appconf_string.reject {|x| x == :format}
-    @appconf_missing_body = @appconf_string.reject {|x| x == :body}
-    @appconf_missing_application = @appconf_string.reject {|x| x == :application_id}
-  end
   before(:each) do
     Ohm.redis.flushdb
+    app = Noah::Application.create :name => "my_application"
+    @appconf_string = {:name => "mystringconf", :format => "string", :body => "some_var", :application_id => app.id}
+    @appconf_json = {:name => "myjsonconf", :format => "json", :body => @appconf_string.to_json, :application_id => app.id}
+    @appconf_missing_name = @appconf_string.reject {|k, v| k == :name}
+    @appconf_missing_format = @appconf_string.reject {|k, v| k == :format}
+    @appconf_missing_body = @appconf_string.reject {|k, v| k == :body}
+    @appconf_missing_application = @appconf_string.reject {|k, v| k == :application_id}
   end
   after(:each) do
     Ohm.redis.flushdb

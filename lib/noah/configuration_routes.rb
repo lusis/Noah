@@ -59,7 +59,7 @@ class Noah::App
       r = {"result" => "success","id" => "#{config.id}", "action" => action, "dependencies" => dependency_action, "application" => app.name, "item" => config.name}
       r.to_json
     else
-      raise "#{config.errors}"
+      raise "#{format_errors(config)}"
     end
   end
 

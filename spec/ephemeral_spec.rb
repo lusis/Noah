@@ -3,8 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe "Using the Ephemeral Model", :reset_redis => true do
   before(:all) do
     @edata = {:path => "/foo/bar/baz", :data => "some_value"}
-    @emissing_path = @edata.reject {|x| x == :path}
-    @emissing_data = @edata.reject {|x| x == :data}
+    @emissing_path = @edata.reject {|k, v| k == :path}
+    @emissing_data = @edata.reject {|k, v| k == :data}
     @good_ephemeral = Noah::Ephemeral.new(@edata)
     @missing_path = Noah::Ephemeral.new(@emissing_path)
     @missing_data = Noah::Ephemeral.new(@emissing_data)
@@ -28,15 +28,15 @@ describe "Using the Ephemeral Model", :reset_redis => true do
       b = Noah::Ephemeral[@missing_data.id]
       b.should == @missing_data
     end
-#    it "update an existing Noah::Ephemeral" do
-#      @good_ephemeral.save
-#      Noah::Ephemeral.all.size.should == 1
-#      c = Noah::Ephemeral[@good_ephemeral.id]
-#      c.data = "updated_data"
-#      c.save
-#      sleep(2)
-#      c.is_new?.should == false
-#    end
+    it "update an existing Noah::Ephemeral" do
+      e = Noah::Ephemeral.create :path => "/is/new/test"
+      Noah::Ephemeral.all.size.should == 1
+      sleep(2)
+      c = Noah::Ephemeral[e.id]
+      c.data = "updated_data"
+      c.save
+      c.is_new?.should == false
+    end
     it "delete an existing Noah::Ephemeral" do
       @good_ephemeral.save
       @good_ephemeral.delete
@@ -45,8 +45,15 @@ describe "Using the Ephemeral Model", :reset_redis => true do
   end
   describe "should not" do
     it "create a new Noah::Ephemeral with missing path" do
-      @missing_path.valid?.should == false
-      @missing_path.errors.should == [[:path, :not_present]]
+      e = Noah::Ephemeral.create
+      e.valid?.should == false
+      e.errors.should == [[:path, :not_present]]
+    end
+    it "create a duplicate Noah::Ephemeral" do
+      e = Noah::Ephemeral.create :path => "/random/path"
+      f = Noah::Ephemeral.create :path => "/random/path"
+      f.valid?.should == false
+      f.errors.should == [[:path, :not_unique]]
     end
   end
 end

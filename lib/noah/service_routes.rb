@@ -50,7 +50,7 @@ class Noah::App
         r = {"action" => action, "result" => "success", "id" => service.id, "host" => h.name, "name" => service.name}
         r.to_json
       else
-        raise "#{service.errors}"
+        raise "#{format_errors(service)}"
       end
     else
       raise "Missing Parameters"

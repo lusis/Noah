@@ -24,7 +24,7 @@ class Noah::App
     raise("Data too large") if request.body.size > 512
     d = Base64.encode64(request.body.read)  || nil
     e = Noah::Ephemeral.new(:path => params[:splat][0], :data => d)
-    e.valid? ? (e.save; e.to_json) : (raise "#{e.errors}")
+    e.valid? ? (e.save; e.to_json) : (raise "#{format_errors(e)}")
   end
 
   delete '/e/*' do

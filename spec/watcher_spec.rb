@@ -32,30 +32,30 @@ describe "Using the Watcher Model", :reset_redis => true do
     it "create a new Noah::Watcher with missing endpoint" do
       a = Noah::Watcher.create(:pattern => "/foo/bar")
       a.valid?.should == false
-      a.errors.to_s.should == "[[:endpoint, :not_present]]"
+      a.errors.should == [[:endpoint, :not_present]]
     end
     it "create a new Noah::Watcher with missing pattern" do
       a = Noah::Watcher.create(:endpoint => "http://localhost/webhook")
       a.valid?.should == false
-      a.errors.to_s.should == "[[:pattern, :not_present]]"
+      a.errors.should == [[:pattern, :not_present]]
     end
     it "create a new Noah::Watcher with subset pattern" do
       a = Noah::Watcher.create(:endpoint => "http://localhost.domain.com/webhook", :pattern => "//noah/")
       b = Noah::Watcher.create(:endpoint => "http://localhost.domain.com/webhook", :pattern => "//noah/foobar")
       b.valid?.should == false
-      b.errors.to_s.should == "[[:pattern, :already_provided]]"
+      b.errors.should == [[:pattern, :already_provided]]
     end
     it "create a new Noah::Watcher with superset pattern" do
       a = Noah::Watcher.create(:endpoint => "http://localhost.domain.com/webhook", :pattern => "//noah/foobar")
       b = Noah::Watcher.create(:endpoint => "http://localhost.domain.com/webhook", :pattern => "//noah")
       b.valid?.should == false
-      b.errors.to_s.should == "[[:pattern, :replaces_existing]]"
+      b.errors.should == [[:pattern, :replaces_existing]]
     end
     it "create a duplicate Noah::Watcher" do
       a = Noah::Watcher.create(:endpoint => "http://localhost.domain.com/webhook", :pattern => "//noah/foobar")
       b = Noah::Watcher.create(:endpoint => "http://localhost.domain.com/webhook", :pattern => "//noah/foobar")
       b.valid?.should == false
-      b.errors.to_s.should == "[[[:endpoint, :pattern], :not_unique]]"
+      b.errors.should == [[[:endpoint, :pattern], :not_unique]]
     end
   end
 

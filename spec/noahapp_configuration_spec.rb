@@ -34,8 +34,8 @@ describe "Using the Configuration API", :reset_redis => false, :populate_sample_
         response = YAML.load(last_response.body)
         response.is_a?(Hash).should == true
         response.keys.should == ["development"]
-        response["development"].keys.should == ["database", "adapter", "username", "password"]
-        response["development"].values.should == ["development_database", "mysql", "dev_user", "dev_password"]
+        response["development"].keys.sort.should == ["adapter", "database", "password", "username"]
+        response["development"].values.sort.should == ["dev_password", "dev_user", "development_database", "mysql"]
       end
       it "invalid application should not work" do
         get '/c/badapp'

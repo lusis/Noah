@@ -68,7 +68,7 @@ describe "Using the Service API", :reset_redis => false, :populate_sample_data =
         put "/s/foobar", {:name => "foobar", :status => "fsck", :host => @h.name}.to_json, "CONTENT_TYPE" => "application/json"
         last_response.should_not be_ok
         response = last_response.should return_json
-        response["error_message"].should == "[[:status, :not_member]]"
+        response["error_message"].should == "Status must be up, down or pending"
       end  
       it "new service with missing name should not work" do
         put "/s/foobar", {:status => "fsck", :host => @h.name}.to_json, "CONTENT_TYPE" => "application/json"

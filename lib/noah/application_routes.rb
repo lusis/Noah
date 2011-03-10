@@ -41,7 +41,7 @@ class Noah::App
       r = {"result" => "success","id" => app.id, "action" => action, "name" => app.name }
       r.to_json
     else
-      raise "#{app.errors}"
+      raise "#{format_errors(app)}"
     end
   end
 
