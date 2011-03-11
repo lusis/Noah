@@ -7,6 +7,7 @@ module Noah
 
     attribute :pattern
     attribute :endpoint
+    attribute :name
 
     index :pattern
     index :endpoint
@@ -29,11 +30,18 @@ module Noah
       super.merge(h)
     end
 
-    def self.watch_list
+    class << self
+    def find_by_name(name)
+      pattern, endpoint = Base64.decode64(name).split('|')
+      find(:pattern => pattern, :endpoint => endpoint).first
+    end
+
+    def watch_list
       arr = []
       watches = self.all.sort_by(:pattern)
       watches.each {|w| arr << w.name}
       arr
+    end
     end
 
     private

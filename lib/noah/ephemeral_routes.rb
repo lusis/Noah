@@ -1,5 +1,4 @@
 class Noah::App
-  # Stubbing Ephemeral endpoints
   get '/e/?' do
     halt 404
   end
