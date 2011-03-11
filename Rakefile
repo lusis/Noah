@@ -13,28 +13,24 @@ end
 
 
 task :default => :run
-task :test => [:start, :spec, :stop]
+task :test => :run
 
 desc "Run tests and manage server start/stop"
 task :run => [:start, :spec, :stop]
 
-desc "Start the Redis server"
 task :start do
   puts "Starting redis-server"
   system "redis-server #{REDIS_CNF}"
 end
 
-desc "Stop the Redis server"
 task :stop do
   puts "Killing redis"
   system "killall -TERM redis-server"
 end
 
 namespace :coverage do
-  desc "Delete aggregate coverage data."
   task(:clean) { rm_f "coverage.data" }
 end
-desc "Run Rcov code coverage analysis"
 RSpec::Core::RakeTask.new(:coverage) do |t|
   t.rcov = true
   t.verbose = true
@@ -128,7 +124,6 @@ rescue LoadError
   "You need YARD installed to generate docs"
 end
 
-desc "Demo environment"
 task :start_demo do
   puts "Soon, young padawan"
 end

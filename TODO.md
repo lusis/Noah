@@ -28,7 +28,7 @@
 * Ephemeral nodes
 
     **IN PROGRESS**
-    Not sure how I want to implement that. Not too keen on storing them as in-memory hashes. Maybe a LRU in Redis?
+    implement lifetime support
 
 * Examples
 
@@ -56,7 +56,7 @@
   - Done.
 
 * Watchers
-  - Partially done. Framework is in place to create a custom Watcher by hooking directly into Redis. Need to expand that to "official" watchers
+  - Done. GET PUT DELETE are all available at the '/w/' endpoint now!
 
 
 ## Watcher specific stuff

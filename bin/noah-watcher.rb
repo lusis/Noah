@@ -1,15 +1,22 @@
 #!/usr/bin/env ruby
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
-require 'rubygems'
-require 'rbtrace'
-require 'logger'
-require 'optparse'
-require 'em-hiredis'
-require 'eventmachine'
-require 'em-http-request'
-require 'thin'
-require 'noah'
-require 'json'
+  HELP = <<-EOH
+  Unfortunately, the agent script has some difficult requirements right now.
+  Please see https://github.com/lusis/Noah/Watcher-Agent for details.
+  EOH
+begin
+  require 'rubygems'
+  require 'logger'
+  require 'optparse'
+  require 'em-hiredis'
+  require 'eventmachine'
+  require 'em-http-request'
+  require 'noah'
+  require 'json'
+rescue LoadError
+  puts HELP
+  exit
+end
 
 LOGGER = Logger.new(STDOUT)
 
@@ -73,6 +80,7 @@ end
 
 EventMachine.run do
   logger = LOGGER
+  trap("INT") { logger.debug("Shutting down. Watches will not be fired");EM.stop }
   noah = EventMachine::NoahAgent.new
   # Passing messages...like a boss
   master_channel = EventMachine::Channel.new
