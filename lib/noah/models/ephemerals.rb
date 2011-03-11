@@ -21,6 +21,21 @@ module Noah
       h = {:path => path, :data => data, :created_at => created_at, :updated_at => :updated_at}
       super.merge(h)
     end
+
+    class << self
+    def find_or_create(opts = {})
+      begin
+        find(opts).first.nil? ? (eph = create(opts)) : (eph = find(opts).first)
+        if eph.valid?
+          eph.save
+        end
+        eph
+      rescue Exception => e
+        e.message
+      end
+    end
+    end
+
     protected
     def save_hook
       # called after any create,update,delete
@@ -31,7 +46,7 @@ module Noah
     def path_protected?(path_part)
       # Check for protected paths in ephemeral nodes
     end
-      
+
   end
 
 end

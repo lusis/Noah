@@ -22,7 +22,8 @@ class Noah::App
   put '/e/*' do
     raise("Data too large") if request.body.size > 512
     d = request.body.read  || nil
-    e = Noah::Ephemeral.new(:path => "/#{params[:splat][0]}", :data => d)
+    e = Noah::Ephemeral.find_or_create(:path => "/#{params[:splat][0]}")
+    e.data = d
     if e.valid?
       e.save
       action = e.is_new? ? "create" : "update"

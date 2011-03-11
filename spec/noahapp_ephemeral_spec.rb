@@ -65,8 +65,28 @@ describe "Using the Ephemeral API", :reset_redis => true do
         response['data'].should == nil
       end
 
-      it "existing ephemeral with data should work"
-      it "existing ephemeral without data should work"
+      it "existing ephemeral with data should work" do
+        Noah::Ephemeral.create(:path => '/new/ephemeral', :data => 'old_value')
+        get '/e/new/ephemeral'
+        last_response.should be_ok
+        last_response.body.should == 'old_value'
+        put '/e/new/ephemeral', 'new_value'
+        last_response.should be_ok
+        get '/e/new/ephemeral'
+        last_response.should be_ok
+        last_response.body.should == 'new_value'
+      end
+      it "existing ephemeral without data should work" do
+        Noah::Ephemeral.create(:path => '/a/random/key')
+        get '/e/a/random/key'
+        last_response.should be_ok
+        last_response.body.should == ""
+        put '/e/a/random/key', 'a new value'
+        last_response.should be_ok
+        get '/e/a/random/key'
+        last_response.should be_ok
+        last_response.body.should == 'a new value'
+      end
     end
 
     describe "DELETE" do
