@@ -8,7 +8,7 @@ Warbler::Config.new do |config|
   config.includes = FileList["config.ru"]
   config.excludes = FileList["noah.gemspec", "Gemfile", "Gemfile.lock"]
   config.bundler = false
-  config.gems += ["json", "ohm", "ohm-contrib", "sinatra", "sinatra-namespace", "haml"]
+  config.gems += ["json", "ohm", "ohm-contrib", "sinatra", "haml"]
   config.gem_excludes = [/^(test|spec)\//]
   config.public_html = FileList["views/**/*"]
   config.webxml.booter = :rack

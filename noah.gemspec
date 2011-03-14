@@ -6,6 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "noah"
   s.version     = Noah::VERSION
   s.platform    = Gem::Platform::RUBY
+  #s.platform    = "jruby"
   s.authors     = ["John E. Vincent"]
   s.email       = ["lusis.org+rubygems.org@gmail.com"]
   s.homepage    = "https://github.com/lusis/noah"
@@ -19,7 +20,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency("hiredis", ["= 0.3.1"])
+  s.add_dependency("eventmachine", ["1.0.0.beta.3"])
+  s.add_dependency("em-http-request", ["1.0.0.beta.3"])
   s.add_dependency("redis", ["= 2.1.1"])
   s.add_dependency("nest", ["= 1.1.0"])
   s.add_dependency("rack", ["= 1.2.1"])
@@ -36,6 +38,7 @@ Gem::Specification.new do |s|
     s.add_dependency("json")
     s.add_development_dependency("warbler", ["= 1.2.1"])
   else
+    s.add_dependency("hiredis", ["= 0.3.1"])
     s.add_dependency("yajl-ruby") 
     s.add_dependency("SystemTimer") if RUBY_VERSION =~ /1.8/
     s.add_dependency("thin")
