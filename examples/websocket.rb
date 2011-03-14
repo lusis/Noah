@@ -20,7 +20,7 @@ EventMachine.run do
     @channel.push "(#{event}) #{message}"
   end
 
-  EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 3001) do |ws|
+  EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 3009) do |ws|
     ws.onopen {
       sub = @channel.subscribe { |msg| 
         ws.send msg 

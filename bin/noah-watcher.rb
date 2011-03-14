@@ -31,9 +31,8 @@ class EventMachine::NoahAgent
     if EventMachine.reactor_running?
       @worker = EM.spawn {|event, message, watch_list|
         logger = LOGGER
-        logger.debug("Worker initiated")
-        logger.info("got event on http worker: #{event}")
-        logger.info("got message on http worker: #{message}")
+        logger.info("Worker initiated")
+        logger.debug("got event on http worker: #{event}")
         matches = watch_list.find_all{|w| event =~ /^#{Base64.decode64(w)}/}
         logger.debug("Found #{matches.size} matches for #{event}")
         EM::Iterator.new(matches).each do |watch, iter|
@@ -41,16 +40,15 @@ class EventMachine::NoahAgent
           logger.info("Sending message to: #{ep} for pattern: #{p}")
           http = EM::HttpRequest.new(ep, :connection_timeout => 2, :inactivity_timeout => 4).post :body => message
           http.callback {
-            LOGGER.debug("Message posted to #{ep} successfully")
-            #iter.next
+            logger.info("Message posted to #{ep} successfully")
           }
           http.errback {
-            LOGGER.debug("Something went wrong")
-            #iter.net
+            logger.error("Something went wrong")
           }
           iter.next
         end
       }
+      self.succeed("Succeed callback")
     else
       logger.fatal("Must be inside a reactor!")
     end
@@ -70,22 +68,26 @@ class EventMachine::NoahAgent
 
   def broker(msg)
     # This is just for testing for now
-    @logger.warn(msg)
     e,m = msg.split("|")
     be = Base64.encode64(e).gsub("\n","")
-    @logger.info("Encoded event: #{be}")
     @worker.notify e, m, @@watchers.clone
   end
 end
 
 EventMachine.run do
+  EM.error_handler do |e|
+    Logger.new(STDOUT).warn(e)
+  end
   logger = LOGGER
   trap("INT") { logger.debug("Shutting down. Watches will not be fired");EM.stop }
   noah = EventMachine::NoahAgent.new
+  noah.errback{|x| logger.error("Errback: #{x}")}
+  noah.callback{|y| logger.info("Callback: #{y}")}
   # Passing messages...like a boss
   master_channel = EventMachine::Channel.new
 
   r = EventMachine::Hiredis::Client.connect
+  r.errback{|x| logger.error("Unable to connect to redis: #{x}")}
   logger.debug("Starting up")
   r.psubscribe("//noah/*")
   r.on(:pmessage) do |pattern, event, message|

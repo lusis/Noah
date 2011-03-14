@@ -1,16 +1,20 @@
 require 'eventmachine'
 require 'uri'
 require 'logger'
+begin
+  require 'em-hiredis'
+rescue LoadError
+  puts "Please install: em-hiredis"
+end
 
 @log = Logger.new(STDOUT)
 @log.level = Logger::DEBUG
 
 require File.join(File.dirname(__FILE__), 'passthrough')
-require File.join(File.dirname(__FILE__), '..','vendor','em-hiredis','lib','em-hiredis')
 
 module Noah
 
-  class Watcher
+  class CustomWatcher
     extend Passthrough
 
     passthrough :redis_host, :pattern, :destination, :run!, :run_watcher

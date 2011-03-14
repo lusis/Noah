@@ -1,5 +1,5 @@
 module Noah
-  class Ephemeral < Model #NYI
+  class Ephemeral < Model
 
     attribute :path
     attribute :data
@@ -18,14 +18,16 @@ module Noah
     end
 
     def to_hash
-      h = {:path => path, :data => data, :created_at => created_at, :updated_at => :updated_at}
+      h = {:path => path, :data => data, :created_at => created_at, :updated_at => updated_at}
       super.merge(h)
     end
 
     class << self
     def find_or_create(opts = {})
       begin
-        find(opts).first.nil? ? (eph = create(opts)) : (eph = find(opts).first)
+        path, data = opts[:path], opts[:data]
+        find(:path => path).first.nil? ? (eph = new(:path => path)) : (eph = find(:path => path).first)
+        eph.data = data
         if eph.valid?
           eph.save
         end

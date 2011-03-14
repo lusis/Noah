@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'sinatra'
 require 'ohm'
 require 'open-uri'

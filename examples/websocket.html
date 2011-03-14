@@ -8,7 +8,7 @@
       $(document).ready(function(){
         function debug(str){ $("#debug").append("<p>" +  str); };
 
-        ws = new WebSocket("ws://localhost:3001/");
+        ws = new WebSocket("ws://localhost:3009/");
         ws.onmessage = function(evt) { $("#msg").append("<p>"+evt.data+"</p>"); };
         ws.onclose = function() { debug("socket closed"); };
         ws.onopen = function() {
