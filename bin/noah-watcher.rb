@@ -12,6 +12,8 @@ begin
   require 'eventmachine'
   require 'em-http-request'
   require 'noah'
+  require 'noah/agents/http_agent'
+  require 'noah/agents/dummy_agent'
   require 'json'
 rescue LoadError
   puts HELP
@@ -23,31 +25,16 @@ LOGGER = Logger.new(STDOUT)
 class EventMachine::NoahAgent
   include EM::Deferrable
 
+  Noah::Agents::HttpAgent.register
+  Noah::Agents::DummyAgent.register
   @@watchers = Noah::Watcher.watch_list
+  @@agents = Noah::Watchers.agents
 
   def initialize
     @logger = LOGGER
     @logger.debug("Initializing with #{@@watchers.size} registered watches")
+    @logger.debug("#{@@agents} agents registered")
     if EventMachine.reactor_running?
-      @worker = EM.spawn {|event, message, watch_list|
-        logger = LOGGER
-        logger.info("Worker initiated")
-        logger.debug("got event on http worker: #{event}")
-        matches = watch_list.find_all{|w| event =~ /^#{Base64.decode64(w)}/}
-        logger.debug("Found #{matches.size} matches for #{event}")
-        EM::Iterator.new(matches).each do |watch, iter|
-          p, ep = Base64.decode64(watch).split("|")
-          logger.info("Sending message to: #{ep} for pattern: #{p}")
-          http = EM::HttpRequest.new(ep, :connection_timeout => 2, :inactivity_timeout => 4).post :body => message
-          http.callback {
-            logger.info("Message posted to #{ep} successfully")
-          }
-          http.errback {
-            logger.error("Something went wrong")
-          }
-          iter.next
-        end
-      }
       self.succeed("Succeed callback")
     else
       logger.fatal("Must be inside a reactor!")
@@ -58,19 +45,24 @@ class EventMachine::NoahAgent
     @@watchers.size
   end
 
+  def http_worker
+    @http_worker
+  end
+
   def reread_watchers
     @logger.debug("Found new watches")
     @logger.debug("Current watch count: #{@@watchers.size}")
     @@watchers = Noah::Watcher.watch_list
     @logger.debug("New watch count: #{@@watchers.size}")
-    #@logger.debug(@@watchers)
   end
 
   def broker(msg)
-    # This is just for testing for now
     e,m = msg.split("|")
     be = Base64.encode64(e).gsub("\n","")
-    @worker.notify e, m, @@watchers.clone
+    EM::Iterator.new(@@agents).each do |agent, iter|
+      agent.send(:notify, e, m, @@watchers.clone)
+      iter.next
+    end
   end
 end
 
@@ -93,7 +85,6 @@ EventMachine.run do
   r.on(:pmessage) do |pattern, event, message|
     noah.reread_watchers if event =~ /^\/\/noah\/watcher\/.*/
     master_channel.push "#{event}|#{message}"
-    logger.debug("Saw[#{event}]")
   end
 
   sub = master_channel.subscribe {|msg|

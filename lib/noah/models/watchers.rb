@@ -55,8 +55,17 @@ module Noah
   end
 
   class Watchers
+    @@agents = []
     def self.all(options = {})
       options.empty? ? Watcher.all.sort : Watcher.find(options).sort
+    end
+
+    def self.register_agent(agent_class)
+      @@agents << agent_class
+    end
+
+    def self.agents
+      @@agents
     end
   end
 end
