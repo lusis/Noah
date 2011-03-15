@@ -28,8 +28,8 @@ module Noah::Agents
           http.errback {
             logger.error("#{NAME}: Something went wrong with #{ep}")
           }
-          iter.next
         end
+        iter.next
       end
     end
 

@@ -21,8 +21,8 @@ module Noah::Agents
           logger.info("#{NAME}: Sending message to: #{ep} for pattern: #{p}")
           logger.debug("#{NAME}: message received: #{message}")
         end
-        iter.next
       end
+      iter.next
     end
 
   end
