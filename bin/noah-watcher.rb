@@ -12,8 +12,7 @@ begin
   require 'eventmachine'
   require 'em-http-request'
   require 'noah'
-  require 'noah/agents/http_agent'
-  require 'noah/agents/dummy_agent'
+  require 'noah/agent'
   require 'json'
 rescue LoadError
   puts HELP
@@ -22,57 +21,13 @@ end
 
 LOGGER = Logger.new(STDOUT)
 
-class EventMachine::NoahAgent
-  include EM::Deferrable
-
-  Noah::Agents::HttpAgent.register
-  Noah::Agents::DummyAgent.register
-  @@watchers = Noah::Watcher.watch_list
-  @@agents = Noah::Watchers.agents
-
-  def initialize
-    @logger = LOGGER
-    @logger.debug("Initializing with #{@@watchers.size} registered watches")
-    @logger.debug("#{@@agents} agents registered")
-    if EventMachine.reactor_running?
-      self.succeed("Succeed callback")
-    else
-      logger.fatal("Must be inside a reactor!")
-    end
-  end
-
-  def watchers
-    @@watchers.size
-  end
-
-  def http_worker
-    @http_worker
-  end
-
-  def reread_watchers
-    @logger.debug("Found new watches")
-    @logger.debug("Current watch count: #{@@watchers.size}")
-    @@watchers = Noah::Watcher.watch_list
-    @logger.debug("New watch count: #{@@watchers.size}")
-  end
-
-  def broker(msg)
-    e,m = msg.split("|")
-    be = Base64.encode64(e).gsub("\n","")
-    EM::Iterator.new(@@agents).each do |agent, iter|
-      agent.send(:notify, e, m, @@watchers.clone)
-      iter.next
-    end
-  end
-end
-
 EventMachine.run do
   EM.error_handler do |e|
-    Logger.new(STDOUT).warn(e)
+    LOGGER.warn(e)
   end
   logger = LOGGER
   trap("INT") { logger.debug("Shutting down. Watches will not be fired");EM.stop }
-  noah = EventMachine::NoahAgent.new
+  noah = Noah::Agent.new
   noah.errback{|x| logger.error("Errback: #{x}")}
   noah.callback{|y| logger.info("Callback: #{y}")}
   # Passing messages...like a boss
