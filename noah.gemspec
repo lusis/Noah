@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency("nest", ["= 1.1.0"])
   s.add_dependency("rack", ["= 1.2.1"])
   s.add_dependency("tilt", ["= 1.2.2"])
-  s.add_dependency("sinatra", ["= 1.1.2"])
+  s.add_dependency("sinatra", ["= 1.2.0"])
   s.add_dependency("ohm", ["= 0.1.3"])
   s.add_dependency("ohm-contrib", ["= 0.1.1"])
   s.add_dependency("haml", ["= 3.0.25"])
