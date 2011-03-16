@@ -1,13 +1,11 @@
+require File.join(File.dirname(__FILE__), 'base_agent')
+
 module Noah::Agents
   class DummyAgent
-    include EM::Deferrable
+    include Noah::Agents::Base
 
     PREFIX = "dummy"
     NAME = "dummy"
-
-    def self.register
-      Noah::Watchers.register_agent(self)
-    end
 
     def self.notify(event, message, watch_list)
       logger = LOGGER
@@ -21,8 +19,8 @@ module Noah::Agents
           logger.info("#{NAME}: Sending message to: #{ep} for pattern: #{p}")
           logger.debug("#{NAME}: message received: #{message}")
         end
+        iter.next
       end
-      iter.next
     end
 
   end

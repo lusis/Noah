@@ -9,9 +9,6 @@ module Noah
   class Agent
     include EM::Deferrable
 
-    Noah::Agents::HttpAgent.register
-    Noah::Agents::DummyAgent.register
-
     @@watchers = Noah::Watcher.watch_list
     @@agents = Noah::Watchers.agents
 

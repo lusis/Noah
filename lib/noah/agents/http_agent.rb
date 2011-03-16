@@ -1,15 +1,11 @@
-require 'logger'
+require File.join(File.dirname(__FILE__), 'base_agent')
 
 module Noah::Agents
   class HttpAgent
-    include EM::Deferrable
+    include Noah::Agents::Base
 
     PREFIX = "http"
     NAME = "http"
-
-    def self.register
-      Noah::Watchers.register_agent(self)
-    end
 
     def self.notify(event, message, watch_list)
       logger = LOGGER
