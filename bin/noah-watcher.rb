@@ -14,7 +14,8 @@ begin
   require 'noah'
   require 'noah/agent'
   require 'json'
-rescue LoadError
+rescue LoadError => e
+  puts e.message
   puts HELP
   exit
 end
