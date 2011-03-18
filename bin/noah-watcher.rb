@@ -20,7 +20,8 @@ rescue LoadError => e
   exit
 end
 
-LOGGER = Logger.new(STDOUT)
+LOGGER = Logger.new('rundeck-test.log')
+#LOGGER = Logger.new(STDOUT)
 
 EventMachine.run do
   EM.error_handler do |e|
@@ -32,7 +33,7 @@ EventMachine.run do
   noah.errback{|x| logger.error("Errback: #{x}")}
   noah.callback{|y| logger.info("Callback: #{y}")}
   # Passing messages...like a boss
-  master_channel = EventMachine::Channel.new
+  #master_channel = EventMachine::Channel.new
 
   r = EventMachine::Hiredis::Client.connect
   r.errback{|x| logger.error("Unable to connect to redis: #{x}")}
@@ -40,11 +41,12 @@ EventMachine.run do
   r.psubscribe("//noah/*")
   r.on(:pmessage) do |pattern, event, message|
     noah.reread_watchers if event =~ /^\/\/noah\/watcher\/.*/
-    master_channel.push "#{event}|#{message}"
+    noah.broker("#{event}|#{message}") unless noah.watchers == 0
+    #master_channel.push "#{event}|#{message}"
   end
 
-  sub = master_channel.subscribe {|msg|
+  #sub = master_channel.subscribe {|msg|
     # We short circuit if we have no watchers
-    noah.broker(msg) unless noah.watchers == 0
-  }
+  #  noah.broker(msg) unless noah.watchers == 0
+  #}
 end

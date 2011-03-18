@@ -127,3 +127,8 @@ end
 task :start_demo do
   puts "Soon, young padawan"
 end
+
+desc "Start an irb session with all libraries loaded"
+task :shell do
+  sh "irb -r./lib/noah.rb"
+end

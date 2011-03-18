@@ -11,9 +11,13 @@ module Noah::Agents
       logger = LOGGER
       logger.info("#{NAME}: Worker initiated")
       logger.debug("#{NAME}: got event - #{event}")
+      # TODO
+      # I can save work by only decoding once.
+      # This is retarded doing it twice.
+      # Populate matches with decoded data for chrissakes
       matches = watch_list.find_all{|w| event =~ /^#{Base64.decode64(w)}/}
       logger.debug("#{PREFIX}: Found #{matches.size} possible matches for #{event}")
-      EM::Iterator.new(matches).each do |watch, iter|
+      EM::Iterator.new(matches, 100).each do |watch, iter|
         p, ep = Base64.decode64(watch).split("|")
         if ep =~ /^#{PREFIX}/
           logger.info("#{NAME}: Sending message to (#{ep}) for pattern (#{p})")

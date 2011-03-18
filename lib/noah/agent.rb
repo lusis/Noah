@@ -40,7 +40,8 @@ module Noah
 
     def broker(msg)
       e,m = msg.split("|")
-      be = Base64.encode64(e).gsub("\n","")
+      # Below isn't being used right now
+      #be = Base64.encode64(e).gsub("\n","")
       EM::Iterator.new(@@agents).each do |agent, iter|
         agent.send(:notify, e, m, @@watchers.clone)
         iter.next
