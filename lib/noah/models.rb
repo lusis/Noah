@@ -9,6 +9,9 @@ module Noah
       model.send :include, Ohm::Callbacks
       model.send :include, Ohm::ExtraValidations
 
+      model.send :attribute, :tags
+      model.send :index, :tag
+
       # removing this as it's simply redundant
       # model.after :save, :notify_via_redis_save
       model.after :create, :notify_via_redis_create
@@ -25,6 +28,9 @@ module Noah
       self.created_at == self.updated_at
     end
 
+    def tag(tags = self.tags)
+      tags.to_s.split(/\s*,\s*/).uniq
+    end
 
     def watch!(opts={:endpoint => nil, :pattern => nil})
       base_pattern = "#{self.patternize_me}"
@@ -53,11 +59,21 @@ module Noah
     def class_to_lower
       self.class.to_s.gsub(/(.*)::(\w)/,'\2').downcase
     end
+
     def dbnum
       o = Ohm.options.first
       return "0" if o.nil?
       return "0" if (o[:db].nil? && o[:url].nil?)
       o[:db].nil? ? "#{o[:url].split('/').last}" : "#{o[:db]}"
+    end
+
+    def before_update
+      return if new?
+      tag(read_remote(:tags)).map(&Tag).each {|t| t.decr :total}
+    end
+
+    def after_save
+      tag.map(&Tag).each {|t| t.incr :total }
     end
 
     ["create", "update", "delete"].each do |meth|
@@ -79,6 +95,7 @@ module Noah
 
   end
 end
+require File.join(File.dirname(__FILE__), 'models','tags')
 require File.join(File.dirname(__FILE__), 'models','hosts')
 require File.join(File.dirname(__FILE__), 'models','services')
 require File.join(File.dirname(__FILE__), 'models','applications')
