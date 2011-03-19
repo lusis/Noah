@@ -1,11 +1,11 @@
 class Noah::App
 
-  get '/w/:name' do |name|
+  get '/watches/:name' do |name|
     w = Noah::Watcher.find_by_name(name)
     w.nil? ? (halt 404) : w.to_json
   end
 
-  get '/w/?' do
+  get '/watches/?' do
     w = Noah::Watcher.all.sort_by(:pattern)
     if w.size == 0
       halt 404
@@ -14,7 +14,7 @@ class Noah::App
     end 
   end
 
-  put '/w/?' do
+  put '/watches/?' do
     required_params = %w[endpoint pattern]
     data = JSON.parse(request.body.read)
     (data.keys.sort == required_params.sort) ? (pattern, endpoint = data['pattern'],data['endpoint']) : (raise "Missing Parameters")
@@ -28,7 +28,7 @@ class Noah::App
     end
   end
 
-  delete '/w/?' do
+  delete '/watches/?' do
     required_params = %w[endpoint pattern]
     data = JSON.parse(request.body.read)
     (data.keys.sort == required_params.sort) ? (pattern, endpoint = data['pattern'],data['endpoint']) : (raise "Missing Parameters")

@@ -5,13 +5,13 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
 
     describe "GET" do
       it "all hosts should work" do
-        get '/h'
+        get '/hosts'
         last_response.should be_ok
         last_response.should return_json
       end
 
       it "existing host should work" do
-        get '/h/localhost'
+        get '/hosts/localhost'
         last_response.should be_ok
         response = last_response.should return_json
 
@@ -29,7 +29,7 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
       end  
 
       it "named service for host should work" do
-        get '/h/localhost/noah'
+        get '/hosts/localhost/noah'
         last_response.should be_ok
         response = last_response.should return_json
 
@@ -42,7 +42,7 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
     describe "PUT" do
       it "new host should work" do
         host_data = {:name => "host99.domain.com", :status => "down"}.to_json
-        put '/h/host99.domain.com', host_data, "CONTENT_TYPE" => "application/json"
+        put '/hosts/host99.domain.com', host_data, "CONTENT_TYPE" => "application/json"
         last_response.should be_ok
         response = last_response.should return_json
 
@@ -56,7 +56,7 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
       it "existing host should work" do
         sleep 3
         host_data = {:name => "host99.domain.com", :status => "pending"}.to_json
-        put '/h/host99.domain.com', host_data, "CONTENT_TYPE" => "application/json"
+        put '/hosts/host99.domain.com', host_data, "CONTENT_TYPE" => "application/json"
         last_response.should be_ok
         response = last_response.should return_json
 
@@ -65,19 +65,19 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
 
       it "host missing name parameter should not work" do
         host_data = {:status => "pending"}.to_json
-        put '/h/host100.domain.com', host_data, "CONTENT_TYPE" => "application/json"
+        put '/hosts/host100.domain.com', host_data, "CONTENT_TYPE" => "application/json"
         last_response.should be_invalid
       end
 
       it "host missing status parameter should not work" do
         host_data = {:name => "host100.domain.com"}.to_json
-        put '/h/host100.domain.com', host_data, "CONTENT_TYPE" => "application/json"
+        put '/hosts/host100.domain.com', host_data, "CONTENT_TYPE" => "application/json"
         last_response.should be_invalid
       end 
 
       it "host with invalid status parameter should not work" do
         host_data = {:name => "host100.domain.com", :status => "fscked"}.to_json
-        put '/h/host100.domain.com', host_data, "CONTENT_TYPE" => "application/json"
+        put '/hosts/host100.domain.com', host_data, "CONTENT_TYPE" => "application/json"
         last_response.should_not be_ok
         response = last_response.should return_json
 
@@ -96,7 +96,7 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
       end  
       it "existing host should work" do
         svc_size = @h.services.size
-        delete "/h/#{@h.name}"
+        delete "/hosts/#{@h.name}"
         last_response.should be_ok
         response = last_response.should return_json
 
@@ -107,7 +107,7 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
       end
 
       it "invalid host should not work" do
-        delete "/h/#{@h.name}"
+        delete "/hosts/#{@h.name}"
         last_response.should be_missing
       end
     end

@@ -2,7 +2,7 @@ class Noah::App
   # Service URIs
 
   # get named {Service} for named {Host}
-  get '/s/:servicename/:hostname/?' do |servicename, hostname|
+  get '/services/:servicename/:hostname/?' do |servicename, hostname|
     hs = host_service(hostname, servicename)
     if hs.nil?
       halt 404
@@ -11,7 +11,7 @@ class Noah::App
     end  
   end
 
-  get '/s/:servicename/?' do |servicename|
+  get '/services/:servicename/?' do |servicename|
     s = services(:name => servicename)
     s.map {|x| x.to_hash}
     if s.empty?
@@ -21,7 +21,7 @@ class Noah::App
     end  
   end
 
-  get '/s/?' do
+  get '/services/?' do
     if services.empty?
       halt 404
     else
@@ -30,7 +30,7 @@ class Noah::App
     end  
   end
 
-  put '/s/:servicename/watch' do |servicename|
+  put '/services/:servicename/watch' do |servicename|
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)
     (data.keys.sort == required_params.sort) ? (s = Noah::Service.find(:name => servicename).first) : (raise "Missing Parameters")
@@ -38,7 +38,7 @@ class Noah::App
     w.to_json
   end
 
-  put '/s/:servicename/?' do |servicename|
+  put '/services/:servicename/?' do |servicename|
     required_params = ["status", "host", "name"]
     data = JSON.parse(request.body.read)
     if data.keys.sort == required_params.sort
@@ -57,7 +57,7 @@ class Noah::App
     end  
   end
 
-  delete '/s/:servicename/:hostname/?' do |servicename, hostname|
+  delete '/services/:servicename/:hostname/?' do |servicename, hostname|
     host = Noah::Host.find(:name => hostname).first || (halt 404)
     service = Noah::Service.find(:name => servicename, :host_id => host.id).first || (halt 404)
     if host && service

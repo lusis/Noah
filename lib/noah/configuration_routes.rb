@@ -6,7 +6,7 @@ class Noah::App
             :string => "text/plain"
   }
   # Configuration URIs
-  get '/c/:appname/:element/?' do |appname, element|
+  get '/configurations/:appname/:element/?' do |appname, element|
     a = Noah::Application.find(:name => appname).first
     if a.nil?
       halt 404
@@ -17,7 +17,7 @@ class Noah::App
     end  
   end
 
-  get '/c/:appname/?' do |appname|
+  get '/configurations/:appname/?' do |appname|
     config = []
     a = Noah::Application.find(:name => appname).first
     if a.nil?
@@ -28,7 +28,7 @@ class Noah::App
     end  
   end
 
-  get '/c/?' do
+  get '/configurations/?' do
     configs = []
     Noah::Configuration.all.sort.each {|c| configs << c.to_hash}
     if configs.empty?
@@ -38,7 +38,7 @@ class Noah::App
     end  
   end
 
-  put '/c/:configname/watch' do |configname|
+  put '/configurations/:configname/watch' do |configname|
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)
     (data.keys.sort == required_params.sort) ? (c = Noah::Configuration.find(:name => configname).first) : (raise "Missing Parameters")
@@ -46,7 +46,7 @@ class Noah::App
     w.to_json
   end
 
-  put '/c/:appname/:element?' do |appname, element|
+  put '/configurations/:appname/:element?' do |appname, element|
     app = Noah::Application.find_or_create(:name => appname)
     config = Noah::Configuration.find_or_create(:name => element, :application_id => app.id)
     required_params = ["format", "body"]
@@ -63,7 +63,7 @@ class Noah::App
     end
   end
 
-  delete '/c/:appname/:element?' do |appname, element|
+  delete '/configurations/:appname/:element?' do |appname, element|
     app = Noah::Application.find(:name => appname).first
     if app
       config = Noah::Configuration.find(:name=> element, :application_id => app.id).first

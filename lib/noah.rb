@@ -1,5 +1,5 @@
 module Noah
-  PROTECTED_PATHS = %w[a c h s w]
+  PROTECTED_PATHS = %w[applications configurations hosts services watches]
 end
 begin
   require 'yajl'

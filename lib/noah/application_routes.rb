@@ -1,6 +1,6 @@
 class Noah::App
   # Application URIs
-  get '/a/:appname/:config/?' do |appname, config|
+  get '/applications/:appname/:config/?' do |appname, config|
     app = Noah::Application.find(:name => appname).first
     if app.nil?
       halt 404
@@ -10,7 +10,7 @@ class Noah::App
     end  
   end
 
-  get '/a/:appname/?' do |appname|
+  get '/applications/:appname/?' do |appname|
     app = Noah::Application.find(:name => appname).first
     if app.nil?
       halt 404
@@ -19,7 +19,7 @@ class Noah::App
     end
   end
 
-  put '/a/:appname/watch' do |appname|
+  put '/applications/:appname/watch' do |appname|
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)
     (data.keys.sort == required_params.sort) ? (a = Noah::Application.find(:name => appname).first) : (raise "Missing Parameters")
@@ -27,7 +27,7 @@ class Noah::App
     w.to_json
   end
 
-  put '/a/:appname/?' do |appname|
+  put '/applications/:appname/?' do |appname|
     required_params = ["name"]
     data = JSON.parse(request.body.read)
     if data.keys.sort == required_params.sort && data['name'] == appname
@@ -45,7 +45,7 @@ class Noah::App
     end
   end
 
-  delete '/a/:appname/?' do |appname|
+  delete '/applications/:appname/?' do |appname|
     app = Noah::Application.find(:name => appname).first
     if app.nil?
       halt 404
@@ -58,7 +58,7 @@ class Noah::App
     end
   end
 
-  get '/a/?' do
+  get '/applications/?' do
     apps = []
     Noah::Application.all.sort.each {|a| apps << a.to_hash}
     if apps.empty?
