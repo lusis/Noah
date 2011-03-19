@@ -87,6 +87,21 @@ describe "Using the Ephemeral API", :reset_redis => true do
         last_response.should be_ok
         last_response.body.should == 'a new value'
       end
+      it "ephemeral with reserved word in subpath should work" do
+        Noah::PROTECTED_PATHS.each do |path|
+        put "/e/a/valid/path/with/#{path}"
+          last_response.should be_ok
+        end
+      end
+      it "ephemeral with reserved word as path should not work" do
+        Noah::PROTECTED_PATHS.each do |path|
+          put "/e/#{path}/other/stuff"
+          last_response.should_not be_ok
+          response = last_response.should return_json
+          response['error_message'].should == 'Path is reserved'
+          response['result'].should == 'failure'
+        end
+      end
     end
 
     describe "DELETE" do

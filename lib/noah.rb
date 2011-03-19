@@ -1,5 +1,5 @@
 module Noah
-  PROTECTED_PATHS = %w[applications configurations hosts services watches]
+  PROTECTED_PATHS = %w[applications configurations hosts services watches ark noah]
 end
 begin
   require 'yajl'

@@ -1,5 +1,6 @@
 module Noah
   class Ephemeral < Model
+    include EphemeralValidations
 
     attribute :path
     attribute :data
@@ -11,6 +12,7 @@ module Noah
       super
       assert_present :path
       assert_unique :path
+      assert_not_reserved
     end
 
     def name

@@ -1,8 +1,6 @@
 require 'digest/sha1'
 module Noah
-  class Watcher < Model #NYI
-    # Don't trust anything in here yet
-    # I'm still trying a few things
+  class Watcher < Model
     include WatcherValidations
 
     attribute :pattern

@@ -42,6 +42,12 @@ describe "Using the Ephemeral Model", :reset_redis => true do
       @good_ephemeral.delete
       Noah::Ephemeral[@good_ephemeral.id].should == nil
     end
+    it "should allow reserved keywords as subpaths" do
+      Noah::PROTECTED_PATHS.each do |path|
+        e = Noah::Ephemeral.new :path => "/this/should/be/#{path}"
+        e.valid?.should == true
+      end
+    end
   end
   describe "should not" do
     it "create a new Noah::Ephemeral with missing path" do
@@ -54,6 +60,13 @@ describe "Using the Ephemeral Model", :reset_redis => true do
       f = Noah::Ephemeral.create :path => "/random/path"
       f.valid?.should == false
       f.errors.should == [[:path, :not_unique]]
+    end
+    it "allow a reserved keyword as a path" do
+      Noah::PROTECTED_PATHS.each do |path|
+        e = Noah::Ephemeral.new :path => "/#{path}"
+        e.valid?.should == false
+        e.errors.should == [[:path, :reserved_path]]
+      end
     end
   end
 end

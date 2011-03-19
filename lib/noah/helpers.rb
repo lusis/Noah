@@ -22,6 +22,7 @@ module Noah
         # Custom exceptions
         e.on [:pattern, :already_provided], "Pattern is already provided"
         e.on [:pattern, :replaces_existing], "Pattern would overwrite existing"
+        e.on [:path, :reserved_path], "Path is reserved"
       end
       error_messages.first
     end
