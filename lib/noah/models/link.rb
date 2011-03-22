@@ -1,11 +1,17 @@
 module Noah
   class Link < Model
-    
     attribute :path
-    attribute :nodes
-
+    attribute :source
+    
     index :path
+    index :source
 
+    def validate
+      super
+      assert_present :path
+      assert_present :source
+      assert_unique [:path, :source]
+    end
     # Nothing to see yet.
     # This will be for creating "overlays" or "link" relationships
     # between arbitrary objects or modeling your data the way you want.
@@ -32,6 +38,10 @@ module Noah
     # ephemeral nodes.
     #
     # Almost a "choose your own model" thing.
+
+    def name
+      @name = path
+    end
 
   end
 end

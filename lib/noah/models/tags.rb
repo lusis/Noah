@@ -10,4 +10,5 @@ module Noah
       super(encode(id)) || create(:id => encode(id))
     end
   end
+
 end

@@ -2,6 +2,7 @@ require 'ohm'
 require 'ohm/contrib'
 module Noah
   class Model < Ohm::Model
+
     def self.inherited(model)
 
       model.send :include, Ohm::Timestamping
@@ -24,12 +25,29 @@ module Noah
 
   module ModelClassMethods
 
+    def self.included(base)
+      Noah::RegisteredModels.register_model(base)
+    end
+
     def is_new?
       self.created_at == self.updated_at
     end
 
     def tag(tags = self.tags)
       tags.to_s.split(/\s*,\s*/).uniq
+    end
+
+    def link!(path)
+      base_pattern = "#{self.patternize_me}"
+      path.nil? ? (raise ArgumentError, "Must provide a path") : p=path
+
+      begin
+        l = Link.new :path => p, :source => base_pattern
+        l.valid? ? l.save : (raise "#{l.errors}")
+        l.name
+      rescue Exception => e
+        e.message
+      end
     end
 
     def watch!(opts={:endpoint => nil, :pattern => nil})
@@ -45,7 +63,7 @@ module Noah
         e.message
       end
     end
-      
+
     protected
     def patternize_me
       name.match(/^\//) ? n = name.gsub(/^\//, '') : n = name
@@ -94,7 +112,20 @@ module Noah
     end
 
   end
+
+  class RegisteredModels
+    @@models = []
+    def self.register_model(model)
+      @@models << model
+    end
+
+    def self.models
+      @@models
+    end
+  end
+
 end
+
 require File.join(File.dirname(__FILE__), 'models','tags')
 require File.join(File.dirname(__FILE__), 'models','hosts')
 require File.join(File.dirname(__FILE__), 'models','services')

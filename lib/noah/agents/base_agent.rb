@@ -1,5 +1,4 @@
 require 'logger'
-require 'logger'
 
 module Noah::Agents
   module Base
