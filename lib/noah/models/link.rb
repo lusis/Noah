@@ -1,16 +1,14 @@
+require File.join(File.dirname(__FILE__), 'link_member')
 module Noah
   class Link < Model
     attribute :path
-    attribute :source
+    list :nodes, LinkMember
     
     index :path
-    index :source
 
     def validate
       super
       assert_present :path
-      assert_present :source
-      assert_unique [:path, :source]
     end
     # Nothing to see yet.
     # This will be for creating "overlays" or "link" relationships

@@ -1,11 +1,11 @@
 module Noah
   PROTECTED_PATHS = %w[applications configurations hosts services watches ark noah]
-  PATH_MAPPING = {"Noah::Application" => "//noah/application",
-                  "Noah::Service" => "//noah/service",
-                  "Noah::Configuration" => "//noah/configuration",
-                  "Noah::Host" => "//noah/host",
-                  "Noah::Tag" => "//noah/tag",
-                  "Noah::Ephemeral" => "//noah/ephemeral"}
+  PATH_MAPPING = {"applications" => "Application",
+                  "services" => "Service",
+                  "configurations" => "Configuration",
+                  "hosts" => "Host",
+                  "tags" => "Tag",
+                  "ephemeral" => "Ephemeral"}
 end
 begin
   require 'yajl'
