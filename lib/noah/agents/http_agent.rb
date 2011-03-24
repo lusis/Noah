@@ -4,31 +4,26 @@ module Noah::Agents
   class HttpAgent
     include Noah::Agents::Base
 
-    PREFIX = "http"
+    PREFIX = "http://"
     NAME = "http"
 
     def self.notify(event, message, watch_list)
       logger = LOGGER
       logger.info("#{NAME}: Worker initiated")
-      logger.debug("#{NAME}: got event - #{event}")
-      # TODO
-      # I can save work by only decoding once.
-      # This is retarded doing it twice.
-      # Populate matches with decoded data for chrissakes
-      matches = watch_list.find_all{|w| event =~ /^#{Base64.decode64(w)}/}
-      logger.debug("#{PREFIX}: Found #{matches.size} possible matches for #{event}")
+      logger.debug("#{NAME}: got event -  #{event}")
+      watched_patterns = find_watched_patterns!(watch_list)
+      matches = watched_patterns.find_all {|w| event =~ /^#{w}/}
+      logger.debug("#{NAME}: Found #{matches.size} matches for #{event}")
       EM::Iterator.new(matches, 100).each do |watch, iter|
-        p, ep = Base64.decode64(watch).split("|")
-        if ep =~ /^#{PREFIX}/
-          logger.info("#{NAME}: Sending message to (#{ep}) for pattern (#{p})")
-          http = EM::HttpRequest.new(ep, :connection_timeout => 2, :inactivity_timeout => 4).post :body => message
-          http.callback {
-            logger.info("#{NAME}: Message posted to #{ep} successfully")
-          }
-          http.errback {
-            logger.error("#{NAME}: Something went wrong with #{ep}")
-          }
-        end
+        p, ep = watch.split("|")
+        logger.info("#{NAME}: Sending message to (#{ep}) for pattern (#{p})")
+        http = EM::HttpRequest.new(ep, :connection_timeout => 2, :inactivity_timeout => 4).post :body => message
+        http.callback {
+          logger.info("#{NAME}: Message posted to #{ep} successfully")
+        }
+        http.errback {
+          logger.error("#{NAME}: Something went wrong with #{ep}")
+        }
         iter.next
       end
     end

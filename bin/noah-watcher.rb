@@ -20,8 +20,8 @@ rescue LoadError => e
   exit
 end
 
-LOGGER = Logger.new('rundeck-test.log')
-#LOGGER = Logger.new(STDOUT)
+#LOGGER = Logger.new('rundeck-test.log')
+LOGGER = Logger.new(STDOUT)
 
 EventMachine.run do
   EM.error_handler do |e|

@@ -4,21 +4,20 @@ module Noah::Agents
   class DummyAgent
     include Noah::Agents::Base
 
-    PREFIX = "dummy"
+    PREFIX = "dummy://"
     NAME = "dummy"
 
     def self.notify(event, message, watch_list)
       logger = LOGGER
       logger.info("#{NAME}: Worker initiated")
       logger.debug("#{NAME}: got event -  #{event}")
-      matches = watch_list.find_all{|w| event =~ /^#{Base64.decode64(w)}/} 
-      logger.debug("#{NAME}: Found #{matches.size} possible matches for #{event}")
+      watched_patterns = find_watched_patterns!(watch_list)
+      matches = watched_patterns.find_all {|w| event =~ /^#{w}/}
+      logger.debug("#{NAME}: Found #{matches.size} matches for #{event}")
       EM::Iterator.new(matches).each do |watch, iter|
-        p, ep = Base64.decode64(watch).split("|")
-        if ep =~ /^#{PREFIX}/
-          logger.info("#{NAME}: Sending message to: #{ep} for pattern: #{p}")
-          logger.debug("#{NAME}: message received: #{message}")
-        end
+        p, ep = watch.split("|")
+        logger.info("#{NAME}: Sending message to: #{ep} for pattern: #{p}")
+        logger.debug("#{NAME}: message received: #{message}")
         iter.next
       end
     end

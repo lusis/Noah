@@ -42,7 +42,7 @@ module Noah
       e,m = msg.split("|")
       # Below isn't being used right now
       #be = Base64.encode64(e).gsub("\n","")
-      EM::Iterator.new(@@agents).each do |agent, iter|
+      EM::Iterator.new(@@agents, @@agents.size).each do |agent, iter|
         agent.send(:notify, e, m, @@watchers.clone)
         iter.next
       end
