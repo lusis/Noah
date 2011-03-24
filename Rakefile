@@ -44,10 +44,11 @@ task :sample, :redis_url do |t, args|
   Ohm::connect(:url => args.redis_url)
   Ohm::redis.flushdb 
   puts "Creating watchers..."
-  Noah::Watcher.create :endpoint => "http://localhost:3000/webhook", :pattern => "//noah/application"
-  Noah::Watcher.create :endpoint => "http://localhost:3001/webhook", :pattern => "//noah/configuration"
-  Noah::Watcher.create :endpoint => "http://localhost:3002/webhook", :pattern => "//noah/host"
-  Noah::Watcher.create :endpoint => "http://localhost:3003/webhook", :pattern => "//noah/service"
+  Noah::Watcher.create :endpoint => "dummy://applications", :pattern => "//noah/applications"
+  Noah::Watcher.create :endpoint => "dummy://configurations", :pattern => "//noah/configurations"
+  Noah::Watcher.create :endpoint => "dummy://hosts", :pattern => "//noah/hosts"
+  Noah::Watcher.create :endpoint => "dummy://services", :pattern => "//noah/services"
+  Noah::Watcher.create :endpoint => "dummy://ephemerals", :pattern => "//noah/ephemerals"
   puts "Creating Host entry for 'localhost'"
   h = Noah::Host.create(:name => 'localhost', :status => "up")
   if h.save

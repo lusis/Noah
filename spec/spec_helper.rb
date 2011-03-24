@@ -14,6 +14,11 @@ RSpec.configure do |config|
   config.after(:all, :populate_sample_data => true) {Ohm::redis.flushdb }
   config.before(:all, :populate_sample_data => true) do
     Ohm::redis.flushdb
+    Noah::Watcher.create :endpoint => "dummy://applications", :pattern => "//noah/applications"
+    Noah::Watcher.create :endpoint => "dummy://configurations", :pattern => "//noah/configurations"
+    Noah::Watcher.create :endpoint => "dummy://hosts", :pattern => "//noah/hosts"
+    Noah::Watcher.create :endpoint => "dummy://services", :pattern => "//noah/services"
+    Noah::Watcher.create :endpoint => "dummy://ephemerals", :pattern => "//noah/ephemerals"
     h = Noah::Host.create(:name => 'localhost', :status => "up")
     if h.save
       %w[redis noah].each do |service|

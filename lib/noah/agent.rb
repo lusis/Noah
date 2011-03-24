@@ -13,7 +13,8 @@ module Noah
     @@agents = Noah::Watchers.agents
 
     def initialize
-      @logger = LOGGER
+      @logger = Noah::Log.logger
+      @logger.progname = self.class.name
       @logger.debug("Initializing with #{@@watchers.size} registered watches")
       @logger.debug("#{@@agents} agents registered")
       if EventMachine.reactor_running?

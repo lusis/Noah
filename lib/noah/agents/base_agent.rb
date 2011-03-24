@@ -1,8 +1,6 @@
-require 'logger'
-
 module Noah::Agents
   module Base
-    class << self
+    class <<self
       PREFIX = "base"
       NAME = "base-agent"
     end
@@ -16,6 +14,11 @@ module Noah::Agents
 
   module AgentClassMethods
 
+    def logger
+      Noah::Log.logger.progname = self.name
+      Noah::Log.logger
+    end
+
     def find_watched_patterns!(watchlist)
       watched_patterns = []
       watchlist.find_all do |w|
@@ -23,6 +26,15 @@ module Noah::Agents
         watched_patterns << "#{p}|#{ep}" if ep =~ /^#{self.const_get("PREFIX")}/
       end
       watched_patterns
+    end
+
+    def notify(event, message, watch_list)
+      logger.info("Worker Initiated")
+      logger.debug("got event - #{event}")
+      watched_patterns = find_watched_patterns!(watch_list)
+      matches = watched_patterns.find_all {|w| event =~ /^#{w}/}
+      logger.debug("Found #{matches.size} matches for #{event}")
+      self.callback!(matches, message)
     end
 
   end

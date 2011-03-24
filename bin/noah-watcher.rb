@@ -20,8 +20,9 @@ rescue LoadError => e
   exit
 end
 
-#LOGGER = Logger.new('rundeck-test.log')
-LOGGER = Logger.new(STDOUT)
+Noah::Log.logger = Logger.new(STDOUT)
+LOGGER = Noah::Log.logger
+LOGGER.progname = __FILE__
 
 EventMachine.run do
   EM.error_handler do |e|
@@ -38,7 +39,7 @@ EventMachine.run do
   r = EventMachine::Hiredis::Client.connect
   r.errback{|x| logger.error("Unable to connect to redis: #{x}")}
   logger.debug("Starting up")
-  r.psubscribe("//noah/*")
+  r.psubscribe("*")
   r.on(:pmessage) do |pattern, event, message|
     noah.reread_watchers if event =~ /^\/\/noah\/watcher\/.*/
     noah.broker("#{event}|#{message}") unless noah.watchers == 0

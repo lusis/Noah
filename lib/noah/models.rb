@@ -67,7 +67,7 @@ module Noah
     protected
     def patternize_me
       name.match(/^\//) ? n = name.gsub(/^\//, '') : n = name
-      "//noah/#{self.class_to_lower}/#{n}"
+      "//noah/#{self.class_to_lower}s/#{n}"
     end
 
     def stash_name
