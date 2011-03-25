@@ -41,7 +41,7 @@ EventMachine.run do
   logger.debug("Starting up")
   r.psubscribe("*")
   r.on(:pmessage) do |pattern, event, message|
-    noah.reread_watchers if event =~ /^\/\/noah\/watcher\/.*/
+    noah.reread_watchers if event =~ /^\/\/noah\/watchers\/.*/
     noah.broker("#{event}|#{message}") unless noah.watchers == 0
     #master_channel.push "#{event}|#{message}"
   end

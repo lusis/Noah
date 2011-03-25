@@ -1,9 +1,18 @@
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
 require 'rubygems'
-require 'logger'
 require 'noah'
 require 'noah/agents/http_agent'
 require 'noah/agents/dummy_agent'
+begin
+  candidates = []
+  Gem.source_index.find_all {|g| candidates << g[1].name if g[1].name =~ /^noah-agents-.*/}
+  candidates.each do |c|
+    require c
+  end
+rescue LoadError
+  puts "Unable to load #{c}"
+end
+
 
 module Noah
   class Agent
@@ -11,7 +20,7 @@ module Noah
 
     @@watchers = Noah::Watcher.watch_list
     @@agents = Noah::Watchers.agents
-
+    
     def initialize
       @logger = Noah::Log.logger
       @logger.progname = self.class.name
@@ -48,5 +57,19 @@ module Noah
         iter.next
       end
     end
+
+    private
+    def find_and_register_agents
+      candidates = []
+      Gem.source_index.find_all {|g| candidates << g[1].name if g[1].name =~ /^noah-agent-.*/}
+      candidates.each do |c|
+        begin
+          require c
+        rescue LoadError
+          Noah::Log.logger.warn("Unable to load #{c}")
+        end
+      end
+    end
+
   end
 end
