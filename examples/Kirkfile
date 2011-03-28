@@ -1,0 +1,4 @@
+log :level => :all
+rack "/home/jvincent/development/noah/examples/lb.ru" do
+	listen 3000
+end

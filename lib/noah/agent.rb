@@ -27,9 +27,10 @@ module Noah
       @logger.debug("Initializing with #{@@watchers.size} registered watches")
       @logger.debug("#{@@agents} agents registered")
       if EventMachine.reactor_running?
-        self.succeed("Succeed callback")
+        #instantiate_agents!
+        @logger.info("Started up!")
       else
-        logger.fatal("Must be inside a reactor!")
+        @logger.fatal("Must be inside a reactor!")
       end
     end
 
@@ -37,12 +38,8 @@ module Noah
       @@watchers.size
     end
 
-    def http_worker
-      @http_worker
-    end
-
     def reread_watchers
-      @logger.debug("Found new watches")
+      @logger.info("Found new watches")
       @logger.debug("Current watch count: #{@@watchers.size}")
       @@watchers = Noah::Watcher.watch_list
       @logger.debug("New watch count: #{@@watchers.size}")
@@ -50,15 +47,32 @@ module Noah
 
     def broker(msg)
       e,m = msg.split("|")
-      # Below isn't being used right now
-      #be = Base64.encode64(e).gsub("\n","")
       EM::Iterator.new(@@agents, @@agents.size).each do |agent, iter|
-        agent.send(:notify, e, m, @@watchers.clone)
-        iter.next
+        #a = agent.to_s.gsub(/::/,'_').downcase
+        x = agent.send(:new)
+        begin
+          #self.instance_variable_get("@#{a}").send(:notify, e, m, @@watchers)
+          x.notify(e, m, @@watchers.clone)
+          iter.next
+        rescue Exception => e
+          @logger.error("#{agent.to_s} invocation failed with #{e.message}")
+        end
       end
     end
 
-    private
+    protected
+    def instantiate_agents!
+      @@agents.each do |agent|
+        # Convert Noah::Agents::HttpAgent to
+        # noah_agents_httpagent
+        a = agent.to_s.gsub(/::/,'_').downcase
+        @logger.debug("#{a}")
+        # Create instance variable of a
+        self.class.send :attr_accessor, a.to_sym
+        # Set the instance variable "a" to instance of agent
+        self.instance_variable_set(:"@#{a}", agent.send(:new))
+      end
+    end
     def find_and_register_agents
       candidates = []
       Gem.source_index.find_all {|g| candidates << g[1].name if g[1].name =~ /^noah-agent-.*/}

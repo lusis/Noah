@@ -28,17 +28,16 @@ EventMachine.run do
   EM.error_handler do |e|
     LOGGER.warn(e)
   end
-  logger = LOGGER
-  trap("INT") { logger.debug("Shutting down. Watches will not be fired");EM.stop }
+  trap("INT") { LOGGER.debug("Shutting down. Watches will not be fired");EM.stop }
   noah = Noah::Agent.new
-  noah.errback{|x| logger.error("Errback: #{x}")}
-  noah.callback{|y| logger.info("Callback: #{y}")}
+  noah.errback{|x| LOGGER.error("Errback: #{x}")}
+  noah.callback{|y| LOGGER.info("Callback: #{y}")}
   # Passing messages...like a boss
   #master_channel = EventMachine::Channel.new
 
   r = EventMachine::Hiredis::Client.connect
-  r.errback{|x| logger.error("Unable to connect to redis: #{x}")}
-  logger.debug("Starting up")
+  r.errback{|x| LOGGER.error("Unable to connect to redis: #{x}")}
+  LOGGER.info("Attaching to Redis Pubsub")
   r.psubscribe("*")
   r.on(:pmessage) do |pattern, event, message|
     noah.reread_watchers if event =~ /^\/\/noah\/watchers\/.*/

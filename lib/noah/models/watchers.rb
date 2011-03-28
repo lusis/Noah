@@ -37,7 +37,7 @@ module Noah
     def watch_list
       arr = []
       watches = self.all.sort_by(:pattern)
-      watches.each {|w| arr << w.name}
+      watches.each {|w| arr << w.to_hash}
       arr
     end
     end
