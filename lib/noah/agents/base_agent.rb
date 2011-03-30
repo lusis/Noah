@@ -1,9 +1,10 @@
 module Noah::Agents
   class Base
 
-    PREFIX = "base"
+    PREFIX = "base://"
     NAME = "base-agent"
     DEFAULT_CONCURRENCY = 1
+    NEEDS_TRANSFORM = false
 
     def self.inherited(base)
       Noah::Watchers.register_agent(base)
@@ -11,12 +12,13 @@ module Noah::Agents
     end
 
     def notify(event, message, watch_list)
-      logger.info("#{self.class} worker initiated")
+      logger.info("#{self.class.to_s} worker initiated")
       worklist = []
       watch_list.select{|w| worklist << w[:endpoint] if (w[:endpoint] =~ /^#{self.class::PREFIX}/ && event =~ /^#{w[:pattern]}/) }
       if worklist.size >= 1
         logger.info("Dispatching message to #{worklist.size} #{self.class.to_s} endpoints")
         EM::Iterator.new(worklist, self.class::DEFAULT_CONCURRENCY).each do |ep, iter|
+          ep, message = transform(ep, message) if self.class::NEEDS_TRANSFORM == true
           work!(ep, message)
           iter.next
         end

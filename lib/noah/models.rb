@@ -12,6 +12,7 @@ module Noah
 
       model.send :attribute, :tags
       model.send :index, :tag
+      model.send :attribute, :metadata
 
       # removing this as it's simply redundant
       # model.after :save, :notify_via_redis_save

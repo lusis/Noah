@@ -5,7 +5,7 @@ module Noah::Agents
 
     PREFIX = "http://"
     NAME = self.class.to_s
-    DEFAULT_CONCURRENCY = 500
+    DEFAULT_CONCURRENCY = 50
 
     def work!(ep, message)
         logger.info("Sending message to (#{ep})")
