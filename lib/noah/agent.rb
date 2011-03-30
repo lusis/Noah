@@ -2,6 +2,7 @@ $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
 require 'rubygems'
 require 'noah'
 require 'noah/agents/http_agent'
+require 'noah/agents/https_agent'
 require 'noah/agents/dummy_agent'
 begin
   candidates = []

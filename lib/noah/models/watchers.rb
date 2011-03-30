@@ -1,4 +1,3 @@
-require 'digest/sha1'
 module Noah
   class Watcher < Model
     include WatcherValidations
