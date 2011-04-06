@@ -11,7 +11,7 @@ class Noah::App
     if a.nil?
       halt 404
     else 
-      c = Noah::Configuration.find(:name => element, :application_id => a.id).first
+      c = a.configurations.find(:name => element).first
       content_type content_type_mapping[c.format.to_sym] if content_type_mapping[c.format.to_sym]
       c.body
     end  
@@ -23,7 +23,7 @@ class Noah::App
     if a.nil?
       halt 404
     else  
-      Noah::Configuration.find(:application_id => a.id).sort.each {|c| config << c.to_hash}
+      a.configurations.sort.each {|c| config << c.to_hash}
       config.to_json
     end  
   end
@@ -48,14 +48,16 @@ class Noah::App
 
   put '/configurations/:appname/:element?' do |appname, element|
     app = Noah::Application.find_or_create(:name => appname)
-    config = Noah::Configuration.find_or_create(:name => element, :application_id => app.id)
+    dependency_action = app.is_new? ? "created" : "updated"
+    config = Noah::Configuration.find_or_create(:name => element)
     required_params = ["format", "body"]
     data = JSON.parse(request.body.read)
     data.keys.sort == required_params.sort  ? (config.format = data["format"]; config.body = data["body"]) : (raise "Missing Parameters")
     if config.valid?
       config.save
+      app.configurations << config
+      app.save
       action = config.is_new? ? "create" : "update"
-      dependency_action = app.is_new? ? "created" : "updated"
       r = {"result" => "success","id" => "#{config.id}", "action" => action, "dependencies" => dependency_action, "application" => app.name, "item" => config.name}
       r.to_json
     else

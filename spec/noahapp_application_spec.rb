@@ -3,9 +3,9 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe "Using the Application API", :reset_redis => false do
   before(:all) do
     @a = Noah::Application.create(:name => 'rspec_sample_app')
-    @a.configurations << Noah::Configuration.create(:name => 'rspec_config', :format => 'string', :body => 'rspec is great', :application => @a)
+    @c = Noah::Configuration.create(:name => 'rspec_config', :format => 'string', :body => 'rspec is great')
+    @a.configurations << @c
     @a.save
-    @c = @a.configurations.first
   end  
   describe "calling" do
 
@@ -38,7 +38,6 @@ describe "Using the Application API", :reset_redis => false do
         response["name"].should == @c.name
         response["format"].should == @c.format
         response["body"].should == @c.body
-        response["application"].should == @a.name
       end
       it "invalid application should not work" do
         get "/applications/should_not_exist"
@@ -96,7 +95,6 @@ describe "Using the Application API", :reset_redis => false do
         response["action"].should == "delete"
         response["id"].nil?.should == false
         response["name"].should == @appdata[:name]
-        response["configurations"].should == "0"
       end
       it "invalid application should not work" do
         delete "/applications/should_not_work"

@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), 'configurations')
 module Noah
   class Application < Model
     attribute :name
-    collection :configurations, Configuration
+    set :configurations, Configuration
 
     index :name
 
@@ -14,8 +14,9 @@ module Noah
 
     def to_hash
       arr = []
-      configurations.sort.each {|c| arr << c.to_hash}
-      super.merge(:name => name, :configuration => arr, :created_at => created_at, :updated_at => updated_at)
+      self.configurations.sort.each {|c| arr << c.to_hash} if self.configurations.size != 0
+      super.merge(:name => name, :configurations => arr, :created_at => created_at, :updated_at => updated_at)
+      #super.merge(:name => name, :created_at => created_at, :updated_at => updated_at)
     end
 
     class << self

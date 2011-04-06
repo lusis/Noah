@@ -18,7 +18,6 @@ describe "Using the Configuration API", :reset_redis => false, :populate_sample_
         response.first["name"].should == "redis"
         response.first["format"].should == "string"
         response.first["body"].should == "redis://127.0.0.1:6379/0"
-        response.first["application"].should == "noah"
       end
       it "named configuration for application should work" do
         get '/configurations/noah/redis'
@@ -86,7 +85,7 @@ describe "Using the Configuration API", :reset_redis => false, :populate_sample_
     describe "DELETE" do
       before(:all) do
         @a = Noah::Application.create(:name => 'delete_test_app')
-        cparms = {:name => 'a', :format => 'string', :body => 'asdf', :application_id => @a.id}
+        cparms = {:name => 'a', :format => 'string', :body => 'asdf'}
         @a.configurations << Noah::Configuration.create(cparms)
         @a.save
         @c = @a.configurations.first

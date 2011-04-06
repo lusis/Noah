@@ -1,45 +1,49 @@
-require File.join(File.dirname(__FILE__), 'link_member')
 module Noah
   class Link < Model
     attribute :path
-    list :nodes, LinkMember
-    
+    attribute :nodes
+
     index :path
+    index :nodes
+
+    def nodes
+      arr = []
+      self.key[:nodes].smembers.each do |node|
+        arr << node
+      end
+      arr
+    end
+
+    def nodes=(node)
+      case node.class.to_s
+      when "Array"
+        node.each do |n|
+          self.key[:nodes].sadd(n.key)
+        end
+      else
+        self.key[:nodes].sadd(node.key)
+      end
+    end
 
     def validate
       super
       assert_present :path
     end
-    # Nothing to see yet.
-    # This will be for creating "overlays" or "link" relationships
-    # between arbitrary objects or modeling your data the way you want.
-    #
-    # Example:
-    # path = "/myservers"
-    # path.nodes = ["/applications/myapp","/some/ephemeral/path", "sometag"]
-    #
-    # would result in a structure like:
-    # path/
-    #     applications/
-    #                  myapp
-    #     some/ephemeral/path/
-    #                        child1
-    #                        child2
-    #                        child3
-    #     sometag/
-    #            tagged_item1
-    #            tagged_item2
-    #            tagged_item4
-    #            tagged_item5
-    #
-    # The idea is to create a blended view across opinionated, tagged and
-    # ephemeral nodes.
-    #
-    # Almost a "choose your own model" thing.
+
+    def to_hash
+      n = Array.new
+      nodes.each {|node| n << node_to_class(node).to_hash} if nodes.size > 0
+      h = {:name => name, :nodes => n, :created_at => created_at, :updated_at => updated_at}
+      super.merge(h)
+    end
 
     def name
       @name = path
     end
-
+    private
+    def node_to_class(node)
+      node.match(/^Noah::(.*):(\d+)$/)
+      Noah.const_get($1).send(:[], $2)
+    end
   end
 end

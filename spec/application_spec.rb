@@ -23,7 +23,7 @@ describe "Using the Application Model", :reset_redis => true do
     end
     it "create a new Noah::Application with Configurations" do
       a = Noah::Application.create(@appdata1)
-      a.configurations << Noah::Configuration.create(@appconf_string.merge({:application => a}))
+      a.configurations << Noah::Configuration.create(@appconf_string)
       a.valid?.should == true
       a.is_new?.should == true
       a.save

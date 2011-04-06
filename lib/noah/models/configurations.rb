@@ -1,11 +1,10 @@
+require File.join(File.dirname(__FILE__), 'applications')
 module Noah
   class Configuration < Model
 
     attribute :name
     attribute :format
     attribute :body
-    attribute :new_record
-    reference :application, Application
 
     index :name
     index :format
@@ -16,13 +15,11 @@ module Noah
       assert_present :name
       assert_present :format
       assert_present :body
-      assert_present :application_id
-      assert_unique [:name, :application_id]
+      assert_unique :name
     end
 
     def to_hash
-      Application[application_id].nil? ? app_name=nil : app_name=Application[application_id].name
-      super.merge(:name => name, :format => format, :body => body, :created_at => created_at, :updated_at => updated_at, :application => app_name)
+      super.merge(:name => name, :format => format, :body => body, :created_at => created_at, :updated_at => updated_at)
     end
 
     class << self

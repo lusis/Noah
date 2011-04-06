@@ -29,9 +29,9 @@ RSpec.configure do |config|
 
     a = Noah::Application.create(:name => 'noah')
     if a.save
-      cr = Noah::Configuration.create(:name => 'redis', :format => 'string', :body => 'redis://127.0.0.1:6379/0', :application => a)
-      ch = Noah::Configuration.create(:name => 'host', :format => 'string', :body => 'localhost', :application  => a)
-      cp = Noah::Configuration.create(:name => 'port', :format => 'string', :body => '9292', :application => a)
+      cr = Noah::Configuration.create(:name => 'redis', :format => 'string', :body => 'redis://127.0.0.1:6379/0')
+      ch = Noah::Configuration.create(:name => 'host', :format => 'string', :body => 'localhost')
+      cp = Noah::Configuration.create(:name => 'port', :format => 'string', :body => '9292')
       %w[cr ch cp].each do |c|
         a.configurations << eval(c)
       end
@@ -53,13 +53,13 @@ EOJ
 
     a1 = Noah::Application.create(:name => 'myrailsapp1')
     if a1.save
-      c1 = Noah::Configuration.create(:name => 'database.yml', :format => 'yaml', :body => my_yaml, :application => a1)
+      c1 = Noah::Configuration.create(:name => 'database.yml', :format => 'yaml', :body => my_yaml)
       a1.configurations << c1
     end
 
     a2 = Noah::Application.create(:name => 'myrestapp1')
     if a2.save
-      c2 = Noah::Configuration.create(:name => 'config.json', :format => 'json', :body => my_json, :application => a2)
+      c2 = Noah::Configuration.create(:name => 'config.json', :format => 'json', :body => my_json)
       a2.configurations << c2
     end
   end

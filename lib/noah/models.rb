@@ -51,13 +51,12 @@ module Noah
       end
     end
 
-    def watch!(opts={:endpoint => nil, :pattern => nil})
+    def watch!(opts={:endpoint => nil})
       base_pattern = "#{self.patternize_me}"
       opts[:endpoint].nil? ? (raise ArgumentError, "Need an endpoint") : endpoint=opts[:endpoint]
-      opts[:pattern].nil? ? pattern=base_pattern : pattern=opts[:pattern]
 
       begin
-        w = Watcher.new :pattern => pattern, :endpoint => endpoint
+        w = Watcher.new :pattern => base_pattern, :endpoint => endpoint
         w.valid? ? w.save : (raise "#{w.errors}")
         w.name
       rescue Exception => e
