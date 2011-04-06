@@ -68,9 +68,9 @@ class Noah::App
   delete '/configurations/:appname/:element?' do |appname, element|
     app = Noah::Application.find(:name => appname).first
     if app
-      config = Noah::Configuration.find(:name=> element, :application_id => app.id).first
+      config = app.configurations.find(:name=> element).first
       if config
-        config.delete
+        app.configurations.delete(config)
         r = {"result" => "success", "id" => "#{config.id}", "action" => "delete", "application" => "#{app.name}", "item" => "#{element}"}
         r.to_json
       else

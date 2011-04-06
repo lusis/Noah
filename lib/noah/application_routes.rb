@@ -50,11 +50,11 @@ class Noah::App
     if app.nil?
       halt 404
     else
-# configs are no longer tied to apps. remove the cascade delete
-#      configurations = []
-#      Noah::Configuration.find(:application_id => app.id).sort.each {|x| configurations << x; x.delete} if app.configurations.size > 0
+       # configs are no longer tied to apps. remove the cascade delete
+       # configurations = []
+       # Noah::Configuration.find(:application_id => app.id).sort.each {|x| configurations << x; x.delete} if app.configurations.size > 0
       app.delete
-#      r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{appname}", "configurations" => "#{configurations.size}"}
+      # r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{appname}", "configurations" => "#{configurations.size}"}
       r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{appname}"}
       r.to_json
     end

@@ -65,9 +65,10 @@ module Noah
     end
 
     protected
-    def patternize_me
+    def patternize_me(opts = {:namespace => nil})
+      opts[:namespace].nil? ? namespace="//noah/#{self.class_to_lower}s" : namespace="//noah/#{opts[:namespace]}/#{self.class_to_lower}s"
       name.match(/^\//) ? n = name.gsub(/^\//, '') : n = name
-      "//noah/#{self.class_to_lower}s/#{n}"
+      "#{namespace}/#{n}"
     end
 
     def stash_name
@@ -133,3 +134,4 @@ require File.join(File.dirname(__FILE__), 'models','applications')
 require File.join(File.dirname(__FILE__), 'models','configurations')
 require File.join(File.dirname(__FILE__), 'models','watchers')
 require File.join(File.dirname(__FILE__), 'models','ephemerals')
+require File.join(File.dirname(__FILE__), 'models','link')
