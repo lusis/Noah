@@ -16,17 +16,16 @@ module Noah
       arr = []
       self.configurations.sort.each {|c| arr << c.to_hash} if self.configurations.size != 0
       super.merge(:name => name, :configurations => arr, :created_at => created_at, :updated_at => updated_at)
-      #super.merge(:name => name, :created_at => created_at, :updated_at => updated_at)
     end
 
     class << self
     def find_or_create(opts = {})
       begin
-        find(opts).first.nil? ? (app = create(opts)) : (app = find(opts).first)
-        if app.valid?
-          app.save
+        find(opts).first.nil? ? (obj = new(opts)) : (obj = find(opts).first)
+        if obj.valid?
+          obj.save
         end
-        app
+        obj
       rescue Exception => e
         e.message
       end

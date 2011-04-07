@@ -28,12 +28,12 @@ module Noah
     def find_or_create(opts = {})
       begin
         path, data = opts[:path], opts[:data]
-        find(:path => path).first.nil? ? (eph = new(:path => path)) : (eph = find(:path => path).first)
-        eph.data = data
-        if eph.valid?
-          eph.save
+        find(:path => path).first.nil? ? (obj = new(:path => path)) : (obj = find(:path => path).first)
+        obj.data = data
+        if obj.valid?
+          obj.save
         end
-        eph
+        obj
       rescue Exception => e
         e.message
       end

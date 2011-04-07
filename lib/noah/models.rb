@@ -75,8 +75,8 @@ module Noah
       @deleted_name = self.name
     end
 
-    def class_to_lower
-      self.class.to_s.gsub(/(.*)::(\w)/,'\2').downcase
+    def class_to_lower(class_name = self.class.to_s)
+      class_name.gsub(/(.*)::(\w)/,'\2').downcase
     end
 
     def dbnum

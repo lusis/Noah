@@ -25,11 +25,11 @@ module Noah
     class << self
     def find_or_create(opts={})
       begin
-        if find(opts).first.nil?
-          conf = create(opts)
-        else  
-          conf = find(opts).first
-        end  
+        find(opts).first.nil? ? (obj = new(opts)) : (obj = find(opts).first)
+        if obj.valid?
+          obj.save
+        end
+        obj
       rescue Exception => e
         e.message
       end

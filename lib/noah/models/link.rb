@@ -31,9 +31,26 @@ module Noah
     end
 
     def to_hash
-      n = Array.new
-      nodes.each {|node| n << node_to_class(node).to_hash} if nodes.size > 0
-      h = {:name => name, :nodes => n, :created_at => created_at, :updated_at => updated_at}
+      # TODO Holy shit, is this messy or what?
+      # Prepopulate instance variables of each object type instead?
+      %w[applications configurations hosts services ephemerals].each {|x| instance_variable_set("@#{x}", Hash.new)}
+      if nodes.size > 0
+        nodes.each do |node|
+          n = node_to_class(node)
+          cls = class_to_lower(n.class.to_s)
+          hsh = instance_variable_get("@#{cls}s")
+          hsh["#{n.name}"] = Hash.new unless hsh.has_key?(n.name)
+          # all of this bs is because services are unique per [servicename, hostname]
+          # so if I add multiple services just by name to the hash, I'll wipe the previous one
+          # a better option would be for services to be named slug style 
+          if cls == "service"
+            hsh[n.name].merge!({n.to_hash[:host] => n.to_hash})
+          else
+            hsh[n.name].merge!(n.to_hash)
+          end
+        end
+      end
+      h = {:name => name, :hosts => @hosts, :services => @services, :applications => @applications, :configurations => @configurations, :ephemerals => @ephemerals, :created_at => created_at, :updated_at => updated_at}
       super.merge(h)
     end
 
