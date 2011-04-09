@@ -3,7 +3,7 @@ module Noah
   class Host < Model
     # Host model
     # @return {Host} a {Host} object
-
+    include Taggable
     attribute :name
     attribute :status
     collection :services, Service

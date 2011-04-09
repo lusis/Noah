@@ -10,8 +10,6 @@ module Noah
       model.send :include, Ohm::Callbacks
       model.send :include, Ohm::ExtraValidations
 
-      model.send :attribute, :tags
-      model.send :index, :tag
       model.send :attribute, :metadata
 
       # removing this as it's simply redundant
@@ -32,10 +30,6 @@ module Noah
 
     def is_new?
       self.created_at == self.updated_at
-    end
-
-    def tag(tags = self.tags)
-      tags.to_s.split(/\s*,\s*/).uniq
     end
 
     def link!(path)
@@ -86,15 +80,6 @@ module Noah
       o[:db].nil? ? "#{o[:url].split('/').last}" : "#{o[:db]}"
     end
 
-    def before_update
-      return if new?
-      tag(read_remote(:tags)).map(&Tag).each {|t| t.decr :total}
-    end
-
-    def after_save
-      tag.map(&Tag).each {|t| t.incr :total }
-    end
-
     ["create", "update", "delete"].each do |meth|
       class_eval do
         define_method("notify_via_redis_#{meth}".to_sym) do
@@ -128,6 +113,7 @@ module Noah
 end
 
 require File.join(File.dirname(__FILE__), 'models','tags')
+require File.join(File.dirname(__FILE__), 'taggable')
 require File.join(File.dirname(__FILE__), 'models','hosts')
 require File.join(File.dirname(__FILE__), 'models','services')
 require File.join(File.dirname(__FILE__), 'models','applications')

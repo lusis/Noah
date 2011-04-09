@@ -1,7 +1,7 @@
 module Noah
 
   class Service < Model
-
+    include Taggable
     attribute :name
     attribute :status
     reference :host, Host

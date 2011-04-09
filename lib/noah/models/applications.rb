@@ -1,6 +1,7 @@
 require File.join(File.dirname(__FILE__), 'configurations')
 module Noah
   class Application < Model
+    include Taggable
     attribute :name
     set :configurations, Configuration
 
