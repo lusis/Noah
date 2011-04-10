@@ -37,9 +37,8 @@ module Noah
       path.nil? ? (raise ArgumentError, "Must provide a path") : p=path
 
       begin
-        l = Link.new :path => p, :source => base_pattern
-        l.valid? ? l.save : (raise "#{l.errors}")
-        l.name
+        l = Link.find_or_create :path => p
+        l.nodes = self
       rescue Exception => e
         e.message
       end

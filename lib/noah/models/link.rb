@@ -57,6 +57,19 @@ module Noah
     def name
       @name = path
     end
+    class <<self
+    def find_or_create(opts={})
+      begin
+        find(opts).first.nil? ? obj=new(opts) : obj=find(opts).first
+        if obj.valid?
+          obj.save
+        end
+        obj
+      rescue Exception => e
+        e.message
+      end
+    end
+    end
     private
     def node_to_class(node)
       node.match(/^Noah::(.*):(\d+)$/)

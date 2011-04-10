@@ -19,12 +19,24 @@ class Noah::App
     end
   end
 
+  put '/applications/:appname/tag' do |appname|
+    required_params = ["tags"]
+    data = JSON.parse(request.body.read)
+    (data.keys.sort == required_params.sort) ? (a=Noah::Application.find(:name=>appname).first) : (raise "Missing Parameters")
+    a.nil? ? (halt 404) : (a.tag!(data['tags']))
+    a.to_json
+  end
+
   put '/applications/:appname/watch' do |appname|
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)
     (data.keys.sort == required_params.sort) ? (a = Noah::Application.find(:name => appname).first) : (raise "Missing Parameters")
     a.nil? ? (halt 404) : (w = a.watch!(:endpoint => data['endpoint']))
     w.to_json
+  end
+
+  put '/applications/:appname/link/:linkname' do |appname, linkname|
+
   end
 
   put '/applications/:appname/?' do |appname|
