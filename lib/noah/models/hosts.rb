@@ -22,7 +22,7 @@ module Noah
     # @return [Hash] A hash representation of a {Host}
     def to_hash
       arr = []
-      services.sort.each {|s| arr << s.to_hash}
+      services.sort.each {|s| arr << {:id => s.id, :status => s.status, :name => s.name}}
       h = {:name => name, :status => status, :created_at => created_at, :updated_at => updated_at, :services => arr}
       super.merge(h)
     end
