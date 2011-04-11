@@ -61,8 +61,8 @@ describe "Using the Application Model", :reset_redis => true do
       b = Noah::Application.create(@appdata2)
       c = Noah::Applications.all
       c.size.should == 2
-      c.member?(a).should == true
-      c.member?(b).should == true
+      c.has_key?(a.name).should == true
+      c.has_key?(b.name).should == true
     end  
   end
 

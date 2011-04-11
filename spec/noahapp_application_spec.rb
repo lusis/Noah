@@ -14,20 +14,23 @@ describe "Using the Application API", :reset_redis => false do
         get '/applications'
         last_response.should be_ok
         response = last_response.should return_json
-        response.is_a?(Array).should == true
+        response.is_a?(Hash).should == true
       end
       it "named application should work" do
         get '/applications/rspec_sample_app'
         last_response.should be_ok
         response = last_response.should return_json
 
-        response["id"].should == @a.id
         response["name"].should == @a.name
-        c = response["configurations"].first
-        c["id"].should == @c.id
-        c["name"].should == @c.name
-        c["body"].should == @c.body
-        c["format"].should == @c.format
+        response["id"].should == @a.id.to_s
+        response["name"].should == @a.name
+        response.has_key?("configurations").should == true
+        c = response["configurations"]
+        c.has_key?(@c.name).should == true
+        p @c
+        p c
+        c["#{@c.name}"]["format"].should == "#{@c.format}"
+        c["#{@c.name}"]["body"].should == "#{@c.body}"
       end
       it "named configuration for application should work" do
         get "/applications/#{@a.name}/#{@c.name}"

@@ -2,6 +2,7 @@ require File.join(File.dirname(__FILE__), 'configurations')
 module Noah
   class Application < Model
     include Taggable
+    include Linkable
     attribute :name
     set :configurations, Configuration
 
@@ -14,9 +15,11 @@ module Noah
     end
 
     def to_hash
-      arr = []
-      self.configurations.sort.each {|c| arr << c.to_hash} if self.configurations.size != 0
-      super.merge(:name => name, :configurations => arr, :created_at => created_at, :updated_at => updated_at)
+      cfg_hash = Hash.new
+      configurations.sort.each do |cfg|
+        cfg_hash["#{cfg.name}"] = {:format => cfg.to_hash[:format], :body => cfg.to_hash[:body]}
+      end
+      super.merge(:name => name, :created_at => created_at, :updated_at => updated_at, :configurations => cfg_hash)
     end
 
     class << self
@@ -37,7 +40,10 @@ module Noah
 
   class Applications
     def self.all(options = {})
-      options.empty? ? Application.all.sort : Application.find(options).sort
+      app_hash = Hash.new
+      options.empty? ? apps=Application.all.sort : apps=Application.find(options).sort
+      apps.each {|x| app_hash["#{x.name}"] = x.to_hash.reject {|k,v| k == :name} }
+      app_hash
     end
   end
 end
