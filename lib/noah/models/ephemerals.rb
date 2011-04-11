@@ -2,6 +2,7 @@ module Noah
   class Ephemeral < Model
     include EphemeralValidations
     include Taggable
+    include Linkable
     attribute :path
     attribute :data
     attribute :lifetime
