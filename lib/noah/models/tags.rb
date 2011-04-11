@@ -2,6 +2,7 @@ module Noah
   class Tag < Model
     attribute :name
     attribute :members
+    index :members
     index :name
 
     def validate
@@ -12,6 +13,7 @@ module Noah
 
     def members=(member)
       self.key[:members].sadd(member.key)
+      member.tag! self.name unless member.tags.member?(self)
     end
 
     def members
