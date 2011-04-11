@@ -20,10 +20,10 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
         response["name"].should == "localhost"
         response["status"].should == "up"
         services.size.should == 2
-        services.first["name"].should == "redis"
-        services.first["status"].should == "up"
-        services.last["name"].should == "noah"
-        services.last["status"].should == "up"
+        services.has_key?("redis").should == true
+        services.has_key?("noah").should == true
+        services["redis"].should == "up"
+        services["noah"].should == "up"
       end  
 
       it "named service for host should work" do

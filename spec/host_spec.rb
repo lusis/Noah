@@ -73,12 +73,12 @@ describe "Using the Host Model", :reset_redis => true do
       host2 = Noah::Host.create(:name => hostname2, :status => status2)
       host1.save
       host2.save
-      Noah::Hosts.all.class.should == Array
+      Noah::Hosts.all.class.should == Hash
       Noah::Hosts.all.size.should == 2
-      Noah::Hosts.all.first.name.should == hostname1
-      Noah::Hosts.all.first.status.should == status1
-      Noah::Hosts.all.last.name.should == hostname2
-      Noah::Hosts.all.last.status.should == status2
+      Noah::Hosts.all.has_key?(hostname1).should == true
+      Noah::Hosts.all[hostname1][:status].should == status1
+      Noah::Hosts.all.has_key?(hostname2).should == true
+      Noah::Hosts.all[hostname2][:status].should == status2
     end
   end
 

@@ -25,7 +25,6 @@ class Noah::App
 
   # GET all {Hosts}
   get '/hosts/?' do
-    hosts.map {|h| h.to_hash}
     if hosts.size == 0
       halt 404
     else

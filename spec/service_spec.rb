@@ -57,8 +57,8 @@ describe "Noah Service Model", :reset_redis => true do
         h.save
       end
       Noah::Services.all.size.should == 2
-      Noah::Services.all.first.name.should == "s1"
-      Noah::Services.all.last.name.should == "s2"
+      Noah::Services.all.has_key?("s1").should == true
+      Noah::Services.all.has_key?("s2").should == true
     end
 
   end

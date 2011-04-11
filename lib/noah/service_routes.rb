@@ -13,21 +13,13 @@ class Noah::App
 
   get '/services/:servicename/?' do |servicename|
     s = services(:name => servicename)
-    s.map {|x| x.to_hash}
-    if s.empty?
-      halt 404
-    else  
-      s.to_json
-    end  
+    (halt 404) if s.size == 0
+    s.to_json
   end
 
   get '/services/?' do
-    if services.empty?
-      halt 404
-    else
-      services.map {|s| s.to_hash}
-      services.to_json
-    end  
+    (halt 404) if services.size == 0
+    services.to_json
   end
 
   put '/services/:servicename/watch' do |servicename|

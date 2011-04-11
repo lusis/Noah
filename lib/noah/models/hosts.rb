@@ -4,6 +4,7 @@ module Noah
     # Host model
     # @return {Host} a {Host} object
     include Taggable
+    include Linkable
     attribute :name
     attribute :status
     collection :services, Service
@@ -21,9 +22,11 @@ module Noah
 
     # @return [Hash] A hash representation of a {Host}
     def to_hash
-      arr = []
-      services.sort.each {|s| arr << {:id => s.id, :status => s.status, :name => s.name}}
-      h = {:name => name, :status => status, :created_at => created_at, :updated_at => updated_at, :services => arr}
+      services_hash = Hash.new
+      services.sort.each do |svc|
+        services_hash["#{svc.name}"] = svc.status
+      end
+      h = {:name => name, :status => status, :created_at => created_at, :updated_at => updated_at, :services => services_hash}
       super.merge(h)
     end
 
@@ -50,7 +53,10 @@ module Noah
     # @param [Hash] optional filters for results
     # @return [Array] Array of {Host} objects
     def self.all(options = {})
-      options.empty? ? Noah::Host.all.sort : Noah::Host.find(options).sort
+      host_hash = Hash.new
+      options.empty? ? hosts=Noah::Host.all.sort : hosts=Noah::Host.find(options).sort
+      hosts.each {|x| host_hash["#{x.name}"] = x.to_hash.reject {|k,v| k == :name } }
+      host_hash
     end
   end
 end

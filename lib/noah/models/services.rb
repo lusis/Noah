@@ -2,6 +2,7 @@ module Noah
 
   class Service < Model
     include Taggable
+    include Linkable
     attribute :name
     attribute :status
     reference :host, Host
@@ -48,7 +49,15 @@ module Noah
 
   class Services
     def self.all(options = {})
-      options.empty? ? Service.all.sort : Service.find(options).sort
+      service_hash = Hash.new
+      options.empty? ? services=Service.all.sort : services=Service.find(options).sort
+      services.each do |svc|
+        service_hash["#{svc.name}"] = Hash.new unless service_hash.has_key?(svc.name)
+        host_name = Noah::Host[svc.host_id].name
+        service_hash["#{svc.name}"]["#{host_name}"] = Hash.new
+        service_hash["#{svc.name}"]["#{host_name}"].merge!({:id => svc.id, :status => svc.status, :tags => svc.to_hash[:tags], :links => svc.to_hash[:links], :created_at => svc.created_at, :updated_at => svc.updated_at})
+      end
+      service_hash
     end
   end
 end

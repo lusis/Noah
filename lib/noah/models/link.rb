@@ -42,16 +42,17 @@ module Noah
           # all of this bs is because services are unique per [servicename, hostname]
           # so if I add multiple services just by name to the hash, I'll wipe the previous one
           # a better option would be for services to be named slug style 
-          if cls == "service"
-            hsh["#{n.name}-#{n.id}"] = Hash.new unless hsh.has_key?("#{n.name}-#{n.id}")
-            hsh["#{n.name}-#{n.id}"].merge!({n.to_hash[:host] => n.to_hash})
+          hsh["#{n.name}"] = Hash.new unless hsh.has_key?(n.name)
+          case cls
+          when "service"
+            sh = Noah::Host[n.host_id].name
+            hsh["#{n.name}"]["#{sh}"] = Hash.new unless hsh["#{n.name}"].has_key?("#{sh}")
+            hsh["#{n.name}"]["#{sh}"].merge!({:id => n.id, :status => n.status, :tags => n.to_hash[:tags]})
+          when "host"
+            hsh["#{n.name}"].merge!({:id => n.id, :status => n.status, :tags => n.to_hash[:tags], :services => n.to_hash[:services]})
           else
-            hsh["#{n.name}"] = Hash.new unless hsh.has_key?(n.name)
-            hsh[n.name].merge!(n.to_hash)
+            hsh[n.name].merge!(n.to_hash.reject{|key, value| key == :created_at || key == :updated_at || key == :name})
           end
-          # all of this bs is because services are unique per [servicename, hostname]
-          # so if I add multiple services just by name to the hash, I'll wipe the previous one
-          # a better option would be for services to be named slug style 
         end
       end
       h = {:name => name, :hosts => @hosts, :services => @services, :applications => @applications, :configurations => @configurations, :ephemerals => @ephemerals, :created_at => created_at, :updated_at => updated_at}
