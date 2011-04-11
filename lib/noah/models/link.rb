@@ -19,9 +19,11 @@ module Noah
       when "Array"
         node.each do |n|
           self.key[:nodes].sadd(n.key)
+          n.links << self
         end
       else
         self.key[:nodes].sadd(node.key)
+        n.links << self
       end
     end
 

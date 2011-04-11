@@ -7,7 +7,7 @@ module Noah::Linkable
   def link!(link_name)
     link = Noah::Link.find_or_create(:path => link_name)
     link.nodes = self
-    self.links << link
+    links << link
   end
 
   def unlink!(link_name)

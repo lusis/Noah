@@ -8,10 +8,14 @@ module Noah::Taggable
     case tag_name.class.to_s
     when "Array"
       tag_name.each do |t|
-        tags << ::Noah::Tag.find_or_create(:name => t)
+        my_tag = ::Noah::Tag.find_or_create(:name => t)
+        tags << my_tag
+        my_tag.members = self
       end
     else
-      tags << Noah::Tag.find_or_create(:name => tag_name)
+      my_tag = ::Noah::Tag.find_or_create(:name => tag_name)
+      tags << my_tag
+      my_tag.members = self
     end
   end
 
