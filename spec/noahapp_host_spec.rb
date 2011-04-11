@@ -22,10 +22,8 @@ describe "Using the Host API", :reset_redis => false, :populate_sample_data => t
         services.size.should == 2
         services.first["name"].should == "redis"
         services.first["status"].should == "up"
-        services.first["host"].should == "localhost"
         services.last["name"].should == "noah"
         services.last["status"].should == "up"
-        services.last["host"].should == "localhost"
       end  
 
       it "named service for host should work" do
