@@ -47,6 +47,8 @@ describe "Using the Tag Model", :reset_redis => true do
       end
       Noah::Tag.all.size.should == 3
     end
+    it "find all objects tagged"
+    it "support tagging all object types"
   end
 
   describe "should not" do
