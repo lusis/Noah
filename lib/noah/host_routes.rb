@@ -32,12 +32,28 @@ class Noah::App
     end
   end
 
+  put '/hosts/:hostname/tag' do |hostname|
+    required_params = ["tags"]
+    data = JSON.parse(request.body.read)
+    (data.keys.sort == required_params.sort) ? (a=Noah::Host.find(:name=>hostname).first) : (raise "Missing Parameters")
+    a.nil? ? (halt 404) : (a.tag!(data['tags']))
+    a.to_json
+  end
+
   put '/hosts/:hostname/watch' do |hostname|
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)
     (data.keys.sort == required_params.sort) ? (h = Noah::Host.find(:name => hostname).first) : (raise "Missing Parameters")
     h.nil? ? (halt 404) : (w = h.watch!(:endpoint => data['endpoint']))
     w.to_json
+  end
+
+  put '/hosts/:hostname/link' do |hostname|
+    required_params = ["link_name"]
+    data = JSON.parse(request.body.read)
+    (data.keys.sort == required_params.sort) ? (a = Noah::Host.find(:name => hostname).first) : (raise "Missing Parameters")
+    a.nil? ? (halt 404) : (a.link! data["link_name"])
+    a.to_json
   end
 
   put '/hosts/:hostname/?' do |hostname|

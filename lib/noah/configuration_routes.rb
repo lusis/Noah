@@ -38,6 +38,14 @@ class Noah::App
     end  
   end
 
+  put '/configurations/:configname/tag' do |configname|
+    required_params = ["tags"]
+    data = JSON.parse(request.body.read)
+    (data.keys.sort == required_params.sort) ? (c=Noah::Configuration.find(:name=>configname).first) : (raise "Missing Parameters")
+    c.nil? ? (halt 404) : (c.tag!(data['tags']))
+    c.to_json
+
+  end
   put '/configurations/:configname/watch' do |configname|
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)

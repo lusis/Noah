@@ -23,7 +23,7 @@ module Noah
         end
       else
         self.key[:nodes].sadd(node.key)
-        n.links << self
+        node.links << self
       end
     end
 
@@ -38,6 +38,7 @@ module Noah
       %w[applications configurations hosts services ephemerals].each {|x| instance_variable_set("@#{x}", Hash.new)}
       if nodes.size > 0
         nodes.each do |node|
+          rejected_vals = [:created_at, :updated_at, :links, :name]
           n = node_to_class(node)
           cls = class_to_lower(n.class.to_s)
           hsh = instance_variable_get("@#{cls}s")
@@ -53,7 +54,7 @@ module Noah
           when "host"
             hsh["#{n.name}"].merge!({:id => n.id, :status => n.status, :tags => n.to_hash[:tags], :services => n.to_hash[:services]})
           else
-            hsh[n.name].merge!(n.to_hash.reject{|key, value| key == :created_at || key == :updated_at || key == :name})
+            hsh["#{n.name}"].merge!(n.to_hash.reject{|key, value| rejected_vals.member?(key)})
           end
         end
       end
@@ -68,10 +69,7 @@ module Noah
     class <<self
     def find_or_create(opts={})
       begin
-        find(opts).first.nil? ? obj=new(opts) : obj=find(opts).first
-        if obj.valid?
-          obj.save
-        end
+        find(opts).first.nil? ? obj=create(opts) : obj=find(opts).first
         obj
       rescue Exception => e
         e.message

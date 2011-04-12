@@ -13,7 +13,6 @@ if h.save
   %w[redis noah].each do |service|
     puts "Create Service entry for #{service}"
     s = Noah::Service.create(:name => service, :status => "up", :host_id => h.id)
-    h.services << s
   end
 end
 
@@ -24,8 +23,8 @@ if a.save
   cr = Noah::Configuration.create(:name => 'redis', :format => 'string', :body => 'redis://127.0.0.1:6379/0')
   ch = Noah::Configuration.create(:name => 'host', :format => 'string', :body => 'localhost')
   cp = Noah::Configuration.create(:name => 'port', :format => 'string', :body => '9292')
-  %w[cr ch cp].each do |c|
-    a.configurations << eval(c)
+  [cr,ch,cp].each do |c|
+    a.configurations << c
   end
 end
 
@@ -34,7 +33,7 @@ puts "Creating sample entries - Host and Service"
   h = Noah::Host.create(:name => host, :status => "up")
   if h.save
     %w[http https smtp mysql].each do |service|
-      s = Noah::Service.create(:name => service, :status => "pending", :host => h)
+      s = Noah::Service.create(:name => service, :status => "pending", :host_id => h.id)
       h.services << s
     end
   end
@@ -77,7 +76,11 @@ l1.path = "/my_sample_organization"
 l1.save
 l1.nodes = [a1, c2, Noah::Host.find(:name => 'localhost').first, Noah::Service.find(:name => 'redis').first, e1, e2]
 a1.tag! ["production", "sample_data"]
-e2.tag! "ephemeral"
+e2.tag! ["ephemeral", "development"]
+c1.tag! "development"
+Noah::Service[1].tag! "development"
+Noah::Service[2].tag! ["development", "out-of-service"]
+Noah::Service[2].link! "/my_sample_organization"
 
 
 puts "Sample data populated!"

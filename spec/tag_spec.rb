@@ -28,14 +28,14 @@ describe "Using the Tag Model", :reset_redis => true do
       t.members = @host
       @host.tags.member?(t).should == true
       t.members[:hosts].size.should == 1
-      t.members[:hosts].member?(@host.name).should == true
+      t.members[:hosts].member?(@host).should == true
     end
     it "tag! an existing object with a single tag" do
       @host.tag! @tags2
       t = Noah::Tag.find(:name => @tags2).first
       @host.tags.member?(t).should == true
       t.members[:hosts].size.should == 1
-      t.members[:hosts].member?(@host.name).should == true
+      t.members[:hosts].member?(@host).should == true
     end
     it "tag! an existing object with an array of tags" do
       @host.tag! @tags1
@@ -43,18 +43,20 @@ describe "Using the Tag Model", :reset_redis => true do
         t = Noah::Tag.find(:name => tag).first
         @host.tags.member?(t).should == true
         t.members[:hosts].size.should == 1
-        t.members[:hosts].member?(@host.name).should == true
+        t.members[:hosts].member?(@host).should == true
       end
       Noah::Tag.all.size.should == 3
     end
     it "tag all object types and find via tagged" do
-      [@host, @service, @application, @configuration, @ephemeral].each do |o|
-        o.tag! @tags1
-      end
+      @host.tag! @tags1
+      @ephemeral.tag! @tags1
+      @configuration.tag! @tags1
+      @application.tag! @tags1
+      @service.tag! @tags1
       @tags1.each do |tag|
-        Noah::Tag.tagged(tag).size.should == 5
+        Noah::Tags.tagged(tag).size.should == 5
         [@host, @service, @application, @configuration, @ephemeral].each do |o|
-          Noah::Tag.tagged(tag).values.flatten.member?(o.name).should == true
+          Noah::Tags.tagged(tag).values.flatten.member?(o).should == true
         end
       end
     end

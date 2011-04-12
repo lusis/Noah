@@ -58,6 +58,7 @@ module Noah
       erb :'500'
     end
 
+    load File.join(File.dirname(__FILE__), 'tag_routes.rb')
     load File.join(File.dirname(__FILE__), 'host_routes.rb')
     load File.join(File.dirname(__FILE__), 'service_routes.rb')
     load File.join(File.dirname(__FILE__), 'application_routes.rb')

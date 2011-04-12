@@ -38,8 +38,9 @@ class Noah::App
   put '/applications/:appname/link' do |appname|
     required_params = ["link_name"]
     data = JSON.parse(request.body.read)
-    (data.keys.sort == required_params.sort) ? (a = Noah::Applicaiton.find(:name => appname).first) : (raise "Missing Parameters")
-    #a.nil? ? (halt 404) : (a.link!
+    (data.keys.sort == required_params.sort) ? (a = Noah::Application.find(:name => appname).first) : (raise "Missing Parameters")
+    a.nil? ? (halt 404) : (a.link! data["link_name"])
+    a.to_json
   end
 
   put '/applications/:appname/?' do |appname|

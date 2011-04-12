@@ -1,16 +1,16 @@
 class Noah::App
-  get '/e/?' do
+  get '/ephemerals/?' do
     halt 404
   end
 
-  get '/e/*' do
+  get '/ephemerals/*' do
     params["splat"].size == 0 ? (halt 404) : (e=Noah::Ephemeral.find(:path => "/#{params["splat"][0]}").first)
     (halt 404) if e.nil?
     content_type "application/octet-stream"
     e.data.nil? ? "" : "#{e.data}"
   end
 
-  put '/e/*/watch' do
+  put '/ephemerals/*/watch' do
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)
     (data.keys.sort == required_params.sort) ? (e = Noah::Watcher.find(:path => params[:splat][0]).first) : (raise "Missing Parameters")
@@ -18,7 +18,7 @@ class Noah::App
     w.to_json
   end
 
-  put '/e/*' do
+  put '/ephemerals/*' do
     raise("Data too large") if request.body.size > 512
     d = request.body.read  || nil
     opts = {:path => "/#{params[:splat][0]}", :data => d}
@@ -32,7 +32,7 @@ class Noah::App
     end
   end
 
-  delete '/e/*' do
+  delete '/ephemerals/*' do
     p = params[:splat][0]
     e = Noah::Ephemeral.find(:path => "/"+p).first
     if e

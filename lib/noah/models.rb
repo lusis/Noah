@@ -111,10 +111,11 @@ module Noah
 
 end
 
-require File.join(File.dirname(__FILE__), 'models','tags')
+require File.join(File.dirname(__FILE__), 'linkable')
 require File.join(File.dirname(__FILE__), 'models','link')
 require File.join(File.dirname(__FILE__), 'taggable')
-require File.join(File.dirname(__FILE__), 'linkable')
+require File.join(File.dirname(__FILE__), 'models','tags')
+require File.join(File.dirname(__FILE__), 'models','link')
 require File.join(File.dirname(__FILE__), 'models','hosts')
 require File.join(File.dirname(__FILE__), 'models','services')
 require File.join(File.dirname(__FILE__), 'models','applications')

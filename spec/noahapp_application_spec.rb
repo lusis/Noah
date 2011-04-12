@@ -27,8 +27,6 @@ describe "Using the Application API", :reset_redis => false do
         response.has_key?("configurations").should == true
         c = response["configurations"]
         c.has_key?(@c.name).should == true
-        p @c
-        p c
         c["#{@c.name}"]["format"].should == "#{@c.format}"
         c["#{@c.name}"]["body"].should == "#{@c.body}"
       end
