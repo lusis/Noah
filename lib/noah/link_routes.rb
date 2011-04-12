@@ -1,4 +1,5 @@
 class Noah::App
+
   get '/:link_name/:model_name/?' do |path, model|
     link_name = Noah::Link.find(:path => "/"+path).first
     (halt 404) if link_name.nil?
@@ -11,4 +12,5 @@ class Noah::App
     (halt 404) if link_name.nil?
     link_name.to_json
   end
+
 end

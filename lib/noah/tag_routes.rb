@@ -11,4 +11,5 @@ class Noah::App
     (halt 404) if tags.size == 0
     tags.to_json
   end
+
 end
