@@ -8,7 +8,7 @@ describe "Using the Tag Model", :reset_redis => true do
     @host = Noah::Host.create(:name => 'tagged_host', :status => 'up')
     @service = Noah::Service.create(:name => 'tagged_service', :status => 'down', :host_id => @host.id)
     @application = Noah::Application.create(:name => 'tagged_application')
-    @configuration = Noah::Configuration.create(:name => 'tagged_configuration')
+    @configuration = Noah::Configuration.create(:name => 'tagged_configuration', :format => 'string', :body => 'some_string')
     @ephemeral = Noah::Ephemeral.create(:path => '/tagged/ephemeral')
   end
   after(:each) do
@@ -47,15 +47,30 @@ describe "Using the Tag Model", :reset_redis => true do
       end
       Noah::Tag.all.size.should == 3
     end
-    it "find all objects tagged"
-    it "support tagging all object types"
+    it "tag all object types and find via tagged" do
+      [@host, @service, @application, @configuration, @ephemeral].each do |o|
+        o.tag! @tags1
+      end
+      @tags1.each do |tag|
+        Noah::Tag.tagged(tag).size.should == 5
+        [@host, @service, @application, @configuration, @ephemeral].each do |o|
+          Noah::Tag.tagged(tag).values.flatten.member?(o.name).should == true
+        end
+      end
+    end
   end
 
   describe "should not" do
-    it "should not create a new Noah::Tag without a name" do
+    it "create a new Noah::Tag without a name" do
       a = Noah::Tag.create
       a.valid?.should == false
       a.errors.should == [[:name, :not_present]]
+    end
+    it "create a tag with a duplicate name" do
+      a = Noah::Tag.create(:name => 'tag1')
+      b = Noah::Tag.create(:name => 'tag1')
+      b.valid?.should == false
+      b.errors.should == [[:name, :not_unique]]
     end
   end
 end  
