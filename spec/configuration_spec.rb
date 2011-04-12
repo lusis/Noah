@@ -50,9 +50,10 @@ describe "Using the Configuration Model", :reset_redis => true do
       a = Noah::Configuration.find_or_create(@appconf_string)
       b = Noah::Configuration.find_or_create(@appconf_json)
       c = Noah::Configurations.all
+      c.class.to_s.should == 'Hash'
       c.size.should == 2
-      c.member?(a).should == true
-      c.member?(b).should == true
+      c.has_key?(a.name).should == true
+      c.has_key?(b.name).should == true
     end
   end
 

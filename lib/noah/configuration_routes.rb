@@ -29,13 +29,9 @@ class Noah::App
   end
 
   get '/configurations/?' do
-    configs = []
-    Noah::Configuration.all.sort.each {|c| configs << c.to_hash}
-    if configs.empty?
-      halt 404
-    else  
-      configs.to_json
-    end  
+    configs = Noah::Configurations.all.to_hash
+    (halt 404) if configs.size == 0
+    configs.to_json
   end
 
   put '/configurations/:configname/link' do |configname|

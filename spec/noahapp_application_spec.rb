@@ -20,12 +20,11 @@ describe "Using the Application API", :reset_redis => false do
         get '/applications/rspec_sample_app'
         last_response.should be_ok
         response = last_response.should return_json
-
-        response["name"].should == @a.name
-        response["id"].should == @a.id.to_s
-        response["name"].should == @a.name
-        response.has_key?("configurations").should == true
-        c = response["configurations"]
+        response.has_key?(@a.name).should == true
+        response[@a.name].class.to_s.should == 'Hash'
+        response[@a.name]["id"].should == @a.id.to_s
+        response[@a.name].has_key?("configurations").should == true
+        c = response[@a.name]["configurations"]
         c.has_key?(@c.name).should == true
         c["#{@c.name}"]["format"].should == "#{@c.format}"
         c["#{@c.name}"]["body"].should == "#{@c.body}"

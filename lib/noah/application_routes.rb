@@ -12,11 +12,8 @@ class Noah::App
 
   get '/applications/:appname/?' do |appname|
     app = Noah::Application.find(:name => appname).first
-    if app.nil?
-      halt 404
-    else
-      app.to_json
-    end
+    (halt 404) if app.nil?
+    app.to_json
   end
 
   put '/applications/:appname/tag' do |appname|
@@ -63,13 +60,10 @@ class Noah::App
 
   delete '/applications/:appname/?' do |appname|
     app = Noah::Application.find(:name => appname).first
-    if app.nil?
-      halt 404
-    else
-      app.delete
-      r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{appname}"}
-      r.to_json
-    end
+    (halt 404) if app.nil?
+    app.delete
+    r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{appname}"}
+    r.to_json
   end
 
   get '/applications/?' do

@@ -19,7 +19,7 @@ module Noah
       configurations.sort.each do |cfg|
         cfg_hash["#{cfg.name}"] = {:format => cfg.to_hash[:format], :body => cfg.to_hash[:body]}
       end
-      super.merge(:name => name, :created_at => created_at, :updated_at => updated_at, :configurations => cfg_hash)
+      {name => {:id => id, :created_at => created_at, :updated_at => updated_at, :configurations => cfg_hash}}
     end
 
     class << self

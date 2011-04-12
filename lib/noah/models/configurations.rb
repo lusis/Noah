@@ -41,7 +41,10 @@ module Noah
 
   class Configurations
     def self.all(options = {})
-      options.empty? ? Configuration.all.sort : Configuration.find(options).sort
+      config_hash = Hash.new
+      options.empty? ? configs=Configuration.all.sort : configs=Configuration.find(options).sort
+      configs.each {|x| config_hash["#{x.name}"] = x.to_hash.reject {|k,v| k == :name} }
+      config_hash
     end
   end 
 end
