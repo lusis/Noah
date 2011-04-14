@@ -58,14 +58,14 @@ module Noah
       erb :'500'
     end
 
-    load File.join(File.dirname(__FILE__), 'tag_routes.rb')
-    load File.join(File.dirname(__FILE__), 'host_routes.rb')
-    load File.join(File.dirname(__FILE__), 'service_routes.rb')
-    load File.join(File.dirname(__FILE__), 'application_routes.rb')
-    load File.join(File.dirname(__FILE__), 'configuration_routes.rb')
-    load File.join(File.dirname(__FILE__), 'watcher_routes.rb')
-    load File.join(File.dirname(__FILE__), 'ephemeral_routes.rb')
-    load File.join(File.dirname(__FILE__), 'link_routes.rb')
+    load File.join(File.dirname(__FILE__), 'routes/tags.rb')
+    load File.join(File.dirname(__FILE__), 'routes/hosts.rb')
+    load File.join(File.dirname(__FILE__), 'routes/services.rb')
+    load File.join(File.dirname(__FILE__), 'routes/applications.rb')
+    load File.join(File.dirname(__FILE__), 'routes/configurations.rb')
+    load File.join(File.dirname(__FILE__), 'routes/watchers.rb')
+    load File.join(File.dirname(__FILE__), 'routes/ephemerals.rb')
+    load File.join(File.dirname(__FILE__), 'routes/links.rb')
 
   end
 end

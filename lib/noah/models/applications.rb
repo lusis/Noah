@@ -7,6 +7,7 @@ module Noah
     set :configurations, Configuration
 
     index :name
+    index :configurations
 
     def validate
       super
