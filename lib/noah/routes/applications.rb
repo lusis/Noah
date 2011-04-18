@@ -2,12 +2,9 @@ class Noah::App
   # Application URIs
   get '/applications/:appname/:config/?' do |appname, config|
     app = Noah::Application.find(:name => appname).first
-    if app.nil?
-      halt 404
-    else  
-      c = app.configurations.find(:name => config).first
-      c.to_json
-    end  
+    (halt 404) if app.nil?
+    c = app.configurations.find(:name => config).first
+    c.to_json
   end
 
   get '/applications/:appname/?' do |appname|
@@ -64,6 +61,9 @@ class Noah::App
     app.delete
     r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{appname}"}
     r.to_json
+  end
+
+  delete '/applications/:appname/configurations/:configname/?' do |appname, configname|
   end
 
   get '/applications/?' do
