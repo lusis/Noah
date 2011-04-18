@@ -45,7 +45,7 @@ module Noah
     get '/' do
       content_type "text/html"
 
-      haml :index, :format => :html5, :locals => {:redis_url => settings.redis_url, :noah_version => Noah::VERSION}
+      haml :index, :format => :html5, :locals => {:redis_version => Ohm.redis.info["redis_version"].to_s, :noah_version => Noah::VERSION}
     end
 
     not_found do
