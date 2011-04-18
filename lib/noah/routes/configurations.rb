@@ -8,14 +8,15 @@ class Noah::App
   # GET the raw data of a configuration object
   get '/configurations/:configname/data/?' do |configname|
     c = Noah::Configuration.find(:name => configname).first
-    (halt 404) if c.empty?
+    (halt 404) if c.nil?
     content_type content_type_mapping[c.format.to_sym] if content_type_mapping[c.format.to_sym]
+    response.headers['Content-Disposition'] = "attachment; filename=#{configname}"
     c.body
   end
   # GET the JSON representation of a configuration object
   get '/configurations/:configname/?' do |configname|
     c = Noah::Configuration.find(:name => configname).first
-    (halt 404) if c.empty?
+    (halt 404) if c.nil?
     c.to_json
   end
   # GET all configurations
@@ -50,42 +51,27 @@ class Noah::App
     w.to_json
   end
   # Attach a configuration object to an application object
-  put '/configurations/:configname/:appname?' do |configname, appname|
-    app = Noah::Application.find_or_create(:name => appname)
-    dependency_action = app.is_new? ? "created" : "updated"
-    config = Noah::Configuration.find_or_create(:name => configname)
+  put '/configurations/:configname/?' do |configname|
     required_params = ["format", "body"]
     data = JSON.parse(request.body.read)
-    data.keys.sort == required_params.sort  ? (config.format = data["format"]; config.body = data["body"]) : (raise "Missing Parameters")
+    data.keys.sort == required_params.sort ? config=Noah::Configuration.find_or_create(:name => configname) : (raise "Missing Parameters")
+    config.body = data["body"]
+    config.format = data["format"]
     if config.valid?
       config.save
-      app.configurations << config
-      app.save
       action = config.is_new? ? "create" : "update"
-      r = {"result" => "success","id" => "#{config.id}", "action" => action, "dependencies" => dependency_action, "application" => app.name, "item" => config.name}
+      r = {"result" => "success","id" => "#{config.id}", "action" => action, "item" => config.name}
       r.to_json
     else
       raise "#{format_errors(config)}"
     end
   end
 
-  delete '/configurations/:configname/:appname?' do |configname, appname|
-    app = Noah::Application.find(:name => appname).first
-    cfg = app.configurations.find(:name => configname).first
-# Check with soveran. If we delete the member from the set using .delete, it removes the object. That would break any other users of that object.
-    (halt 404) if app.empty?
-    (halt 404) if config.empty?
-    if app
-      config = app.configurations.find(:name=> element).first
-      if config
-        app.configurations.delete(config)
-        r = {"result" => "success", "id" => "#{config.id}", "action" => "delete", "application" => "#{app.name}", "item" => "#{element}"}
-        r.to_json
-      else
-        halt 404
-      end
-    else
-      halt 404
-    end
+  delete '/configurations/:configname/?' do |configname|
+    cfg = Noah::Configuration.find(:name => configname).first
+    (halt 404) if cfg.nil?
+    cfg.delete
+    r = {"result" => "success", "id" => cfg.id, "action" => "delete", "affected_applications" => cfg.affected_applications, "item" => cfg.name}
+    r.to_json
   end
 end

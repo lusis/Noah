@@ -20,9 +20,9 @@ puts "Creating Application entry for 'noah'"
 a = Noah::Application.create(:name => 'noah')
 if a.save
   puts "Creating Configuration entry for 'noah'"
-  cr = Noah::Configuration.create(:name => 'redis', :format => 'string', :body => 'redis://127.0.0.1:6379/0')
-  ch = Noah::Configuration.create(:name => 'host', :format => 'string', :body => 'localhost')
-  cp = Noah::Configuration.create(:name => 'port', :format => 'string', :body => '9292')
+  cr = Noah::Configuration.create(:name => 'redis_url', :format => 'string', :body => 'redis://127.0.0.1:6379/0')
+  ch = Noah::Configuration.create(:name => 'noah_host', :format => 'string', :body => 'localhost')
+  cp = Noah::Configuration.create(:name => 'noah_port', :format => 'string', :body => '9292')
   [cr,ch,cp].each do |c|
     a.configurations << c
   end

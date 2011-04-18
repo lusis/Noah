@@ -46,6 +46,19 @@ describe "Using the Configuration Model", :reset_redis => true do
       c = Noah::Configuration.find(@appconf_string).first
       c.nil?.should == true
     end
+    it "delete from Application when deleting Configuration" do
+      # We have to test this because we override delete in Configuration
+      a = Noah::Configuration.find_or_create(@appconf_string)
+      b = Noah::Configuration.find(@appconf_string).first
+      c = Noah::Application.create(:name => "somerandomapp1234")
+      c.configurations << a
+      b.should == a
+      a.delete
+      d = Noah::Configuration.find(@appconf_string).first
+      d.nil?.should == true
+      a.affected_applications.member?(c.name).should == true
+      c.configurations.size.should == 0
+    end
     it "return all Configurations" do
       a = Noah::Configuration.find_or_create(@appconf_string)
       b = Noah::Configuration.find_or_create(@appconf_json)

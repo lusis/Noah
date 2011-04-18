@@ -23,6 +23,24 @@ module Noah
       super.merge(:name => name, :format => format, :body => body, :created_at => created_at, :updated_at => updated_at)
     end
 
+    # Because we're not doing a 2-way relationship
+    # we need to clean up any applications that use 
+    # this configuration ourself
+    def delete
+      @affected_applications = Array.new
+      Noah::Application.all.each do |app|
+        if app.configurations.member?(self)
+          app.configurations.delete(self)
+          @affected_applications << app.name
+        end
+      end
+      super
+    end
+
+    def affected_applications
+      @affected_applications
+    end
+
     class << self
     def find_or_create(opts={})
       begin

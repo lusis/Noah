@@ -43,7 +43,8 @@ module Noah
     def self.all(options = {})
       app_hash = Hash.new
       options.empty? ? apps=Application.all.sort : apps=Application.find(options).sort
-      apps.each {|x| app_hash["#{x.name}"] = x.to_hash.reject {|k,v| k == :name} }
+      #apps.each {|x| app_hash["#{x.name}"] = x.to_hash.reject {|k,v| k == :name} }
+      apps.each {|x| app_hash.merge!(x.to_hash) }
       app_hash
     end
   end
