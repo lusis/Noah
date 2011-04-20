@@ -26,10 +26,10 @@ describe "Using the Host Model", :reset_redis => true do
       host.name.should == hostname
       host.status.should == hoststatus
       host.services.size.should == 1
-      host.services[1].valid?.should == true
-      host.services[1].name.should == servicename
-      host.services[1].status.should == servicestatus
-      host.services[1].host_id.should == host.id
+      host.services.first.valid?.should == true
+      host.services.first.name.should == servicename
+      host.services.first.status.should == servicestatus
+      host.services.first.host_id.should == host.id
     end
 
     it "create a Host via find_or_create" do

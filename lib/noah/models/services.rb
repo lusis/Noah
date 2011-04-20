@@ -33,8 +33,8 @@ module Noah
             opts.reject!{|key, value| key == :host}
           end  
           # exclude requested status from lookup
-          s = find(opts.reject{|key,value| key == :status}).first
-          service = s.nil? ? create(opts) : s
+          s = find(:name => opts[:name], :host_id => opts[:host_id]).first
+          s.nil? ? service=new(opts) : service=s
           service.status = opts[:status]
           if service.valid?
             service.save

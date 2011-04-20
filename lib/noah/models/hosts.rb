@@ -11,6 +11,7 @@ module Noah
 
     index :name
     index :status
+    index :services
 
     def validate
       super
@@ -33,9 +34,9 @@ module Noah
     class << self
     def find_or_create(opts = {})
       begin
-        # exclude requested status from lookup
-        h = find(opts.reject{|key,value| key == :status}).first
-        host = h.nil? ? create(opts) : h
+        h = find(:name => opts[:name]).first
+        #h = find(opts.reject{|key,value| key == :status}).first
+        h.nil? ? host=new(opts) : host=h
         host.status = opts[:status]
         if host.valid?
           host.save

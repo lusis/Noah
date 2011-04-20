@@ -59,7 +59,28 @@ module Noah
       else  
         Noah::Services.all(:host_id => id)
       end  
-    end 
+    end
+
+    def find_hosts_by_service(servicename)
+      affected_hosts = []
+      s = Noah::Service.find(:name => servicename)
+      if s.nil?
+        affected_hosts
+      else
+        Noah::Host.all.each {|x| affected_hosts << x if (x.services.to_a & s.to_a).length > 0}
+        affected_hosts
+      end
+    end
+
+    def delete_service_from_host(servicename, hostname)
+      host = Noah::Host.find(:name => hostname).first
+      (halt 404) if host.nil?
+      service = Noah::Service.find(:name => servicename, :host_id => host.id).first
+      (halt 404) if service.nil?
+      service.delete
+      r = {"action" => "delete", "result" => "success", "id" => service.id, "host" => host.name, "service" => servicename}
+      r.to_json
+    end
 
     def application(opts = {})
       Noah::Application.find(opts).first

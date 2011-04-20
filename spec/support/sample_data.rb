@@ -78,9 +78,8 @@ l1.nodes = [a1, c2, Noah::Host.find(:name => 'localhost').first, Noah::Service.f
 a1.tag! ["production", "sample_data"]
 e2.tag! ["ephemeral", "development"]
 c1.tag! "development"
-Noah::Service[1].tag! "development"
-Noah::Service[2].tag! ["development", "out-of-service"]
-Noah::Service[2].link! "/my_sample_organization"
+Noah::Service.all.first.tag! ["development", "out-of-service"]
+Noah::Service.all.first.link! "/my_sample_organization"
 
 
 puts "Sample data populated!"

@@ -114,9 +114,7 @@ describe "Using the Configuration API", :reset_redis => true, :populate_sample_d
         @c = Noah::Configuration.create(cparms)
         @a.configurations << @c
         get "/configurations/asdf"
-        p last_response
         delete "/configurations/#{@c.name}"
-        p last_response
         last_response.should be_ok
         response = last_response.should return_json
         response["result"].should == "success"

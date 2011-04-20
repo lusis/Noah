@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency("ohm-contrib", ["= 0.1.1"])
   s.add_dependency("haml", ["= 3.0.25"])
   s.add_dependency("vegas", ["= 0.1.8"])
+  s.add_dependency("guid", ["= 0.1.1"])
 
 
   if RUBY_PLATFORM =~ /java/

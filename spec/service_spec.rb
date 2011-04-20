@@ -16,7 +16,7 @@ describe "Noah Service Model", :reset_redis => true do
       service.name.should == servicename
       service.status.should == servicestatus
       service.host_id.should == host.id
-      host.services[1].name.should == servicename
+      host.services[service.id].name.should == servicename
     end
 
     it "create a new Service with find_or_create" do

@@ -1,5 +1,7 @@
 require 'ohm'
 require 'ohm/contrib'
+require 'guid'
+
 module Noah
   class Model < Ohm::Model
 
@@ -94,6 +96,11 @@ module Noah
           self.send("#{meth}_hook".to_sym) unless self.protected_methods.member?("#{meth}_hook".to_sym) == false
         end
       end
+    end
+
+    private
+    def initialize_id
+      @id ||= Guid.new.to_s
     end
 
   end

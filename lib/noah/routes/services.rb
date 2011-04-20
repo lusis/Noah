@@ -54,19 +54,26 @@ class Noah::App
     w.to_json
   end
 
-  put '/services/:servicename/?' do |servicename|
-    required_params = ["status", "host", "name"]
+  put '/services/:servicename/:hostname?' do |servicename, hostname|
+    required_params = ["status", "host_status"]
     data = JSON.parse(request.body.read)
+    raise ("Missing Parameters") if data.nil?
     if data.keys.sort == required_params.sort
-      h = Noah::Host.find(:name => data['host']).first || (raise "Invalid Host")
-      service = Noah::Service.find_or_create(:name => servicename, :status => data['status'], :host => h)
-      if service.valid?
-        action = service.is_new? ? "create" : "update"
-        service.save
-        r = {"action" => action, "result" => "success", "id" => service.id, "host" => h.name, "name" => service.name}
-        r.to_json
-      else
-        raise "#{format_errors(service)}"
+      begin
+        host = Noah::Host.find_or_create(:name => hostname, :status => data['host_status'])
+        if host.valid?
+          service = Noah::Service.find_or_create(:name => servicename, :status => data['status'], :host => host)
+          if service.valid?
+            service_action = service.is_new? ? "create" : "update"
+            host_action = host.is_new? ? "create" : "update"
+            r = {"action" => service_action, "result" => "success", "id" => service.id, "name" => service.name, "host" => {"name" => host.name, "action" => host_action, "status" => host.status}}
+            r.to_json
+          else
+            raise "#{format_errors(service)}"
+          end
+        else
+          raise "#{format_errors(host)}"
+        end
       end
     else
       raise "Missing Parameters"
@@ -74,14 +81,15 @@ class Noah::App
   end
 
   delete '/services/:servicename/:hostname/?' do |servicename, hostname|
-    host = Noah::Host.find(:name => hostname).first || (halt 404)
-    service = Noah::Service.find(:name => servicename, :host_id => host.id).first || (halt 404)
-    if host && service
-      service.delete
-      r = {"action" => "delete", "result" => "success", "id" => service.id, "host" => host.name, "service" => servicename}
-      r.to_json
-    else
-      halt 404
-    end  
-  end  
+    delete_service_from_host(servicename, hostname)
+  end
+
+  delete '/services/:servicename/?' do |servicename|
+    affected_hosts = find_hosts_by_service(servicename)
+    (halt 404) if affected_hosts.size == 0
+    service = Noah::Service.find(:name => servicename)
+    service.each {|x| x.delete}
+    r = {"action" => "delete", "result" => "success", "affected_hosts" => affected_hosts.size, "service" => servicename}
+    r.to_json
+  end
 end
