@@ -41,7 +41,8 @@ describe "Using the Configuration API", :reset_redis => true, :populate_sample_d
           end
         end
       end
-      it "named configuration should work" do
+      it "named configuration should work as JSON" do
+        header "Accept", "application/json"
         get '/configurations/redis_url'
         last_response.should be_ok
         response = last_response.should return_json
@@ -55,7 +56,7 @@ describe "Using the Configuration API", :reset_redis => true, :populate_sample_d
       end
       it "named configuration should work with mime-type" do
         require 'yaml'
-        get '/configurations/yaml_config/data'
+        get '/configurations/yaml_config'
         last_response.should be_ok
         last_response.headers["Content-Type"].should == "text/x-yaml;charset=utf-8"
         response = YAML.load(last_response.body)

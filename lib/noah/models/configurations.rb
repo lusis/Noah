@@ -44,9 +44,13 @@ module Noah
     class << self
     def find_or_create(opts={})
       begin
-        find(opts).first.nil? ? (obj = new(opts)) : (obj = find(opts).first)
-        if obj.valid?
+        find(:name => opts[:name]).first.nil? ? (obj = new(opts)) : (obj = find(:name => opts[:name]).first)
+        if obj.valid? && obj.new?
           obj.save
+        else
+          obj.format = opts[:format]
+          obj.body = opts[:body]
+          obj.save if obj.valid?
         end
         obj
       rescue Exception => e

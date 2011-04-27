@@ -82,6 +82,32 @@ module Noah
       r.to_json
     end
 
+    def add_config_to_app(appname, config_hash)
+      begin
+        config = Noah::Configuration.find_or_create(config_hash)
+        if config.valid?
+          dep_action = config.is_new? ? "create" : "update"
+        else
+          raise "#{format_errors(config)}"
+        end
+        app = Noah::Application.find_or_create(:name => appname)
+        if app.valid?
+          action = app.is_new? ? "create" : "update"
+          app.configurations << config
+          r = {"result" => "success", "id" => "#{app.id}", "name" => "#{app.name}", "action" => action, "configuration" => {"action" => dep_action, "id" => "#{config.id}", "item" => "#{config.name}"}}
+          r.to_json
+        else
+          raise "#{format_errors(app)}"
+        end
+      rescue Exception => e
+        e.message
+      ensure
+        # Clean up partial objects
+        app.delete if app.valid? == false
+        config.delete if config.valid? == false
+      end
+    end
+
     def application(opts = {})
       Noah::Application.find(opts).first
     end

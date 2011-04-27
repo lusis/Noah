@@ -2,7 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "Using the Application API", :reset_redis => false do
   before(:all) do
+    Ohm.redis.flushdb
     @a = Noah::Application.create(:name => 'rspec_sample_app')
+    @b = Noah::Application.create(:name => 'rspec_sample_app_2')
     @c = Noah::Configuration.create(:name => 'rspec_config', :format => 'string', :body => 'rspec is great')
     @a.configurations << @c
     @a.save
@@ -15,29 +17,38 @@ describe "Using the Application API", :reset_redis => false do
         last_response.should be_ok
         response = last_response.should return_json
         response.is_a?(Hash).should == true
+        response.size.should == 2
       end
       it "named application should work" do
         get '/applications/rspec_sample_app'
         last_response.should be_ok
         response = last_response.should return_json
-        response.has_key?(@a.name).should == true
-        response[@a.name].class.to_s.should == 'Hash'
-        response[@a.name]["id"].should == @a.id.to_s
-        response[@a.name].has_key?("configurations").should == true
-        c = response[@a.name]["configurations"]
+        response["id"].should == @a.id.to_s
+        response["name"].should == @a.name
+        response.has_key?("configurations").should == true
+        c = response["configurations"]
         c.has_key?(@c.name).should == true
         c["#{@c.name}"]["format"].should == "#{@c.format}"
         c["#{@c.name}"]["body"].should == "#{@c.body}"
       end
-      it "named configuration for application should work" do
-        get "/applications/#{@a.name}/#{@c.name}"
+      it "named configuration for application should work as JSON" do
+        header "Accept", "application/json"
+        get "/applications/#{@a.name}/configurations/#{@c.name}"
         last_response.should be_ok
         response = last_response.should return_json
-
         response["id"].should == @c.id
         response["name"].should == @c.name
         response["format"].should == @c.format
         response["body"].should == @c.body
+      end
+      it "named configuration for application should work as raw" do
+        header "Accept", "application/octet"
+        get "/applications/#{@a.name}/configurations/#{@c.name}"
+        last_response.should be_ok
+        headers = last_response.headers
+        body = last_response.body
+        headers["Content-Type"].should == 'text/plain;charset=utf-8'
+        body.should == @c.body
       end
       it "invalid application should not work" do
         get "/applications/should_not_exist"
@@ -64,6 +75,7 @@ describe "Using the Application API", :reset_redis => false do
         Noah::Application.find(:name => @appdata[:name]).size.should == 1
         Noah::Application.find(:name => @appdata[:name]).first.is_new?.should == true
       end
+      it "new application with new configuration should work"
       it "new application with missing name should not work" do
         put "/applications/should_not_work", '{"foo":"bar"}', "CONTENT_TYPE" => "application/json"
         last_response.should be_invalid
@@ -80,7 +92,9 @@ describe "Using the Application API", :reset_redis => false do
         response["action"].should == "update"
         Noah::Application.find(:name => @appdata[:name]).size.should == 1
         Noah::Application.find(:name => @appdata[:name]).first.is_new?.should == false
-      end  
+      end
+      it "existing application with new configuration"
+      it "existing application with existing configuration"
     end
 
     describe "DELETE" do

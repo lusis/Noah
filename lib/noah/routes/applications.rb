@@ -1,10 +1,10 @@
 class Noah::App
   # Application URIs
-  get '/applications/:appname/:config/?' do |appname, config|
+  get '/applications/:appname/configurations/:config/?' do |appname, config|
     app = Noah::Application.find(:name => appname).first
     (halt 404) if app.nil?
-    c = app.configurations.find(:name => config).first
-    c.to_json
+    request.path_info = "/configurations/#{config}"
+    pass
   end
 
   get '/applications/:appname/?' do |appname|
@@ -37,6 +37,14 @@ class Noah::App
     a.to_json
   end
 
+  put '/applications/:appname/configurations/:configname/?' do |appname, configname|
+    required_params = ["format", "body"]
+    raise "Missing Parameters" if request.body.nil?
+    data = JSON.parse(request.body.read)
+    raise "Missing Parameters" if data.keys.sort != required_params.sort
+    add_config_to_app(appname, {:name => configname, :format => data['format'], :body => data['body']})
+  end
+
   put '/applications/:appname/?' do |appname|
     required_params = ["name"]
     data = JSON.parse(request.body.read)
@@ -64,6 +72,17 @@ class Noah::App
   end
 
   delete '/applications/:appname/configurations/:configname/?' do |appname, configname|
+    app = Noah::Application.find(:name => appname).first
+    (halt 404) if app.nil?
+    config = Noah::Configuration.find(:name => configname).first
+    (halt 404) if config.nil?
+    if app.configurations.member?(config)
+      app.configurations.delete(config)
+      r = {"result" => "success", "action" => "delete", "id" => "#{app.id}", "name" => "#{app.name}", "configuration" => "#{config.name}"}
+      r.to_json
+    else
+      halt 404
+    end
   end
 
   get '/applications/?' do

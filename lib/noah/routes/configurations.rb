@@ -5,19 +5,17 @@ class Noah::App
             :xml => "text/xml",
             :string => "text/plain"
   }
-  # GET the raw data of a configuration object
-  get '/configurations/:configname/data/?' do |configname|
-    c = Noah::Configuration.find(:name => configname).first
-    (halt 404) if c.nil?
-    content_type content_type_mapping[c.format.to_sym] if content_type_mapping[c.format.to_sym]
-    response.headers['Content-Disposition'] = "attachment; filename=#{configname}"
-    c.body
-  end
-  # GET the JSON representation of a configuration object
-  get '/configurations/:configname/?' do |configname|
+  get '/configurations/:configname/?', :provides => :json do |configname|
     c = Noah::Configuration.find(:name => configname).first
     (halt 404) if c.nil?
     c.to_json
+  end
+  get '/configurations/:configname/?' do |configname|
+    c = Noah::Configuration.find(:name => configname).first
+    (halt 404) if c.nil?
+    content_type content_type_mapping[c.format.to_sym] if content_type_mapping[c.format.to_sym]
+    #response.headers['Content-Disposition'] = "attachment; filename=#{configname}"
+    c.body
   end
   # GET all configurations
   get '/configurations/?' do
