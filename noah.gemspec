@@ -4,7 +4,7 @@ require "noah/version"
 
 Gem::Specification.new do |s|
   s.name        = "noah"
-  s.version     = "#{Noah::VERSION}.pre"
+  s.version     = "#{Noah::VERSION}"
   s.post_install_message = %q{This release has backwards incompatible changes to the API. Please watch http://goo.gl/jYqp2 for details}
   s.platform    = Gem::Platform::RUBY
   #s.platform    = "jruby"
