@@ -79,7 +79,7 @@ module Noah
 
     private
     def node_to_class(node)
-      node.match(/^Noah::(.*):(\d+)$/)
+      node.match(/^Noah::(.*):(.*)$/)
       Noah.const_get($1).send(:[], $2)
     end
   end
