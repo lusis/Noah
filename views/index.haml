@@ -4,6 +4,11 @@
 
         #header
             %h1 Sample links
+            %p If these links return 404 messages, that simply means the sample data has not been populated. 
+            %p You can click the "All" links on each category to see if there is any data for those object types.
+            %p The best way to interact with Noah is via API calls.
+            %a{:href => "http://goo.gl/jYqp2"} Documentation
+
             %h2 System Information
             %ul
                 %li
@@ -18,7 +23,7 @@
                 %li 
                     %a{:href => "hosts/localhost"} localhost (this server)
                 %li
-                    %a{:href => "hosts/localhost/noah"} localhost noah service
+                    %a{:href => "hosts/localhost/services/noah"} localhost noah service
         #header
             %h2 Services
             %ul
@@ -36,22 +41,18 @@
                 %li
                     %a{:href => "applications/noah"} Noah Application entry
                 %li
-                    %a{:href => "applications/noah/redis"} Noah Redis configuration entry
+                    %a{:href => "applications/noah/configurations/redis_url"} Noah Redis configuration entry
         #header
             %h2 Configurations
             %ul
                 %li
                     %a{:href => "configurations/"} All registered Configurations
                 %li
-                    %a{:href => "configurations/noah"} Noah Configuration entry
+                    %a{:href => "configurations/redis_url"} A Redis URL Configuration entry
                 %li
-                    %a{:href => "configurations/myrailsapp1"} myrailsapp1 Configuration entry
+                    %a{:href => "configurations/database.yml"} database.yml file (most likely will return JSON representation. Send "Accept: application/octet" headers for raw version)
                 %li
-                    %a{:href => "configurations/myrestapp1"} myrestapp1 Configuration entry
-                %li
-                    %a{:href => "configurations/myrailsapp1/database.yml"} database.yml file for myrailsapp1 (should return the proper content-type)
-                %li
-                    %a{:href => "configurations/myrestapp1/config.json"} config.json file for myrestapp1
+                    %a{:href => "configurations/config.json"} config.json file (see above note about headers)
         #header
             %h2 Links
             %ul

@@ -82,6 +82,15 @@ module Noah
       r.to_json
     end
 
+    def find_named_link(path)
+      link = Noah::Link.find(:path => "/"+path).first
+      if link.nil?
+        # try finding it wihtout the slash
+        link = Noah::Link.find(:path => path).first
+        (halt 404) if link.nil?
+      end
+      return link
+    end
     def add_config_to_app(appname, config_hash)
       begin
         config = Noah::Configuration.find_or_create(config_hash)
