@@ -75,11 +75,26 @@ describe "Using the Application API", :reset_redis => false do
         Noah::Application.find(:name => @appdata[:name]).size.should == 1
         Noah::Application.find(:name => @appdata[:name]).first.is_new?.should == true
       end
-      it "new application with new configuration should work"
+
+      it "new application with new configuration should work" do
+        post_json = '{"body":"awesome_string","format":"string"}'
+        put "/applications/my_awesome_app/configurations/my_awesome_config", post_json, "CONTENT_TYPE" => "application/json"
+        last_response.should be_ok
+        response = last_response.should return_json
+        response["result"].should == "success"
+        response["id"].nil?.should == false
+        response["name"].should == "my_awesome_app"
+        response["action"].should == "create"
+        response["configuration"]["action"].should == "create"
+        response["configuration"]["id"].nil?.should == false
+        response["configuration"]["item"].should == "my_awesome_config"
+      end
+
       it "new application with missing name should not work" do
         put "/applications/should_not_work", '{"foo":"bar"}', "CONTENT_TYPE" => "application/json"
         last_response.should be_invalid
       end
+
       it "existing application should work" do
         sleep 3
 
@@ -93,8 +108,32 @@ describe "Using the Application API", :reset_redis => false do
         Noah::Application.find(:name => @appdata[:name]).size.should == 1
         Noah::Application.find(:name => @appdata[:name]).first.is_new?.should == false
       end
-      it "existing application with new configuration"
-      it "existing application with existing configuration"
+
+      it "existing application with new configuration" do
+        post_json = '{"body":"derp","format":"string"}'
+        put "/applications/#{@appdata[:name]}/configurations/herp", post_json, "CONTENT_TYPE" => "application/json"
+        last_response.should be_ok
+        response = last_response.should return_json
+        response["result"].should == "success"
+        response["action"].should == "update"
+        response["configuration"]["action"].should == "create"
+        response["configuration"]["id"].nil?.should == false
+        response["configuration"]["item"].should == "herp"
+      end
+
+      it "existing application with existing configuration" do
+        post_json = '{"body":"derp","format":"string"}'
+        put "/applications/#{@appdata[:name]}/configurations/herp", post_json, "CONTENT_TYPE" => "application/json"
+        sleep 3
+        put "/applications/#{@appdata[:name]}/configurations/herp", post_json, "CONTENT_TYPE" => "application/json"
+        last_response.should be_ok
+        response = last_response.should return_json
+        response["result"].should == "success"
+        response["action"].should == "update"
+        response["configuration"]["action"].should == "update"
+        response["configuration"]["id"].nil?.should == false
+        response["configuration"]["item"].should == "herp"
+      end
     end
 
     describe "DELETE" do
