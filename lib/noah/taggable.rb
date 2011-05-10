@@ -17,9 +17,27 @@ module Noah::Taggable
       tags << my_tag
       my_tag.members = self
     end
+    self.save
   end
 
   def untag!(tag_name)
+    case tag_name.class.to_s
+    when "Array"
+      tag_name.each do |t|
+        my_tag = ::Noah::Tag.find(:name => t).first
+        if self.tags.member?(my_tag)
+          self.tags.key.srem "#{my_tag.id}"
+          my_tag.delete_member(self)
+        end
+      end
+    else
+      my_tag = ::Noah::Tag.find(:name => tag_name).first
+      if self.tags.member?(my_tag)
+        self.tags.key.srem "#{my_tag.id}"
+        my_tag.delete_member(self)
+      end
+    end
+    self.save
   end
 
   def to_hash

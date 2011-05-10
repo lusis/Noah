@@ -6,6 +6,15 @@ module Noah
     index :members
     index :name
 
+    def delete
+      self.members.each_value do |member_array|
+        member_array.each do |member|
+          member.tags.key.srem "#{self.id}"
+        end
+      end
+      super
+    end
+
     def validate
       super
       assert_present :name
@@ -27,6 +36,15 @@ module Noah
         hsh[hash_key] << n
       end
       hsh
+    end
+
+    def delete_member(node)
+      nc = class_to_lower(node.class.to_s)+"s"
+      if self.members[nc.to_sym].member?(node)
+        Ohm.redis.srem("#{self.key}:members", "#{node.key}")
+        node.untag!(self.name) unless node.tags.member?(self) == false
+      end
+      self.save
     end
 
     def to_hash
