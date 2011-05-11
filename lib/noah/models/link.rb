@@ -30,6 +30,7 @@ module Noah
     def validate
       super
       assert_present :path
+      assert_unique :path
     end
 
     def to_hash
