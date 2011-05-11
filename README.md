@@ -1,4 +1,5 @@
 # Noah
+_"look at this effing rainbow I just made for you"_
 Noah is an application registry loosely based on [Apache ZooKeeper](http://zookeeper.apache.org)
 
 What does that mean? From the ZooKeeper Home Page:
