@@ -25,7 +25,7 @@ class Noah::App
     e = Noah::Ephemeral.find_or_create(opts)
     if e.valid?
       action = e.is_new? ? "create" : "update"
-      r = {"action" => action, "result" => "success", "id" => e.id, "path" => e.path, "data" => e.data}
+      r = {"action" => action, "result" => "success", "id" => e.id, "path" => e.path, "data" => e.data, "created_at" => e.created_at, "updated_at" => e.updated_at}
       r.to_json
     else
       raise "#{format_errors(e)}"
