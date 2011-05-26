@@ -60,6 +60,31 @@ describe "Using the Tag Model", :reset_redis => true do
         end
       end
     end
+    it "should untag! a single tag from an object" do
+      @application.tag! "foobarspec"
+      t = Noah::Tag.find(:name => 'foobarspec').first
+      t.nil?.should == false
+      @application.tags.size.should == 1
+      @application.tags.include?(t).should == true
+      t.members.size.should == 1
+      t.members[:applications].include?(@application).should == true
+      @application.untag! "foobarspec"
+      @application.tags.size.should == 0
+      t.members.size.should == 0
+    end
+    it "should untag! an array of tags from an object" do
+      tagz = %w{foo bar baz bang}
+      @application.tag! tagz
+      @application.tags.size.should == tagz.size
+      @application.untag! tagz
+      @application.tags.size.should == 0
+      tagz.each do |tag|
+        t = Noah::Tag.find(:name => tag).first
+        t.nil?.should == false
+        Noah::Tag.all.size.should == tagz.size
+        t.members.has_key?(:applications).should == false
+      end
+    end
   end
 
   describe "should not" do

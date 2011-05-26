@@ -8,8 +8,8 @@ module Noah
 
     def delete
       self.members.each_value do |member_array|
-        member_array.each do |member|
-          member.tags.key.srem "#{self.id}"
+        member_array.each do |mem|
+          delete_member(mem)
         end
       end
       super
@@ -40,11 +40,18 @@ module Noah
 
     def delete_member(node)
       nc = class_to_lower(node.class.to_s)+"s"
-      if self.members[nc.to_sym].member?(node)
+      # Need to refactor. Essentially there are conditions we need to check for before trying to delete a member
+      # Are there any members at all?
+      # Are there any members of a given class?
+      # Not pretty but it works for now
+      if self.members.size == 0 || self.members.has_key?(nc.to_sym) == false
+        # no match so save and be done with it
+        self.save
+      elsif self.members[nc.to_sym].include?(node)
         Ohm.redis.srem("#{self.key}:members", "#{node.key}")
-        node.untag!(self.name) unless node.tags.member?(self) == false
+        node.untag!(self.name) if node.tags.include?(self)
+        self.save
       end
-      self.save
     end
 
     def to_hash

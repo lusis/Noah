@@ -91,6 +91,7 @@ module Noah
       end
       return link
     end
+
     def add_config_to_app(appname, config_hash)
       begin
         config = Noah::Configuration.find_or_create(config_hash)

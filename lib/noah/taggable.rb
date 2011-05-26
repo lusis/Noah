@@ -24,18 +24,10 @@ module Noah::Taggable
     case tag_name.class.to_s
     when "Array"
       tag_name.each do |t|
-        my_tag = ::Noah::Tag.find(:name => t).first
-        if self.tags.member?(my_tag)
-          self.tags.key.srem "#{my_tag.id}"
-          my_tag.delete_member(self)
-        end
+        remove_tag(t)
       end
     else
-      my_tag = ::Noah::Tag.find(:name => tag_name).first
-      if self.tags.member?(my_tag)
-        self.tags.key.srem "#{my_tag.id}"
-        my_tag.delete_member(self)
-      end
+      remove_tag(tag_name)
     end
     self.save
   end
@@ -44,5 +36,14 @@ module Noah::Taggable
     tag_arr = Array.new
     self.tags.sort.each {|t| tag_arr << t.name} if self.tags.size != 0
     super.merge(:tags => tag_arr)
+  end
+
+  protected
+  def remove_tag(tag_name)
+    my_tag = ::Noah::Tag.find(:name => tag_name).first
+      if self.tags.member?(my_tag)
+        self.tags.key.srem "#{my_tag.id}"
+        my_tag.delete_member(self)
+      end
   end
 end
