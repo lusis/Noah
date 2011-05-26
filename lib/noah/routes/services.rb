@@ -46,6 +46,14 @@ class Noah::App
     a.to_json
   end
 
+  delete '/services/:servicename/:hostname/tag' do |servicename, hostname|
+    required_params = ["tags"]
+    data = JSON.parse(request.body.read)
+    (data.keys.sort == required_params.sort) ? (a=host_service(hostname, servicename)) : (raise "Missing Parameters")
+    a.nil? ? (halt 404) : (a.untag!(data['tags']))
+    a.to_json
+  end
+
   put '/services/:servicename/watch' do |servicename|
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)

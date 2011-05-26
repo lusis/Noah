@@ -38,7 +38,14 @@ class Noah::App
     (data.keys.sort == required_params.sort) ? (c=Noah::Configuration.find(:name=>configname).first) : (raise "Missing Parameters")
     c.nil? ? (halt 404) : (c.tag!(data['tags']))
     c.to_json
-
+  end
+  # Delete a tag[s] from a configuration object
+  delete '/configurations/:configname/tag' do |configname|
+    required_params = ["tags"]
+    data = JSON.parse(request.body.read)
+    (data.keys.sort == required_params.sort) ? (c=Noah::Configuration.find(:name=>configname).first) : (raise "Missing Parameters")
+    c.nil? ? (halt 404) : (c.untag!(data['tags']))
+    c.to_json
   end
   # Add a watch to a configuration object
   put '/configurations/:configname/watch' do |configname|
