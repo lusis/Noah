@@ -4,6 +4,7 @@ require 'noah'
 require 'noah/agents/http_agent'
 require 'noah/agents/https_agent'
 require 'noah/agents/dummy_agent'
+require 'noah/agents/rundeck_agent'
 begin
   candidates = []
   Gem.source_index.find_all {|g| candidates << g[1].name if g[1].name =~ /^noah-agents-.*/}
