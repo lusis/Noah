@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency("eventmachine", ["1.0.0.beta.3"])
-  s.add_dependency("em-http-request", ["1.0.0.beta.3"])
+  s.add_dependency("em-http-request", ["1.0.0.beta.4"])
   s.add_dependency("redis", ["= 2.2.0"])
   s.add_dependency("nest", ["= 1.1.0"])
   s.add_dependency("rack", ["= 1.2.2"])
