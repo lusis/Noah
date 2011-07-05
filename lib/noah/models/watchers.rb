@@ -5,6 +5,8 @@ module Noah
     attribute :pattern
     attribute :endpoint
     attribute :name
+    counter :failures
+
 
     index :pattern
     index :endpoint

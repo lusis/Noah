@@ -55,6 +55,8 @@ module Noah
         begin
           #self.instance_variable_get("@#{a}").send(:notify, e, m, @@watchers)
           x.notify(e, m, @@watchers.clone)
+          x.errback {|e| self.set_deferred_status(:fail, "Error in #{x.class.to_s}: #{e}")}
+          x.callback {|m| self.set_deferred_status(:success); iter.next}
           iter.next
         rescue Exception => e
           @logger.error("#{agent.to_s} invocation failed with #{e.message}")

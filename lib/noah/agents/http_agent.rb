@@ -14,7 +14,7 @@ module Noah::Agents
           logger.info("Message posted to #{ep} successfully")
         }
         http.errback {
-          logger.error("Something went wrong with #{ep}")
+          logger.debug("Error posting to #{ep}: #{http.response}.")
         }
     end
 

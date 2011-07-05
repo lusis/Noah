@@ -22,7 +22,7 @@ module Noah::Agents
           work!(ep, message)
           iter.next
         end
-        logger.info("Dispatched message to #{worklist.size} #{self.class.to_s} endpoints")
+          logger.info("Dispatched message to #{worklist.size} #{self.class.to_s} endpoints")
       else
         logger.info("No work to do")
       end
