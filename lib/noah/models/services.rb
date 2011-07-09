@@ -21,7 +21,7 @@ module Noah
 
     def to_hash
       Host[host_id].nil? ? host_name=nil : host_name=Host[host_id].name
-      super.merge(:name => name, :status => status, :updated_at => updated_at, :host => host_name)
+      super.merge(:name => name, :status => status, :updated_at => updated_at, :created_at => created_at, :host => host_name)
     end
 
     class << self
