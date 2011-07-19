@@ -49,7 +49,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency("diff-lcs", ["= 1.1.2"])
   s.add_development_dependency("sinatra-reloader", ["= 0.5.0"])
   s.add_development_dependency("rspec", ["~> 2.5"])
-  s.add_development_dependency("rcov", ["= 0.9.9"])
   s.add_development_dependency("rack-test", ["= 0.5.7"])
   s.add_development_dependency("rake", ["= 0.8.7"])
 end
