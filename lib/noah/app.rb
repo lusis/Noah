@@ -5,6 +5,7 @@ require File.join(File.dirname(__FILE__), 'models')
 module Noah
   class App < Sinatra::Base
     helpers Noah::SinatraBaseHelpers
+    helpers Noah::SinatraTagHelpers
 
     configure do
       set :app_file, __FILE__

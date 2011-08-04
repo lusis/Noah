@@ -32,24 +32,6 @@ class Noah::App
     end
   end
 
-  put '/hosts/:hostname/tag' do |hostname|
-    required_params = ["tags"]
-    data = JSON.parse(request.body.read)
-    raise "Missing parameters" if data.nil?
-    (data.keys.sort == required_params.sort) ? (a=Noah::Host.find(:name=>hostname).first) : (raise "Missing Parameters")
-    a.nil? ? (halt 404) : (a.tag!(data['tags']))
-    a.to_json
-  end
-
-  delete '/hosts/:hostname/tag' do |hostname|
-    required_params = ["tags"]
-    data = JSON.parse(request.body.read)
-    raise "Missing parameters" if data.nil?
-    (data.keys.sort == required_params.sort) ? (a=Noah::Host.find(:name=>hostname).first) : (raise "Missing Parameters")
-    a.nil? ? (halt 404) : (a.untag!(data['tags']))
-    a.to_json
-  end
-
   put '/hosts/:hostname/watch' do |hostname|
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)
