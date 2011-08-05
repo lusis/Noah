@@ -16,3 +16,4 @@ doc
 examples/log/*
 examples/tmp/*
 *.rbc
+*.gem
