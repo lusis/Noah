@@ -11,8 +11,8 @@ Gem::Specification.new do |s|
   s.authors     = ["John E. Vincent"]
   s.email       = ["lusis.org+rubygems.org@gmail.com"]
   s.homepage    = "https://github.com/lusis/noah"
-  s.summary     = %q{Application registry based on Apache Zookeeper}
-  s.description = %q{Application registry based on Apache Zookeeper}
+  s.summary     = %q{Application registry inspired by Apache Zookeeper}
+  s.description = %q{Application registry inspired by Apache Zookeeper}
 
   s.rubyforge_project = "noah"
 
@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("diff-lcs", ["= 1.1.2"])
   s.add_development_dependency("sinatra-reloader", ["= 0.5.0"])
   s.add_development_dependency("rspec", ["~> 2.5"])
-  s.add_development_dependency("rcov", ["= 0.9.9"])
+#  s.add_development_dependency("rcov", ["= 0.9.9"])
   s.add_development_dependency("rack-test", ["= 0.5.7"])
   s.add_development_dependency("rake", ["= 0.8.7"])
 end
