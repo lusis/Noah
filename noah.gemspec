@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency("haml", ["= 3.0.25"])
   s.add_dependency("vegas", ["= 0.1.8"])
   s.add_dependency("guid", ["= 0.1.1"])
+  s.add_dependency("slop", ["= 2.1.0"])
 
 
   if RUBY_PLATFORM =~ /java/

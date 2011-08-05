@@ -1,22 +1,64 @@
 #!/usr/bin/env ruby
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
+CONNERRHELP = <<EOC
+
+---------------------------------------------------------------------------
+Apparently we could not connect to the redis instance.
+
+By default the watcher will attempt to connect to "redis://localhost:6379/0"
+If your redis instance is listening elsewhere, please start like so:
+
+REDIS_URL="redis://hostname:port/dbnum" noah-watcher.rb
+
+This will be rectified in a future release. Sorry about that.
+----------------------------------------------------------------------------
+EOC
+
   HELP = <<-EOH
+  ---------------------------------------------------------------------------------------
   Unfortunately, the agent script has some difficult requirements right now.
-  Please see https://github.com/lusis/Noah/Watcher-Agent for details.
+  Please rerun with the '--depinstall' option to have them installed for you and try again
+  ---------------------------------------------------------------------------------------
   EOH
+require 'rubygems'
+require 'slop'
+require 'logger'
+require 'json'
+
+opts = Slop.parse do
+  banner "Usage: noah-watcher.rb [options]"
+  on '--depinstall', "Installs additional dependencies" do
+    puts "Installing dependencies"
+    puts "em-hiredis..."
+    `gem install em-hiredis`
+    puts "em-http-request prerelease..."
+    `gem install em-http-request --pre`
+    puts "cookiejar...."
+    `gem install cookiejar`
+    exit
+  end
+  on :h, :help, 'Print help', :tail => true do
+    puts help
+    exit
+  end
+end
+
 begin
-  require 'rubygems'
-  require 'logger'
-  require 'optparse'
   require 'em-hiredis'
   require 'eventmachine'
   require 'em-http-request'
-  require 'noah'
-  require 'noah/agent'
-  require 'json'
+  require 'cookiejar'
 rescue LoadError => e
   puts e.message
   puts HELP
+  exit
+end
+
+begin
+  require 'noah'
+  require 'noah/agent'
+rescue Errno::ECONNREFUSED
+  puts CONNERRHELP
   exit
 end
 
@@ -32,21 +74,14 @@ EventMachine.run do
   noah = Noah::Agent.new
   noah.errback{|x| LOGGER.error("Errback: #{x}")}
   noah.callback{|y| LOGGER.info("Callback: #{y}")}
-  # Passing messages...like a boss
-  #master_channel = EventMachine::Channel.new
 
-  r = EventMachine::Hiredis::Client.connect
+  r = EventMachine::Hiredis.connect(ENV["REDIS_URL"])
   r.errback{|x| LOGGER.error("Unable to connect to redis: #{x}")}
   LOGGER.info("Attaching to Redis Pubsub")
   r.psubscribe("*")
   r.on(:pmessage) do |pattern, event, message|
     noah.reread_watchers if event =~ /^\/\/noah\/watchers\/.*/
     noah.broker("#{event}|#{message}") unless noah.watchers == 0
-    #master_channel.push "#{event}|#{message}"
   end
 
-  #sub = master_channel.subscribe {|msg|
-    # We short circuit if we have no watchers
-  #  noah.broker(msg) unless noah.watchers == 0
-  #}
 end
