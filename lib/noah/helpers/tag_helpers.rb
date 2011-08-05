@@ -1,6 +1,7 @@
 module Noah
   module SinatraTagHelpers
-  #TODO DRY this sumbitch up
+  # TODO DRY this sumbitch up
+  # TODO add status in json response
 
     def tag(primitive, name, tags)
       case primitive
@@ -38,7 +39,6 @@ module Noah
       else
         halt 404
       end
-      obj.nil? ? (halt 404) : (obj.untag!(tags))
       obj.to_json
     end
 
