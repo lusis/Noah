@@ -27,6 +27,8 @@ require 'json'
 
 opts = Slop.parse do
   banner "Usage: noah-watcher.rb [options]"
+  on :r, :redis_url, 'Redis URL to use. This MUST match what the Noah server is using for now', :default => 'redis://localhost:6379/0', :argument => true
+  on :o, :output, 'Log destination - full file path. Default is STDOUT', :default => STDOUT, :argument => true
   on '--depinstall', "Installs additional dependencies" do
     puts "Installing dependencies"
     puts "em-hiredis..."
@@ -54,6 +56,8 @@ rescue LoadError => e
   exit
 end
 
+ENV['REDIS_URL'] = opts[:redis_url]
+
 begin
   require 'noah'
   require 'noah/agent'
@@ -62,7 +66,7 @@ rescue Errno::ECONNREFUSED
   exit
 end
 
-Noah::Log.logger = Logger.new(STDOUT)
+Noah::Log.logger = Logger.new(opts[:output])
 LOGGER = Noah::Log.logger
 LOGGER.progname = __FILE__
 
