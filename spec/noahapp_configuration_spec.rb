@@ -41,6 +41,8 @@ describe "Using the Configuration API", :reset_redis => true, :populate_sample_d
           end
         end
       end
+      it "all configurations in short form"
+
       it "named configuration should work as JSON" do
         header "Accept", "application/json"
         get '/configurations/redis_url'
