@@ -41,7 +41,34 @@ describe "Using the Configuration API", :reset_redis => true, :populate_sample_d
           end
         end
       end
-      it "all configurations in short form"
+
+      it "all configurations in short form with no trailing slash" do
+        get '/configurations?short=true'
+        last_response.should be_ok
+        response = last_response.should return_json
+        response.keys.size.should == 3
+        %w[redis_url json_config yaml_config].each do |c|
+          response.keys.member?(c).should == true
+          %w[format location created_at updated_at].each do |ck|
+            response[c].keys.member?(ck).should == true
+          end
+        end
+        response.each {|k,v| v['location'].should =~ /^http:\/\/.*\/configurations\/#{k}/}
+      end
+
+      it "all configurations in short form with trailing slash" do
+        get '/configurations/?short=true'
+        last_response.should be_ok
+        response = last_response.should return_json
+        response.keys.size.should == 3
+        %w[redis_url json_config yaml_config].each do |c|
+          response.keys.member?(c).should == true
+          %w[format location created_at updated_at].each do |ck|
+            response[c].keys.member?(ck).should == true
+          end
+        end
+        response.each {|k,v| v['location'].should =~ /^http:\/\/.*\/configurations\/#{k}/}
+      end
 
       it "named configuration should work as JSON" do
         header "Accept", "application/json"
