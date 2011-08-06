@@ -62,10 +62,15 @@ module Noah
   end
 
   class Configurations
-    def self.all(options = {})
+    def self.all(options = {}, short=false)
+      short_keys = [:format, :created_at, :updated_at]
       config_hash = Hash.new
       options.empty? ? configs=Configuration.all.sort : configs=Configuration.find(options).sort
-      configs.each {|x| config_hash["#{x.name}"] = x.to_hash.reject {|k,v| k == :name} }
+      if short == false
+        configs.each {|x| config_hash["#{x.name}"] = x.to_hash.reject {|k,v| k == :name} }
+      else
+        configs.each {|x| config_hash["#{x.name}"] = x.to_hash.select {|k,v| k if short_keys.include?(k)} }
+      end
       config_hash
     end
   end 

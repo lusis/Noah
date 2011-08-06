@@ -14,15 +14,21 @@ class Noah::App
     c = Noah::Configuration.find(:name => configname).first
     (halt 404) if c.nil?
     content_type content_type_mapping[c.format.to_sym] if content_type_mapping[c.format.to_sym]
-    #response.headers['Content-Disposition'] = "attachment; filename=#{configname}"
     c.body
   end
+
   # GET all configurations
   get '/configurations/?' do
-    configs = Noah::Configurations.all.to_hash
+    params[:short] ||= false
+    configs = Noah::Configurations.all({},params[:short])
     (halt 404) if configs.size == 0
+    configs.each do |config, values|
+      u = request.url.gsub(/(\/\?short=true|\?short=true)/,'/'+config)
+      values.merge!({:location=>u}) if params[:short]
+    end
     configs.to_json
   end
+
   # Add configuration object to a custom link hierarchy
   put '/configurations/:configname/link' do |configname|
     required_params = ["link_name"]
