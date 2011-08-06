@@ -8,10 +8,9 @@ Apparently we could not connect to the redis instance.
 By default the watcher will attempt to connect to "redis://localhost:6379/0"
 If your redis instance is listening elsewhere, please start like so:
 
-REDIS_URL="redis://hostname:port/dbnum" noah-watcher.rb
-
-This will be rectified in a future release. Sorry about that.
+noah-watcher.rb -r redis://hostname:port/dbnum
 ----------------------------------------------------------------------------
+
 EOC
 
   HELP = <<-EOH
