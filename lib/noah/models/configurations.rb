@@ -69,7 +69,17 @@ module Noah
       if short == false
         configs.each {|x| config_hash["#{x.name}"] = x.to_hash.reject {|k,v| k == :name} }
       else
-        configs.each {|x| config_hash["#{x.name}"] = x.to_hash.select {|k,v| k if short_keys.include?(k)} }
+        configs.each do |x|
+          items = x.to_hash.select {|k,v| k if short_keys.include?(k)}
+          # 1.8 fix for Hash#select
+          if items.is_a?(Array)
+            items_hash = {}
+            items.each {|item| items_hash.merge!(Hash[*item])}
+          else
+            items_hash = items
+          end
+          config_hash["#{x.name}"] = items_hash
+        end
       end
       config_hash
     end
