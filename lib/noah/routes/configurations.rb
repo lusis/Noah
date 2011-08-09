@@ -29,15 +29,6 @@ class Noah::App
     configs.to_json
   end
 
-  # Add configuration object to a custom link hierarchy
-  put '/configurations/:configname/link' do |configname|
-    required_params = ["link_name"]
-    data = JSON.parse(request.body.read)
-    (data.keys.sort == required_params.sort) ? (a = Noah::Configuration.find(:name => configname).first) : (raise "Missing Parameters")
-    a.nil? ? (halt 404) : (a.link! data["link_name"])
-    a.to_json
-  end
-
   # Add a watch to a configuration object
   put '/configurations/:configname/watch' do |configname|
     required_params = ["endpoint"]

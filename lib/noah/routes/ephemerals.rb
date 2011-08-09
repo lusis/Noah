@@ -19,6 +19,7 @@ class Noah::App
   end
 
   put '/ephemerals/*' do
+    pass if params["splat"][0].match(/^.*\/link/)
     raise("Data too large") if request.body.size > 512
     d = request.body.read  || nil
     opts = {:path => "/#{params[:splat][0]}", :data => d}
@@ -33,6 +34,7 @@ class Noah::App
   end
 
   delete '/ephemerals/*' do
+    pass if params["splat"][0].match(/^.*\/link/)
     p = params[:splat][0]
     e = Noah::Ephemeral.find(:path => "/"+p).first
     if e

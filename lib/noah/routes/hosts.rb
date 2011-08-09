@@ -41,15 +41,6 @@ class Noah::App
     w.to_json
   end
 
-  put '/hosts/:hostname/link' do |hostname|
-    required_params = ["link_name"]
-    data = JSON.parse(request.body.read)
-    raise "Missing parameters" if data.nil?
-    (data.keys.sort == required_params.sort) ? (a = Noah::Host.find(:name => hostname).first) : (raise "Missing Parameters")
-    a.nil? ? (halt 404) : (a.link! data["link_name"])
-    a.to_json
-  end
-
   put '/hosts/:hostname/?' do |hostname|
     required_params = ["status"]
     data = JSON.parse(request.body.read)

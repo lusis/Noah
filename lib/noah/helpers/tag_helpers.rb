@@ -39,6 +39,7 @@ module Noah
       else
         halt 404
       end
+      obj.nil? ? (halt 404) : (obj.untag!(tags))
       obj.to_json
     end
 

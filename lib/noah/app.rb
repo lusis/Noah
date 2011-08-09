@@ -6,6 +6,7 @@ module Noah
   class App < Sinatra::Base
     helpers Noah::SinatraBaseHelpers
     helpers Noah::SinatraTagHelpers
+    helpers Noah::SinatraLinkHelpers
 
     configure do
       set :app_file, __FILE__

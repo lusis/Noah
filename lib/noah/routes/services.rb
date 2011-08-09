@@ -22,22 +22,6 @@ class Noah::App
     services.to_json
   end
 
-  put '/services/:servicename/link' do |appname|
-    required_params = ["link_name"]
-    data = JSON.parse(request.body.read)
-    (data.keys.sort == required_params.sort) ? (a = Noah::Service.find(:name => servicename).first) : (raise "Missing Parameters")
-    a.nil? ? (halt 404) : (a.link! data["link_name"])
-    a.to_json
-  end
-
-  put '/services/:servicename/:hostname/link' do |servicename, hostname|
-    required_params = ["link_name"]
-    data = JSON.parse(request.body.read)
-    (data.keys.sort == required_params.sort) ? (a=host_service(hostname, servicename)) : (raise "Missing Parameters")
-    a.nil? ? (halt 404) : (a.link! data["link_name"])
-    a.to_json
-  end
-
   put '/services/:servicename/watch' do |servicename|
     required_params = ["endpoint"]
     data = JSON.parse(request.body.read)
