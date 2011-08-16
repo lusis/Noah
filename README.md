@@ -1,13 +1,25 @@
 # Noah
 _"look at this effing rainbow I just made for you"_
 
-Noah is an application registry loosely based on [Apache ZooKeeper](http://zookeeper.apache.org)
+Noah is an application registry inspired by [Apache ZooKeeper](http://zookeeper.apache.org)
 
 What does that mean? From the ZooKeeper Home Page:
 
 > ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. All of these kinds of services are used in some form or another by distributed applications.
 
 Essentially Noah, is a port of those concepts into a stateless RESTful application.
+
+## Blog Posts
+It's probably worth reading the following blog posts before going any further. There seems to be some misunderstanding. Noah is not a replacement for ZK. It's a conceptual port. More than anything, it was an itch I needed to scratch:
+
+- [On Noah - Part 1](http://blog.lusis.org/blog/2011/05/16/on-noah-part-1/)
+- [On Noah - Part 2](http://blog.lusis.org/blog/2011/05/17/on-noah-part-2/)
+- [On Noah - Part 3](http://blog.lusis.org/blog/2011/05/18/on-noah-part-3/)
+- [On Noah - Part 4](http://blog.lusis.org/blog/2011/05/20/on-noah-part-4/)
+
+Also the following post was where I sort of discussed it early on:
+
+- [Ad-hoc configuration and Coordination](http://lusislog.blogspot.com/2011/03/ad-hoc-configuration-coordination-and.html)
 
 ## Quick Start
 The quickstart guide has been moved to the wiki:
