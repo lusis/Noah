@@ -7,10 +7,11 @@ What does that mean? From the ZooKeeper Home Page:
 
 > ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. All of these kinds of services are used in some form or another by distributed applications.
 
-Essentially Noah, is a port of those concepts into a stateless RESTful application.
+Essentially Noah is a port of parts of that functionality into a stateless RESTish application.
 
-## Blog Posts
-It's probably worth reading the following blog posts before going any further. There seems to be some misunderstanding. Noah is not a replacement for ZK. It's a conceptual port. More than anything, it was an itch I needed to scratch:
+## Some background
+It's probably worth reading the following blog posts before going any further to clear up any possible misunderstandings.
+Noah is not a direct replacement for ZK. It's a conceptual port. More than anything, it was an itch I needed to scratch:
 
 - [On Noah - Part 1](http://blog.lusis.org/blog/2011/05/16/on-noah-part-1/)
 - [On Noah - Part 2](http://blog.lusis.org/blog/2011/05/17/on-noah-part-2/)
@@ -20,6 +21,23 @@ It's probably worth reading the following blog posts before going any further. T
 Also the following post was where I sort of discussed it early on:
 
 - [Ad-hoc configuration and Coordination](http://lusislog.blogspot.com/2011/03/ad-hoc-configuration-coordination-and.html)
+
+## Things Noah does not do
+
+- Paxos, ZAB or any other sort of consensus protocol
+- Noah itself is not distributed (yet).
+- ACLs (yet)
+- Leader election of any kind
+
+## Things Noah can do
+_note that these terms are fairly overloaded depending on who you talk to_
+
+- Service registry
+- Node registry
+- Configuration Registry
+- Group Services
+- Watches (albeit differently)
+
 
 ## Quick Start
 The quickstart guide has been moved to the wiki:
