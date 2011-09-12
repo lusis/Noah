@@ -48,6 +48,11 @@ module Noah
 
       haml :index, :format => :html5, :locals => {:redis_version => Ohm.redis.info["redis_version"].to_s, :noah_version => Noah::VERSION}
     end
+  
+    get '/version' do
+      content_type "application/json"
+      {:redis_version => Ohm.redis.info["redis_version"].to_s, :noah_version => Noah::VERSION}.to_json
+    end
 
     not_found do
       content_type "application/json"
