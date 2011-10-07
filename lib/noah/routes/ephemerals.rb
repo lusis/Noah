@@ -19,7 +19,7 @@ class Noah::App
   end
 
   put '/ephemerals/*' do
-    raise("Data too large") if request.body.size > 512
+    raise("Data too large") if request.body.size > settings.ephemeral_size
     d = request.body.read  || nil
     opts = {:path => "/#{params[:splat][0]}", :data => d}
     e = Noah::Ephemeral.find_or_create(opts)

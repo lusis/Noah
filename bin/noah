@@ -6,4 +6,5 @@ require 'vegas'
 
 Vegas::Runner.new(Noah::App, 'noah') do |runner, opts, app|
   opts.on("-r", "--redis URL", "redis url to connect to (default: redis://localhost:6379/0)") {|r| ENV["REDIS_URL"] = r; Noah::App.set :redis_url, r }
+  opts.on("--esize SIZE", Integer, "Max allowed ephemeral size in bytes") {|esize| Noah::App.set :ephemeral_size, esize }
 end

@@ -16,6 +16,7 @@ module Noah
       set :show_exceptions, false
       set :run, false
       set :redis_url, ENV['REDIS_URL'] || 'redis://localhost:6379/0'
+      set :ephemeral_size, ENV['NOAH_ESIZE'] || 512
     end
 
     configure(:development) do
@@ -48,7 +49,12 @@ module Noah
 
       haml :index, :format => :html5, :locals => {:redis_version => Ohm.redis.info["redis_version"].to_s, :noah_version => Noah::VERSION}
     end
-  
+
+    get '/', :provides => :json  do
+      content_type "application/json"
+      erb :'index.json', :locals => {:redis_version => Ohm.redis.info["redis_version"].to_s, :noah_version => Noah::VERSION}
+    end
+
     get '/version' do
       content_type "application/json"
       {:redis_version => Ohm.redis.info["redis_version"].to_s, :noah_version => Noah::VERSION}.to_json
