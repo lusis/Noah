@@ -17,6 +17,7 @@ module Noah
       set :run, false
       set :redis_url, ENV['REDIS_URL'] || 'redis://localhost:6379/0'
       set :ephemeral_size, ENV['NOAH_ESIZE'] || 512
+      disable :protection
     end
 
     configure(:development) do

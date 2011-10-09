@@ -31,7 +31,7 @@ module Noah
         if obj.valid?
           obj.save
         end
-        obj
+        obj if obj.valid?
       rescue Exception => e
         e.message
       end

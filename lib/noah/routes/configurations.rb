@@ -13,8 +13,9 @@ class Noah::App
   get '/configurations/:configname/?' do |configname|
     c = Noah::Configuration.find(:name => configname).first
     (halt 404) if c.nil?
+    #content_type c.format.to_sym
     content_type content_type_mapping[c.format.to_sym] if content_type_mapping[c.format.to_sym]
-    c.body
+    c.body.to_s
   end
 
   # GET all configurations

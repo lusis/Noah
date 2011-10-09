@@ -47,7 +47,7 @@ class Noah::App
     end  
     if app.valid?
       action = app.is_new? ? "create" : "update"
-      app.save
+      #app.save
       r = {"result" => "success","id" => app.id, "action" => action, "name" => app.name }
       r.to_json
     else
