@@ -1,0 +1,10 @@
+{
+  "redis_verion":"<%= locals[:redis_version] %>",
+  "noah_version":"<%= locals[:noah_version] %>",
+  "resources":{
+    "hosts":{"link":"<%= request.url %>hosts"}
+    "services":{"link":"<%= request.url %>services"}
+    "applications":{"link":"<%= request.url %>applications"}
+    "configurations":{"link":"<%= request.url %>configurations"}
+  }
+}

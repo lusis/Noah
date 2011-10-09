@@ -45,9 +45,8 @@ module Noah
     end
 
     # Displays an overview page of all registered objects
-    get '/' do
+    get '/', :provides => :html do
       content_type "text/html"
-
       haml :index, :format => :html5, :locals => {:redis_version => Ohm.redis.info["redis_version"].to_s, :noah_version => Noah::VERSION}
     end
 
@@ -56,7 +55,7 @@ module Noah
       erb :'index.json', :locals => {:redis_version => Ohm.redis.info["redis_version"].to_s, :noah_version => Noah::VERSION}
     end
 
-    get '/version' do
+    get '/version', :provides => :json do
       content_type "application/json"
       {:redis_version => Ohm.redis.info["redis_version"].to_s, :noah_version => Noah::VERSION}.to_json
     end
