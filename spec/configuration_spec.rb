@@ -65,8 +65,8 @@ describe "Using the Configuration Model", :reset_redis => true do
       c = Noah::Configurations.all
       c.class.to_s.should == 'Hash'
       c.size.should == 2
-      c.has_key?(a.name).should == true
-      c.has_key?(b.name).should == true
+      c.has_key?(a.name.to_s).should == true
+      c.has_key?(b.name.to_s).should == true
     end
 
     it "return all Configurations in short form" do
@@ -75,8 +75,8 @@ describe "Using the Configuration Model", :reset_redis => true do
       c = Noah::Configurations.all({},true)
       c.class.to_s.should == 'Hash'
       c.size.should == 2
-      c.has_key?(a.name).should == true
-      c.has_key?(b.name).should == true
+      c.has_key?(a.name.to_s).should == true
+      c.has_key?(b.name.to_s).should == true
       c.each {|k,v| v.keys.map {|k| k.to_s}.sort.should == ['created_at','format','updated_at']}
     end
   end

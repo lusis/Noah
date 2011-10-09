@@ -72,7 +72,7 @@ end
 
 RSpec::Matchers.define :return_json do
   match do |last_response|
-    last_response.headers["Content-Type"].should == "application/json"
+    last_response.headers["Content-Type"].should =~ /^application\/json;.*/
     response = JSON.parse(last_response.body)
   end
 
@@ -83,7 +83,7 @@ end
 
 RSpec::Matchers.define :be_missing do
   match do |last_response|
-    last_response.headers["Content-Type"].should == "application/json"
+    last_response.headers["Content-Type"].should =~ /^application\/json;.*/
     last_response.status.should == 404
     response = JSON.parse(last_response.body)
     response["result"].should == "failure"
@@ -93,7 +93,7 @@ end
 
 RSpec::Matchers.define :be_invalid do
   match do |last_response|
-    last_response.headers["Content-Type"].should == "application/json"
+    last_response.headers["Content-Type"].should =~ /^application\/json;.*/
     response = JSON.parse(last_response.body)
     response["result"].should == "failure"
     response["error_message"].should == "Missing Parameters"

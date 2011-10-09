@@ -58,16 +58,16 @@ describe "Using the Link Model", :reset_redis => true do
       h[:name].should == l.name
       h[:updated_at].should == l.updated_at
       h[:created_at].should == l.created_at
-      h[:hosts].has_key?(@host.name).should == true
-      h[:hosts][@host.name].keys.map {|k| k.to_s}.sort.should == [:id, :status, :tags, :services].map {|k| k.to_s}.sort
-      h[:services].has_key?(@service.name).should == true
-      h[:services][@service.name][@host.name].keys.map {|k| k.to_s}.sort.should == [:id, :status, :tags].map {|k| k.to_s}.sort
-      h[:applications].has_key?(@application.name).should == true
-      h[:applications][@application.name].keys.map {|k| k.to_s}.sort.should == [:id, :tags, :configurations].map {|k| k.to_s}.sort
-      h[:configurations].has_key?(@configuration.name).should == true
-      h[:configurations][@configuration.name].keys.map {|k| k.to_s }.sort.should == [:id, :tags, :format, :body].map {|k| k.to_s}.sort
-      h[:ephemerals].has_key?(@ephemeral.name).should == true
-      h[:ephemerals][@ephemeral.name].keys.map {|k| k.to_s}.sort.should == [:id, :tags, :path, :data].map {|k| k.to_s}.sort
+      h[:hosts].has_key?(@host.name.to_s).should == true
+      h[:hosts]["#{@host.name}"].keys.map {|k| k.to_s}.sort.should == [:id, :status, :tags, :services].map {|k| k.to_s}.sort
+      h[:services].has_key?(@service.name.to_s).should == true
+      h[:services]["#{@service.name}"]["#{@host.name}"].keys.map {|k| k.to_s}.sort.should == [:id, :status, :tags].map {|k| k.to_s}.sort
+      h[:applications].has_key?(@application.name.to_s).should == true
+      h[:applications]["#{@application.name}"].keys.map {|k| k.to_s}.sort.should == [:id, :tags, :configurations].map {|k| k.to_s}.sort
+      h[:configurations].has_key?(@configuration.name.to_s).should == true
+      h[:configurations]["#{@configuration.name}"].keys.map {|k| k.to_s }.sort.should == [:id, :tags, :format, :body].map {|k| k.to_s}.sort
+      h[:ephemerals].has_key?(@ephemeral.name.to_s).should == true
+      h[:ephemerals]["#{@ephemeral.name}"].keys.map {|k| k.to_s}.sort.should == [:id, :tags, :path, :data].map {|k| k.to_s}.sort
 
     end
   end

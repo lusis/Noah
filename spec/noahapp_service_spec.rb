@@ -22,13 +22,13 @@ describe "Using the Service API", :reset_redis => false, :populate_sample_data =
         get "/services/#{@sample_service[:name]}"
         last_response.should be_ok
         response = last_response.should return_json
-        response.is_a?(Hash).should == true
-        response.has_key?(@s.name).should == true
-        response[@s.name].is_a?(Hash).should == true
-        response[@s.name].has_key?(@h.name).should == true
-        response[@s.name][@h.name].is_a?(Hash).should == true
-        response[@s.name][@h.name]["id"].should == @s.id
-        response[@s.name][@h.name]["status"].should == @s.status
+        response.class.to_s.should == "Hash"
+        response.has_key?(@s.name.to_s).should == true
+        response["#{@s.name}"].class.to_s.should == "Hash"
+        response["#{@s.name}"].has_key?(@h.name.to_s).should == true
+        response["#{@s.name}"]["#{@h.name}"].class.to_s.should == "Hash"
+        response["#{@s.name}"]["#{@h.name}"]["id"].should == @s.id
+        response["#{@s.name}"]["#{@h.name}"]["status"].should == @s.status
       end
       it "named service for host should work" do
         get "/services/#{@sample_service[:name]}/#{@sample_host[:name]}"

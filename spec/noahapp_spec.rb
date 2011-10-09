@@ -11,7 +11,7 @@ describe "Noah App Basics", :reset_redis => true do
   it "should test the 404 message" do
     get '/foo'
     last_response.status.should == 404
-    last_response.headers["Content-Type"].should == "application/json"
+    last_response.should return_json
     response = JSON.parse(last_response.body)
     response["result"].should == "failure"
     response["error_message"].should == "Resource not found"
