@@ -4,7 +4,7 @@ module Noah
     include Taggable
     include Linkable
     attribute :name
-    set :configurations, Configuration
+    collection :configurations, Configuration
 
     index :name
     index :configurations

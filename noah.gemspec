@@ -39,6 +39,8 @@ Gem::Specification.new do |s|
   s.add_dependency("guid", ["= 0.1.1"])
   s.add_dependency("slop", ["= 2.1.0"])
 
+  s.add_dependency 'em-hiredis',                      '~> 0.1.0'
+  s.add_dependency 'em-http-request',                 '~> 1.0.0.beta.4'
 
   if RUBY_PLATFORM =~ /java/
     s.add_dependency("jruby-openssl")
