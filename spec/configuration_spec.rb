@@ -79,6 +79,34 @@ describe "Using the Configuration Model", :reset_redis => true do
       c.has_key?(b.name.to_s).should == true
       c.each {|k,v| v.keys.map {|k| k.to_s}.sort.should == ['created_at','format','updated_at']}
     end
+
+    it "should allow for multiple configrations values with the same name with different applications" do
+      a1 = Noah::Application.create(:name => "test-app-1")
+      a1.valid?.should == true
+      a1.is_new?.should == true
+      b1 = Noah::Application.find(:name => "test-app-1").first
+      b1.should == a1
+
+      a2 = Noah::Application.create(:name => "test-app-2")
+      a2.valid?.should == true
+      a2.is_new?.should == true
+      b2 = Noah::Application.find(:name => "test-app-2").first
+      b2.should == a2
+
+      c1 = Noah::Configuration.create(@appconf_string.merge(:application_id => a1.id))
+      c2 = Noah::Configuration.create(@appconf_string.merge(:application_id => a2.id))
+
+      c1.valid?.should == true
+      c1.is_new?.should == true
+      b1 = Noah::Configuration[c1.id]
+      b1.should == c1
+
+      c2.valid?.should == true
+      c2.is_new?.should == true
+      b2 = Noah::Configuration[c2.id]
+      b2.should == c2
+    end
+
   end
 
   describe "should not" do
@@ -100,7 +128,7 @@ describe "Using the Configuration Model", :reset_redis => true do
     it "create a duplicate Configuration" do
       a = Noah::Configuration.create(@appconf_string)
       b = Noah::Configuration.create(@appconf_string)
-      b.errors.should == [[:name, :not_unique]]
+      b.errors.should == [[[:application_id, :name], :not_unique]]
     end
   end
 

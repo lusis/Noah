@@ -11,12 +11,14 @@ module Noah
     index :format
     index :body
 
+    reference :application, Application
+
     def validate
       super
       assert_present :name
       assert_present :format
       assert_present :body
-      assert_unique :name
+      assert_unique  [:application_id, :name]
     end
 
     def to_hash

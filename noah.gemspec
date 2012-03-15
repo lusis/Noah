@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency("em-http-request", ["1.0.0.beta.4"])
   s.add_dependency("redis", ["= 2.2.0"])
   s.add_dependency("nest", "= 1.1.0")
-  s.add_dependency("rack", "= 1.3.4")
+  s.add_dependency("rack", "= 1.3.5")
   s.add_dependency("tilt", "= 1.3.3")
   s.add_dependency("sinatra", "= 1.3.1")
   s.add_dependency("rack-protection", "= 1.1.4")
@@ -39,6 +39,8 @@ Gem::Specification.new do |s|
   s.add_dependency("guid", ["= 0.1.1"])
   s.add_dependency("slop", ["= 2.1.0"])
 
+  s.add_dependency 'em-hiredis',                      '~> 0.1.0'
+  s.add_dependency 'em-http-request',                 '~> 1.0.0.beta.4'
 
   if RUBY_PLATFORM =~ /java/
     s.add_dependency("jruby-openssl")
