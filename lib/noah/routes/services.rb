@@ -50,15 +50,15 @@ class Noah::App
     required_params = ["status", "host_status"]
     data = JSON.parse(request.body.read)
     raise ("Missing Parameters") if data.nil?
-    if data.keys.sort == required_params.sort
+    if (required_params - data.keys).empty?
       begin
         host = Noah::Host.find_or_create(:name => hostname, :status => data['host_status'])
         if host.valid?
-          service = Noah::Service.find_or_create(:name => servicename, :status => data['status'], :host => host)
+          service = Noah::Service.find_or_create(:name => servicename, :status => data['status'], :host => host, :data => data['data'])
           if service.valid?
             service_action = service.is_new? ? "create" : "update"
             host_action = host.is_new? ? "create" : "update"
-            r = {"action" => service_action, "result" => "success", "id" => service.id, "name" => service.name, "host" => {"name" => host.name, "action" => host_action, "status" => host.status}}
+            r = {"action" => service_action, "result" => "success", "id" => service.id, "name" => service.name, "host" => {"name" => host.name, "action" => host_action, "status" => host.status}, "data" => service.data}
             r.to_json
           else
             raise "#{format_errors(service)}"

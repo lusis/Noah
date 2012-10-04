@@ -5,6 +5,7 @@ module Noah
     include Linkable
     attribute :name
     attribute :status
+    attribute :data
     reference :host, Host
 
     index :name
@@ -21,7 +22,7 @@ module Noah
 
     def to_hash
       Host[host_id].nil? ? host_name=nil : host_name=Host[host_id].name
-      super.merge(:name => name, :status => status, :updated_at => updated_at, :host => host_name)
+      super.merge(:name => name, :status => status, :updated_at => updated_at, :host => host_name, :data => data)
     end
 
     class << self
@@ -36,6 +37,7 @@ module Noah
           s = find(:name => opts[:name], :host_id => opts[:host_id]).first
           s.nil? ? service=new(opts) : service=s
           service.status = opts[:status]
+          service.data = opts[:data]
           if service.valid?
             service.save
           end
@@ -55,7 +57,7 @@ module Noah
         service_hash["#{svc.name}"] = Hash.new unless service_hash.has_key?(svc.name)
         host_name = Noah::Host[svc.host_id].name
         service_hash["#{svc.name}"]["#{host_name}"] = Hash.new
-        service_hash["#{svc.name}"]["#{host_name}"].merge!({:id => svc.id, :status => svc.status, :tags => svc.to_hash[:tags], :links => svc.to_hash[:links], :created_at => svc.created_at, :updated_at => svc.updated_at})
+        service_hash["#{svc.name}"]["#{host_name}"].merge!({:id => svc.id, :status => svc.status, :data => svc.data, :tags => svc.to_hash[:tags], :links => svc.to_hash[:links], :created_at => svc.created_at, :updated_at => svc.updated_at})
       end
       service_hash
     end
