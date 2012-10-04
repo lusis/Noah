@@ -62,12 +62,8 @@ module Noah
 
     class <<self
       def find_or_create(opts={})
-        begin
-          find(opts).first.nil? ? obj=create(opts) : obj=find(opts).first
-          obj
-        rescue Exception => e
-          e.message
-        end
+        find(opts).first.nil? ? obj=create(opts) : obj=find(opts).first
+        obj
       end
     end
 

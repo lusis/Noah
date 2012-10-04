@@ -27,24 +27,20 @@ module Noah
 
     class << self
       def find_or_create(opts = {})
-        begin
-          # convert passed host object to host_id if passed
-          if opts.has_key?(:host)
-            opts.merge!({:host_id => opts[:host].id})
-            opts.reject!{|key, value| key == :host}
-          end  
-          # exclude requested status from lookup
-          s = find(:name => opts[:name], :host_id => opts[:host_id]).first
-          s.nil? ? service=new(opts) : service=s
-          service.status = opts[:status]
-          service.data = opts[:data]
-          if service.valid?
-            service.save
-          end
-          service
-        rescue Exception => e
-          e.message
+        # convert passed host object to host_id if passed
+        if opts.has_key?(:host)
+          opts.merge!({:host_id => opts[:host].id})
+          opts.reject!{|key, value| key == :host}
+        end  
+        # exclude requested status from lookup
+        s = find(:name => opts[:name], :host_id => opts[:host_id]).first
+        s.nil? ? service=new(opts) : service=s
+        service.status = opts[:status]
+        service.data = opts[:data]
+        if service.valid?
+          service.save
         end
+        service
       end
     end
   end

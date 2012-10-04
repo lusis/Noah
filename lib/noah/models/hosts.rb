@@ -32,8 +32,7 @@ module Noah
     end
 
     class << self
-    def find_or_create(opts = {})
-      begin
+      def find_or_create(opts = {})
         h = find(:name => opts[:name]).first
         #h = find(opts.reject{|key,value| key == :status}).first
         h.nil? ? host=new(opts) : host=h
@@ -42,10 +41,7 @@ module Noah
           host.save
         end
         host
-      rescue Exception => e
-        e.message
       end
-    end
     end
 
   end

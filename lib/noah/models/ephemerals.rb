@@ -26,8 +26,7 @@ module Noah
     end
 
     class << self
-    def find_or_create(opts = {})
-      begin
+      def find_or_create(opts = {})
         path, data = opts[:path], opts[:data]
         find(:path => path).first.nil? ? (obj = new(:path => path)) : (obj = find(:path => path).first)
         obj.data = data
@@ -35,10 +34,7 @@ module Noah
           obj.save
         end
         obj
-      rescue Exception => e
-        e.message
       end
-    end
     end
 
     protected
