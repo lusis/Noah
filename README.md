@@ -1,3 +1,5 @@
+(_please read [here](http://goo.gl/pJvMw) before continuing_)
+
 # Noah
 _"look at this effing rainbow I just made for you"_
 
