@@ -18,7 +18,7 @@ Noah is not a direct replacement for ZK. It's a conceptual port. More than anyth
 - [On Noah - Part 1](http://blog.lusis.org/blog/2011/05/16/on-noah-part-1/)
 - [On Noah - Part 2](http://blog.lusis.org/blog/2011/05/17/on-noah-part-2/)
 - [On Noah - Part 3](http://blog.lusis.org/blog/2011/05/18/on-noah-part-3/)
-- [On Noah - Part 4](http://blog.lusis.org/blog/2011/05/20/on-noah-part-4/)
+- [On Noah - Part 4](http://blog.lusis.org/blog/2011/05/19/on-noah-part-4/)
 
 Also the following post was where I sort of discussed it early on:
 
